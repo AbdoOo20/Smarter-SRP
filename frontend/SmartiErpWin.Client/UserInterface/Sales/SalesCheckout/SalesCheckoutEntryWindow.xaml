@@ -1,0 +1,154 @@
+﻿<Page
+    x:Class="SmartiErpWin.Client.UserInterface.Sales.SalesCheckout.SalesCheckoutEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:salesCheckout="clr-namespace:SmartiErpWin.Client.UserInterface.Sales.SalesCheckout"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    d:DataContext="{d:DesignInstance salesCheckout:SalesCheckoutEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    SizeChanged="OnSizeChanged"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    FlowDirection="{Binding ViewModel.FlowDirection}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+     
+        <prefabs:RefreshPrefab Grid.Row="1" Visibility="{Binding ViewModel.RingVisibility}"
+                               LoadingInfo="{Binding ViewModel.LoadingInfo}"
+                               LoadingTitle="{Binding ViewModel.LoadingTitle}"
+                               IsRefreshing="{Binding ViewModel.IsRefreshing}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        
+        <ui:DynamicScrollViewer Grid.Row="1" Visibility="{Binding ViewModel.UiVisibility}">
+            <StackPanel>
+                <DockPanel Width="{Binding ActualWidth}"
+                           x:Name="CentrePanel"
+                           Margin="0, 5, 0, 0">
+                    <StackPanel x:Name="ParentActiveDataStackPanel">
+                        <ui:Card>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ViewModel[Barcode]}"
+                                           Margin="0, 7, 0, 0"/>
+                                <TextBox Text="{Binding ViewModel.CurrentBarcode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         MinWidth="180"
+                                         HorizontalAlignment="Left"
+                                         Margin="10, 0, 0, 0"
+                                         x:Name="BarcodeBox"/>
+                            </StackPanel>
+                        </ui:Card>
+                        <StackPanel x:Name="ActiveDataStackPanel"
+                                    HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Right">
+                        <ui:Card>
+                            <StackPanel>
+                                <TextBlock Text="{Binding ViewModel[Browse]}"
+                                           FontSize="18"
+                                           FontWeight="Bold"/>
+                                    <TabControl x:Name="CategoriesTabControl"
+                                                HorizontalContentAlignment="Left"
+                                                Margin="0, 7, 0, 0">
+                                        <TabControl.Template>
+                                            <ControlTemplate TargetType="TabControl">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                                                  VerticalScrollBarVisibility="Hidden"
+                                                                  Margin="0, 0, 0, 0">
+                                                        <TabPanel x:Name="HeaderPanel"
+                                                                  Panel.ZIndex ="1" 
+                                                                  KeyboardNavigation.TabIndex="1"
+                                                                  Grid.Column="0"
+                                                                  Grid.Row="0"
+                                                                  Margin="2, 2, 2, 10"
+                                                                  IsItemsHost="true"/>
+                                                    </ScrollViewer>
+                                                    <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                                      Margin="{TemplateBinding Padding}"
+                                                                      ContentSource="SelectedContent" Grid.Row="1"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </TabControl.Template>
+                                    </TabControl>
+                            </StackPanel>
+                        </ui:Card>
+                    </StackPanel>
+                </DockPanel>
+                <StackPanel VerticalAlignment="Bottom" Margin="0, 5, 0, 10" CanHorizontallyScroll="True">
+                        <ui:Card>
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Vertical"
+                                            Margin="0, 7, 0, 0"
+                                            MinWidth="150">
+                                    <ui:InfoBar IsOpen="True" IsClosable="False"
+                                                Title="{Binding ViewModel[SubtotalPrice]}"
+                                                Message="{Binding ViewModel.Data.SubtotalPrice}"/>
+                                    <ui:InfoBar IsOpen="True" IsClosable="False"
+                                                Margin="0, 0, 0, 0"
+                                                Title="{Binding ViewModel[DiscountedPrice]}"
+                                                Message="{Binding ViewModel.Data.DiscountedPrice}"/>
+                                    <ui:InfoBar IsOpen="True" IsClosable="False"
+                                                Margin="0, 0, 0, 0"
+                                                Severity="Success"
+                                                Title="{Binding ViewModel[TotalPrice]}"
+                                                Message="{Binding ViewModel.Data.TotalPrice}"/>
+                                </StackPanel>
+
+                                <ui:Card Margin="25, 5, 0, 0">
+                                    <StackPanel MinHeight="100">
+                                        <TextBlock Text="{Binding ViewModel[Discounts]}"
+                                                   FontSize="18"
+                                                   FontWeight="Bold"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0, 7, 0, 0">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding ViewModel[Value]}" Margin="0, 0, 0, 0"/>
+                                                <TextBox Text="{Binding ViewModel.CurrentDiscountValue, UpdateSourceTrigger=PropertyChanged}"
+                                                         MinWidth="120"
+                                                         Margin="0, 7, 0, 0"/>  
+                                            </StackPanel>
+
+                                            <StackPanel Margin="5, 0, 0, 0">
+                                                <TextBlock Text="{Binding ViewModel[Type]}" Margin="0, 0, 0, 0"/>
+                                                <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.StaticComboItems}" Margin="0, 7, 0, 0"
+                                                          SelectedItem="{Binding ViewModel.ComboModelBase.SelectedStaticComboItem}"
+                                                          MinWidth="140"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ui:Card>
+                            </StackPanel>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="20, 0, 10, 0"
+                                            HorizontalAlignment="Right">
+                                    <Button Width="100" Height="50"
+                                            Command="{Binding ViewModel.AbortCommand}">
+                                        <TextBlock Text="{Binding ViewModel[Abort]}"
+                                                   FontSize="20"/>
+                                    </Button>
+                                    <Button Width="100" Height="50" Margin="10, 0, 0, 0"
+                                            Command="{Binding ViewModel.PayCommand}">
+                                        <TextBlock Text="{Binding ViewModel[Pay]}"
+                                                   FontSize="20"/>
+                                    </Button>
+                                </StackPanel>
+                            </DockPanel>
+                        </ui:Card>
+                    </StackPanel>
+            </StackPanel>
+        </ui:DynamicScrollViewer>
+    </Grid>
+</Page>

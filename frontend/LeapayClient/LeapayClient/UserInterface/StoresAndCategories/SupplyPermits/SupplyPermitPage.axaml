@@ -1,0 +1,20 @@
+﻿<bases1:UserControlBase x:Class="Leapay.Client.UserInterface.StoresAndCategories.SupplyPermits.SupplyPermitsPage"
+                        xmlns="https://github.com/avaloniaui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:SupplyPermits="clr-namespace:Leapay.Client.UserInterface.StoresAndCategories.SupplyPermits"
+                        xmlns:bases1="clr-namespace:Leapay.Client.Polymorphism.Bases"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:items="clr-namespace:Leapay.Client.UserInterface.StoresAndCategories.Items"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        d:DataContext="{d:DesignInstance items:ItemsPage,
+                                                         IsDesignTimeCreatable=False}"
+                        d:DesignHeight="450"
+                        d:DesignWidth="800"
+                        x:DataType="SupplyPermits:SupplyPermitsPage"
+                        FlowDirection="{CompiledBinding ViewModel.FlowDirection}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel x:Name="DataGrid" />
+    </ScrollViewer>
+</bases1:UserControlBase>

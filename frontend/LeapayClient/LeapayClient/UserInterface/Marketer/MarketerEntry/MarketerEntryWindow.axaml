@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Marketer.MarketerEntry.MarketerEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviours="clr-namespace:Leapay.Client.Behaviours"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dtos="clr-namespace:Fly.Shared.Modules.PurchaseAndSales.Dtos.Misc;assembly=Fly.Shared"
+             xmlns:marketerEntry="clr-namespace:Leapay.Client.UserInterface.Marketer.MarketerEntry"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             Width="600"
+             Height="630"
+             d:DataContext="{d:DesignInstance marketerEntry:MarketerEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="630"
+             d:DesignWidth="600"
+             x:DataType="marketerEntry:MarketerEntryWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <StackPanel Margin="0,40,0,0">
+        <TabControl Margin="10"
+                    VerticalAlignment="Top"
+                    VerticalContentAlignment="Top">
+            <TabControl.Items>
+                <TabItem Header="{Binding ViewModel[MarketerInfo]}">
+                    <suki:GlassCard MinHeight="420">
+                        <StackPanel Margin="25,0,25,25">
+                            <StackPanel>
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[MarketerName]}" />
+                                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Name}" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel MinWidth="235">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Phone]}" />
+                                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Phone}" />
+                                </StackPanel>
+
+                                <StackPanel MinWidth="235" Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Email]}" />
+                                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Email}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel MinWidth="235">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[MarketerPercent]}" />
+                                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Percentage}" />
+                                </StackPanel>
+
+                                <StackPanel MinWidth="235" Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[MarketerSalary]}" />
+                                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Salary}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel MinWidth="235">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OpeningDebtor]}" />
+                                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.AccountOpeningDebtor}" />
+                                </StackPanel>
+
+                                <StackPanel MinWidth="235" Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OpeningCreditor]}" />
+                                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.AccountOpeningCreditor}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <suki:GlassCard Margin="0,10,0,0" Padding="10">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding ViewModel.Model.IsRepresentative}" />
+                                    <TextBlock Margin="7,2,0,0" Text="{Binding ViewModel[MarketerIsARepresentative]}" />
+                                </StackPanel>
+                            </suki:GlassCard>
+                        </StackPanel>
+                    </suki:GlassCard>
+                </TabItem>
+
+                <TabItem VerticalAlignment="Top"
+                         VerticalContentAlignment="Top"
+                         Header="{Binding ViewModel[MarketerClients]}">
+                    <suki:GlassCard MinHeight="420"
+                                    VerticalAlignment="Top"
+                                    VerticalContentAlignment="Top">
+                        <StackPanel VerticalAlignment="Top">
+                            <suki:InfoBar IsClosable="False"
+                                          IsOpen="True"
+                                          Message="{Binding ViewModel[SelectClientsFromHere]}" />
+                            <ScrollViewer VerticalAlignment="Top">
+                                <ListBox MaxHeight="280"
+                                         Margin="0,10,0,0"
+                                         ItemsSource="{Binding ViewModel.Clients}"
+                                         SelectionMode="Multiple,Toggle">
+                                    <Interaction.Behaviors>
+                                        <behaviours:MultiSelectBehaviour SelectedItems="{Binding ViewModel.SelectedClients}" />
+                                    </Interaction.Behaviors>
+
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type dtos:DtoClient}">
+                                            <StackPanel Margin="5" Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Name}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </suki:GlassCard>
+                </TabItem>
+            </TabControl.Items>
+        </TabControl>
+
+        <StackPanel Margin="25,10,25,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+            <Button Margin="0,0,0,0"
+                    Command="{Binding ViewModel.CancelCommand}"
+                    Content="{Binding ViewModel[CancelButton]}" />
+            <Button Margin="15,0,0,0"
+                    Command="{Binding ViewModel.SaveCommand}"
+                    Content="{Binding ViewModel[SaveButton]}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

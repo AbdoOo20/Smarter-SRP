@@ -1,0 +1,127 @@
+﻿<UserControl
+    FlowDirection="RightToLeft"
+    Height="100"
+    MinWidth="870"
+    PreviewKeyDown="OnPreviewKeyDown"
+    d:DataContext="{d:DesignInstance saleInvoices:SellReturnInvoiceDetailsEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="100"
+    d:DesignWidth="850"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Sales.SellReturnInvoice.SellReturnInvoiceDetailsEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:saleInvoices="clr-namespace:SmartiErpWin.Client.UserInterface.Sales.SellReturnInvoice"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ui:Card Margin="0,0">
+        <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
+
+            <!--<StackPanel Margin="5,0" MinWidth="120">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Category]}" />
+                <ComboBox
+                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[3]}"
+                    Margin="0,10,0,0"
+                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[3]}"
+                    SelectionChanged="CategorySelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                            <TextBlock Text="{Binding Display}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>-->
+
+            <StackPanel Margin="10,0" MinWidth="130">
+                <ui:Card>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:InfoBar
+                            IsClosable="False"
+                            IsOpen="True"
+                            Margin="0,0,0,0"
+                            Message="{Binding ViewModel.SelectedItemStatus}"
+                            Severity="{Binding ViewModel.SelectedItemStatusSeverity}"
+                            Title="{Binding ViewModel[Item]}" />
+
+                        <Button
+                            Command="{Binding ViewModel.SelectItemCommand}"
+                            Content="{Binding ViewModel[SelectItem]}"
+                            Margin="5,0,0,0"
+                            Width="120" />
+                    </StackPanel>
+                </ui:Card>
+            </StackPanel>
+
+            <StackPanel Margin="5,0" MinWidth="100">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Unit]}" />
+                <ComboBox
+                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[1]}"
+                    Margin="0,10,0,0"
+                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[1]}"
+                    SelectionChanged="UnitSelectionChanged"
+                    x:Name="FocusTarget">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                            <TextBlock Text="{Binding Display}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel
+                Margin="5,0"
+                MaxWidth="80"
+                MinWidth="80">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Quantity]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Quantity, Converter={StaticResource TextBoxConverter}}" />
+            </StackPanel>
+
+            <StackPanel
+                Margin="5,0"
+                MaxWidth="80"
+                MinWidth="80"
+                Visibility="{Binding ViewModel.FullVisibility}">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Price]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.SuggestedPrice, Converter={StaticResource TextBoxConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <StackPanel
+                Margin="5,0"
+                MaxWidth="100"
+                MinWidth="80"
+                Visibility="{Binding ViewModel.FullVisibility}">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Discount]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Discount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
+            <StackPanel Margin="5,0" MinWidth="100">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[ExpireDate]}" />
+                <ComboBox
+                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[2]}"
+                    Margin="0,10,0,0"
+                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[2]}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                            <TextBlock Text="{Binding Display}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <Button
+                Command="{Binding ViewModel.SaveCommand}"
+                Height="45"
+                Margin="10,30,0,0"
+                Width="45">
+                <ui:SymbolIcon Symbol="{Binding ViewModel.Symbol}" />
+            </Button>
+
+        </WrapPanel>
+
+    </ui:Card>
+
+</UserControl>

@@ -1,0 +1,288 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.StoresAndCategories.Items.ItemEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:items="clr-namespace:Leapay.Client.UserInterface.StoresAndCategories.Items"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             x:Name="ItemWindow"
+             d:DataContext="{d:DesignInstance items:ItemEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             x:DataType="items:ItemEntryWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.RingVisibility}">
+            <suki:Loading Width="65"
+                          Height="65"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       Text="{Binding ViewModel.LoadingTitle}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="{Binding ViewModel.LoadingInfo}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" IsVisible="{Binding ViewModel.UiVisibility}">
+            <DockPanel Margin="0,0,0,0" VerticalSpacing="5">
+                <StackPanel DockPanel.Dock="Top">
+                    <suki:GlassCard Margin="25,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+                            <WrapPanel Grid.Column="0">
+                                <StackPanel Margin="10,10,0,0">
+                                    <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[CategoryForItem]}" />
+                                    <ComboBox MinWidth="230"
+                                              Margin="0,5,0,0"
+                                              DisplayMemberBinding="{Binding Display}"
+                                              ItemsSource="{Binding ViewModel.Categories.Items}"
+                                              SelectedItem="{Binding ViewModel.Categories.SelectedItem}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[LatinName]}" />
+                                    <TextBox MinWidth="200"
+                                             Margin="0,10,0,0"
+                                             Text="{Binding ViewModel.Model.Name}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Barcode]}" />
+                                    <TextBox MinWidth="200"
+                                             Margin="0,10,0,0"
+                                             Text="{Binding ViewModel.Model.Barcode}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[ItemSellingPrice]}" />
+                                    <TextBox MinWidth="150"
+                                             Margin="0,10,0,0"
+                                             Text="{Binding ViewModel.Model.Price}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[MinPrice]}" />
+                                    <TextBox MinWidth="150"
+                                             Margin="0,10,0,0"
+                                             Text="{Binding ViewModel.Model.MinPrice}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[RegionalPrice]}" />
+                                    <TextBox MinWidth="150"
+                                             Margin="0,10,0,0"
+                                             Text="{Binding ViewModel.Model.RegionalPrice}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[BulkPrice]}" />
+                                    <TextBox MinWidth="150"
+                                             Margin="0,10,0,0"
+                                             Text="{Binding ViewModel.Model.BulkPrice}" />
+                                </StackPanel>
+
+                                <suki:GlassCard Margin="10,10,0,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <CheckBox Content="{Binding ViewModel[IsItemActive]}" IsChecked="{Binding ViewModel.Model.IsActive}" />
+                                        <CheckBox Content="{Binding ViewModel[IsItemExpirable]}" IsChecked="{Binding ViewModel.Model.Expirable}" />
+                                    </StackPanel>
+                                </suki:GlassCard>
+                            </WrapPanel>
+
+                            <suki:GlassCard Grid.Column="1">
+                                <StackPanel Spacing="5">
+                                    <Border Width="120"
+                                            Height="120"
+                                            Background="Transparent"
+                                            ClipToBounds="True"
+                                            CornerRadius="20">
+                                        <Image Width="120"
+                                               Height="120"
+                                               Source="{Binding ViewModel.Model.Image, Converter={StaticResource ByteArrayToBitmapConverter}}"
+                                               Stretch="UniformToFill" />
+                                    </Border>
+                                    <Button MaxWidth="150"
+                                            Command="{Binding ViewModel.SelectFileCommand}"
+                                            Content="{Binding ViewModel[BrowseImage]}" />
+                                </StackPanel>
+                            </suki:GlassCard>
+                        </Grid>
+                    </suki:GlassCard>
+                </StackPanel>
+
+                <StackPanel Margin="25,10">
+                    <TabControl>
+                        <TabControl.Items>
+                            <TabItem Header="{Binding ViewModel[ItemDetails]}">
+                                <suki:GlassCard>
+                                    <StackPanel>
+                                        <ScrollViewer x:Name="DataScroller"
+                                                      MaxHeight="550"
+                                                      Margin="0,10,0,0"
+                                                      Padding="5"
+                                                      HorizontalScrollBarVisibility="Visible">
+                                            <StackPanel x:Name="DataGrid" />
+                                        </ScrollViewer>
+
+                                        <ScrollViewer Margin="0,0,0,5" HorizontalScrollBarVisibility="Visible">
+                                            <suki:GlassCard>
+                                                <WrapPanel>
+
+                                                    <StackPanel Margin="10,5"
+                                                                HorizontalAlignment="Center"
+                                                                Orientation="Horizontal">
+
+                                                        <StackPanel Margin="5,0,0,0">
+                                                            <StackPanel>
+                                                                <TextBlock Margin="3,10,0,0" Text="{Binding ViewModel[Unit]}" />
+                                                                <ComboBox x:Name="FocusTarget"
+                                                                          MinWidth="200"
+                                                                          Margin="0,6,0,0"
+                                                                          DisplayMemberBinding="{Binding Display}"
+                                                                          ItemsSource="{Binding ViewModel.Units.Items}"
+                                                                          SelectedItem="{Binding ViewModel.Units.SelectedItem}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <StackPanel MinWidth="150" Margin="10,10,0,0">
+                                                            <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[TransferRate]}" />
+                                                            <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.ModelDetails.Model.TransferRate, Converter={StaticResource TextBoxConverter}}" />
+                                                        </StackPanel>
+                                                        <StackPanel MinWidth="150" Margin="10,10,0,0">
+                                                            <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[Barcode]}" />
+                                                            <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.ModelDetails.Model.Barcode, Converter={StaticResource TextBoxConverter}}" />
+                                                        </StackPanel>
+
+                                                        <StackPanel MinWidth="150" Margin="10,20,0,0">
+                                                            <suki:GlassCard MaxHeight="140"
+                                                                            Margin="0,0,0,0"
+                                                                            HorizontalContentAlignment="Left">
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Margin="0,3,0,0" Text="{Binding ViewModel[Primary]}" />
+                                                                    <ToggleSwitch Margin="12,0,0,0" IsChecked="{Binding ViewModel.ModelDetails.Model.IsPrimary}" />
+                                                                </StackPanel>
+                                                            </suki:GlassCard>
+
+                                                        </StackPanel>
+
+                                                    </StackPanel>
+
+                                                    <Button Width="50"
+                                                            Height="50"
+                                                            Margin="10,20,0,0"
+                                                            Command="{Binding ViewModel.SubmitCommand}">
+                                                        <avalonia:MaterialIcon Margin="-4,0,0,0" Kind="{Binding ViewModel.ModelDetails.Symbol}" />
+                                                    </Button>
+                                                </WrapPanel>
+                                            </suki:GlassCard>
+                                        </ScrollViewer>
+
+                                        <StackPanel MaxHeight="40"
+                                                    Margin="0,10,25,10"
+                                                    HorizontalAlignment="Right"
+                                                    DockPanel.Dock="Bottom"
+                                                    Orientation="Horizontal">
+
+                                            <Button MinWidth="100"
+                                                    Margin="0,0,0,0"
+                                                    Command="{Binding ViewModel.CancelCommand}"
+                                                    Content="{Binding ViewModel[CancelButton]}" />
+
+                                            <Button MinWidth="100"
+                                                    Margin="15,0,0,0"
+                                                    Command="{Binding ViewModel.SaveCommand}"
+                                                    Content="{Binding ViewModel[SaveButton]}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </suki:GlassCard>
+
+                            </TabItem>
+                            <TabItem Header="{Binding ViewModel[OtherBarcodes]}">
+                                <suki:GlassCard>
+                                    <StackPanel>
+                                        <ScrollViewer x:Name="BarcodesDataScroller"
+                                                      MaxHeight="550"
+                                                      Margin="0,10,0,0"
+                                                      Padding="5"
+                                                      HorizontalScrollBarVisibility="Visible">
+                                            <StackPanel x:Name="BarcodesDataGrid" />
+                                        </ScrollViewer>
+
+                                        <ScrollViewer Margin="0,0,0,5" HorizontalScrollBarVisibility="Visible">
+                                            <suki:GlassCard>
+                                                <WrapPanel>
+
+                                                    <StackPanel Margin="10,5"
+                                                                HorizontalAlignment="Center"
+                                                                Orientation="Horizontal">
+
+                                                        <StackPanel MinWidth="150" Margin="10,10,0,0">
+                                                            <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[ItemTypeNameOptional]}" />
+                                                            <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.ModelBarcodes.Model.ItemTypeName, Converter={StaticResource TextBoxConverter}}" />
+                                                        </StackPanel>
+                                                        <StackPanel MinWidth="150" Margin="10,10,0,0">
+                                                            <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[Barcode]}" />
+                                                            <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.ModelBarcodes.Model.Barcode, Converter={StaticResource TextBoxConverter}}" />
+                                                        </StackPanel>
+                                                        <StackPanel MinWidth="150" Margin="10,10,0,0">
+                                                            <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[Notes]}" />
+                                                            <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.ModelBarcodes.Model.Notes, Converter={StaticResource TextBoxConverter}}" />
+                                                        </StackPanel>
+
+                                                    </StackPanel>
+
+                                                    <Button Width="50"
+                                                            Height="50"
+                                                            Margin="10,20,0,0"
+                                                            Command="{Binding ViewModel.SubmitBarcodeCommand}">
+                                                        <avalonia:MaterialIcon Margin="-4,0,0,0" Kind="{Binding ViewModel.ModelBarcodes.Symbol}" />
+                                                    </Button>
+                                                </WrapPanel>
+                                            </suki:GlassCard>
+                                        </ScrollViewer>
+
+                                        <StackPanel MaxHeight="40"
+                                                    Margin="0,10,25,10"
+                                                    HorizontalAlignment="Right"
+                                                    DockPanel.Dock="Bottom"
+                                                    Orientation="Horizontal">
+
+                                            <Button MinWidth="100"
+                                                    Margin="0,0,0,0"
+                                                    Command="{Binding ViewModel.CancelCommand}"
+                                                    Content="{Binding ViewModel[CancelButton]}" />
+
+                                            <Button MinWidth="100"
+                                                    Margin="15,0,0,0"
+                                                    Command="{Binding ViewModel.SaveCommand}"
+                                                    Content="{Binding ViewModel[SaveButton]}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </suki:GlassCard>
+
+                            </TabItem>
+                        </TabControl.Items>
+                    </TabControl>
+                </StackPanel>
+
+            </DockPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

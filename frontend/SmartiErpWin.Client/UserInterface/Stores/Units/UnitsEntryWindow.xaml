@@ -1,0 +1,57 @@
+﻿<ui:FluentWindow
+    x:Class="SmartiErpWin.Client.UserInterface.Stores.Units.UnitEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:units="clr-namespace:SmartiErpWin.Client.UserInterface.Stores.Units"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="600"
+    Height="250"
+    d:DataContext="{d:DesignInstance units:UnitEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="250"
+    d:DesignWidth="600"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+    FlowDirection="{Binding ViewModel.FlowDirection}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar
+            x:Name="TitleBar"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            Grid.Row="0"
+            CloseWindowByDoubleClickOnIcon="True"
+            ShowMinimize="False"
+            ShowMaximize="False"/>
+        
+        <StackPanel Grid.Row="0" Margin="25, 40, 25, 0">
+            
+            <StackPanel>
+                <TextBlock Text="{Binding ViewModel[Name]}" Margin="0, 10, 0, 0"/>
+                <TextBox Text="{Binding ViewModel.Model.Name}" Margin="0, 10, 0, 0"/>
+            </StackPanel>
+            
+            <StackPanel>
+                <TextBlock Text="{Binding ViewModel[Note]}" Margin="0, 10, 0, 0"/>
+                <TextBox Text="{Binding ViewModel.Model.Description}" Margin="0, 10, 0, 0"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" Margin="0, 25, 0, 0" HorizontalAlignment="Center">
+                <Button Content="{Binding ViewModel[CancelButton]}" Margin="0, 0, 0, 0"
+                        Command="{Binding ViewModel.CancelCommand}"/>
+                <Button Content="{Binding ViewModel[SaveButton]}"
+                        Command="{Binding ViewModel.SaveCommand}" Margin="15, 0, 0, 0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

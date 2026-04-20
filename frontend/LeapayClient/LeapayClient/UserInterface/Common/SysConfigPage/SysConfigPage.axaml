@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.SysConfigPage.SysConfigPage"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sysConfigPage="clr-namespace:Leapay.Client.UserInterface.Common.SysConfigPage"
+             Width="600"
+             Height="660"
+             d:DataContext="{d:DesignInstance sysConfigPage:SysConfigPage,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             x:DataType="sysConfigPage:SysConfigPage"
+             FlowDirection="LeftToRight"
+             mc:Ignorable="d">
+    <ScrollViewer Margin="0,25,0,0">
+        <StackPanel Margin="16" Spacing="8">
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Backend Path:" />
+                <TextBox Width="250" Text="{Binding ViewModel.SysConfigModel.BackendPath, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Backend URL:" />
+                <TextBox Width="250" Text="{Binding ViewModel.BackendUrl, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Database URL:" />
+                <TextBox Width="250" Text="{Binding ViewModel.SysConfigModel.DatabaseUrl, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Database Port:" />
+                <TextBox Width="100" Text="{Binding ViewModel.SysConfigModel.DatabasePort, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Database Username:" />
+                <TextBox Width="250" Text="{Binding ViewModel.SysConfigModel.DatabaseUsername, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Database Name:" />
+                <TextBox Width="250" Text="{Binding ViewModel.SysConfigModel.DatabaseName, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Database Password:" />
+                <TextBox Width="250"
+                         PasswordChar="*"
+                         Text="{Binding ViewModel.SysConfigModel.DatabasePasswordU, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Backup Path:" />
+                <TextBox Width="250" Text="{Binding ViewModel.SysConfigModel.BackupPath, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Check items in storage:" />
+                <CheckBox IsChecked="{Binding ViewModel.SysConfigModel.MinusSellCheck, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="By default, items expire:" />
+                <CheckBox IsChecked="{Binding ViewModel.SysConfigModel.ItemsHaveExpireDate, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Enable Backup:" />
+                <CheckBox IsChecked="{Binding ViewModel.SysConfigModel.EnableBackup, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Backup Minutes:" />
+                <TextBox Width="100" Text="{Binding ViewModel.SysConfigModel.BackupMinutes, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Width="150"
+                           VerticalAlignment="Center"
+                           Text="Token:" />
+                <TextBox Width="250" Text="{Binding ViewModel.SysConfigModel.Token, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Width="160"
+                        Height="35"
+                        Margin="0,10,0,0"
+                        Command="{Binding ViewModel.SaveSettingsCommand}"
+                        Content="{Binding ViewModel[Save]}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

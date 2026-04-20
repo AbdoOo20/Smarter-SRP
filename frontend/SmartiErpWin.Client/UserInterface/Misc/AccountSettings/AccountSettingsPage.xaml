@@ -1,0 +1,230 @@
+﻿<Page
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    d:DataContext="{d:DesignInstance accountSettings:AccountSettingsPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="650"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Misc.AccountSettings.AccountSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:accountSettings="clr-namespace:SmartiErpWin.Client.UserInterface.Misc.AccountSettings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <Button
+            Command="{Binding ViewModel.SaveCommand}"
+            Content="{Binding ViewModel[SaveButton]}"
+            Height="40"
+            HorizontalAlignment="Right"
+            Margin="50,0,0,0"
+            Width="80" />
+        <ui:Card Margin="0,7,0,0" VerticalAlignment="Top">
+            <StackPanel>
+                <TabControl>
+                    <TabControl.Items>
+                        <TabItem Header="{Binding ViewModel[General]}">
+                            <StackPanel HorizontalAlignment="Left" Margin="10,0">
+                                <ui:Card>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding ViewModel[SelectLogoFileInfo]}" />
+                                        <Image
+                                            Height="100"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,5,0,0"
+                                            Source="{Binding ViewModel.Image}"
+                                            Width="100" />
+                                        <ui:Button
+                                            Click="BrowseImageFile"
+                                            Content="{Binding ViewModel[BrowseFile]}"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,10,0,0"
+                                            VerticalAlignment="Bottom" />
+                                    </StackPanel>
+                                </ui:Card>
+
+
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <StackPanel>
+                                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[CompanyName]}" />
+                                        <TextBox
+                                            Margin="0,10,0,0"
+                                            MinWidth="300"
+                                            Text="{Binding ViewModel.CompanyInfo.Name}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="10,0,0,0">
+                                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[CompanyType]}" />
+                                        <TextBox
+                                            Margin="0,10,0,0"
+                                            MinWidth="300"
+                                            Text="{Binding ViewModel.CompanyInfo.Type}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    Margin="0,10,0,0"
+                                    Orientation="Horizontal">
+                                    <StackPanel>
+                                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[PhoneNumber1]}" />
+                                        <TextBox
+                                            Margin="0,10,0,0"
+                                            MinWidth="300"
+                                            Text="{Binding ViewModel.CompanyInfo.PhoneNumber1}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="10,0,0,0">
+                                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[PhoneNumber2]}" />
+                                        <TextBox
+                                            Margin="0,10,0,0"
+                                            MinWidth="300"
+                                            Text="{Binding ViewModel.CompanyInfo.PhoneNumber2}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    Margin="0,10,0,0"
+                                    Orientation="Horizontal">
+                                    <StackPanel>
+                                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Address]}" />
+                                        <TextBox
+                                            Margin="0,10,0,0"
+                                            MinWidth="300"
+                                            Text="{Binding ViewModel.CompanyInfo.Address}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="10,0,0,0">
+                                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Email]}" />
+                                        <TextBox
+                                            Margin="0,10,0,0"
+                                            MinWidth="300"
+                                            Text="{Binding ViewModel.CompanyInfo.Email}" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Margin="10,3" MaxWidth="600">
+                                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[InvoiceNotice]}" />
+                                    <TextBox
+                                        Margin="0,10,0,0"
+                                        MinHeight="100"
+                                        MinLines="1"
+                                        Text="{Binding ViewModel.CompanyInfo.InvoiceNotice}" />
+                                </StackPanel>
+
+                            </StackPanel>
+
+
+                        </TabItem>
+                        <TabItem Header="{Binding ViewModel[AccountingOrigins]}">
+                            <ui:DynamicScrollViewer HorizontalAlignment="Left" HorizontalScrollBarVisibility="Visible">
+                                <StackPanel HorizontalAlignment="Left">
+                                    <StackPanel
+                                        HorizontalAlignment="Center"
+                                        Margin="50,0,150,50"
+                                        Orientation="Horizontal">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol1}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                                                TitleText="{Binding ViewModel[ClientsAccount]}" />
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol2}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[1]}"
+                                                TitleText="{Binding ViewModel[SuppliersAccount]}" />
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol3}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[2]}"
+                                                TitleText="{Binding ViewModel[ExpensesAccount]}" />
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol4}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[3]}"
+                                                TitleText="{Binding ViewModel[BanksAccount]}" />
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol9}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[8]}"
+                                                TitleText="{Binding ViewModel[MarketerInvoicesAccount]}" />
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol10}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[9]}"
+                                                TitleText="{Binding ViewModel[SafesAccount]}" />
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[13]}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[13]}"
+                                                TitleText="{Binding ViewModel[Share]}" />
+                                        </StackPanel>
+                                        <StackPanel Margin="25,0,0,0">
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol5}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[4]}"
+                                                TitleText="{Binding ViewModel[PurchasesAccount]}" />
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol6}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[5]}"
+                                                TitleText="{Binding ViewModel[SalesAccount]}" />
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol7}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[6]}"
+                                                TitleText="{Binding ViewModel[GeneralClientAccount]}" />
+
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol8}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[7]}"
+                                                TitleText="{Binding ViewModel[GeneralSupplierAccount]}" />
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol11}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[10]}"
+                                                TitleText="{Binding ViewModel[EmployeesAccount]}" />
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiCol12}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[11]}"
+                                                TitleText="{Binding ViewModel[AssetsAccount]}" />
+                                            <prefabs:ComboPrefabObsolete
+                                                ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[12]}"
+                                                Margin="0,10,0,0"
+                                                SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[12]}"
+                                                TitleText="{Binding ViewModel[Discount]}" />
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel
+                                        HorizontalAlignment="Center"
+                                        Margin="0,0,120,0"
+                                        Orientation="Horizontal">
+                                        <!--<Button Content="{Binding ViewModel[RefreshButton]}"
+                        Command="{Binding ViewModel.RefreshAccountsCommand}" Margin="15, 0, 0, 0"/>-->
+                                    </StackPanel>
+                                </StackPanel>
+                            </ui:DynamicScrollViewer>
+
+                        </TabItem>
+                    </TabControl.Items>
+                </TabControl>
+
+            </StackPanel>
+        </ui:Card>
+
+    </StackPanel>
+</Page>

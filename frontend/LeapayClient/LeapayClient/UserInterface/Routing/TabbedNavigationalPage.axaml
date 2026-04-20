@@ -1,0 +1,88 @@
+﻿<controls:UserControl x:Class="Leapay.Client.UserInterface.Routing.TabbedNavigationalPage"
+                      xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                      xmlns:controls="https://github.com/avaloniaui"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:routing1="clr-namespace:Leapay.Client.UserInterface.Routing"
+                      xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                      xmlns:uiModels1="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels.UiModels"
+                      d:DataContext="{d:DesignInstance routing1:TabbedNavigationalPageViewModel,
+                                                       IsDesignTimeCreatable=False}"
+                      d:DesignHeight="450"
+                      d:DesignWidth="800"
+                      x:DataType="routing1:TabbedNavigationalPage"
+                      FlowDirection="{Binding ViewModel.FlowDirection}"
+                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                      mc:Ignorable="d">
+
+    <TabControl ItemsSource="{Binding ViewModel.Cards}" SelectedItem="{Binding ViewModel.SelectedTab}">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <suki:GlassCard Padding="1" IsOpaque="True">
+                    <suki:GlassCard.Styles>
+                        <Style Selector="Button.clear-button">
+                            <Setter Property="Opacity" Value="0" />
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                        </Style>
+
+                        <Style Selector="ContentControl.clear-button">
+                            <Setter Property="Opacity" Value="0" />
+                            <Setter Property="IsHitTestVisible" Value="False" />
+                        </Style>
+
+                        <Style Selector="suki|GlassCard:pointerover &gt; Grid &gt; Button.clear-button">
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="IsHitTestVisible" Value="True" />
+                        </Style>
+
+                        <Style Selector="suki|GlassCard:pointerover &gt; Grid &gt; ContentControl.clear-button">
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="IsHitTestVisible" Value="True" />
+                        </Style>
+                    </suki:GlassCard.Styles>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                        <ContentControl Classes="clear-button" Content="{Binding StarButtonContent}" />
+                        <TextBlock Grid.Column="1"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="ExtraBold"
+                                   Text="{Binding CardName}" />
+                        <Button Grid.Column="2"
+                                Width="20"
+                                Height="20"
+                                Margin="4,0,0,0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Classes="clear-button Flat Rounded"
+                                Command="{Binding $parent[routing1:TabbedNavigationalPage].ViewModel.RemoveCardCommand}"
+                                CommandParameter="{Binding}">
+                            <Button.RenderTransform>
+                                <TranslateTransform X="-5" />
+                            </Button.RenderTransform>
+                            <avalonia:MaterialIcon Width="13"
+                                                   Height="13"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="Black"
+                                                   Kind="Close">
+                                <avalonia:MaterialIcon.RenderTransform>
+                                    <TranslateTransform X="-16" />
+                                </avalonia:MaterialIcon.RenderTransform>
+                            </avalonia:MaterialIcon>
+                        </Button>
+                    </Grid>
+                </suki:GlassCard>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+        <TabControl.DataTemplates>
+            <DataTemplate DataType="uiModels1:TabbedViewCardModel">
+                <suki:GlassCard Padding="0">
+                    <ContentControl Content="{Binding View}" />
+                </suki:GlassCard>
+            </DataTemplate>
+        </TabControl.DataTemplates>
+    </TabControl>
+</controls:UserControl>

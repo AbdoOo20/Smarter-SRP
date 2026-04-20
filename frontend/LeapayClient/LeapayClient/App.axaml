@@ -1,0 +1,47 @@
+<Application x:Class="Leapay.Client.App"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:converters="clr-namespace:Leapay.Client.Converters"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:waveProgress="clr-namespace:SukiUI.Converters.WaveProgress;assembly=SukiUI"
+             RequestedThemeVariant="Default">
+
+    <!--
+        Refer to the link below to customize your font.
+        https://kikipoulet.github.io/SukiUI/documentation/faq/custom-font.html#how-to-use-custom-font
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="Styles/CompletionWindowStyles.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:TextBoxConverter x:Key="TextBoxConverter" />
+            <converters:LocaleConverter x:Key="LocaleConverter" />
+            <converters:DateOffsetConverter x:Key="DateOffsetConverter" />
+            <converters:BoolAndConverter x:Key="BoolAndConverter" />
+            <converters:ByteArrayToBitmapConverter x:Key="ByteArrayToBitmapConverter" />
+            <converters:MathConverter x:Key="MathConverter" />
+            <converters:StringConcatConverter x:Key="StringConcatConverter" />
+            <waveProgress:CircleProgressStrokeConverter x:Key="ProgressValueConverter" />
+            <converters:ReverseBoolConverter x:Key="ReverseBoolConverter" />
+            <converters:ItemsSourceLimiterConverter x:Key="ItemsSourceLimiterConverter" />
+            <converters:ImageLinkConverter x:Key="ImageLinkConverter" />
+            <converters:BoolOpacityConverter x:Key="BoolOpacityConverter" />
+            <converters:ForegroundStateConverter x:Key="ForegroundStateConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <suki:SukiTheme Locale="en-US" ThemeColor="Blue" />
+        <StyleInclude Source="avares://Leapay.Client/Styles/ShowMeTheXamlStyles.axaml" />
+        <StyleInclude Source="avares://Leapay.Client/Styles/WrapPanelStyles.axaml" />
+        <StyleInclude Source="avares://Leapay.Client/Styles/TextStyles.axaml" />
+        <StyleInclude Source="avares://Leapay.Client/Styles/GlassCardStyles.axaml" />
+        <StyleInclude Source="avares://Leapay.Client/Styles/MaterialIconStyles.axaml" />
+        <avalonia:MaterialIconStyles />
+    </Application.Styles>
+
+</Application>

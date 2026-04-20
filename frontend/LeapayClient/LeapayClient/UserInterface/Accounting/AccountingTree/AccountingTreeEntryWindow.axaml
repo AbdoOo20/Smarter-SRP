@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Accounting.AccountingTree.AccountingTreeEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:accountingTree1="clr-namespace:Leapay.Client.UserInterface.Accounting.AccountingTree"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Width="600"
+             Height="500"
+             d:DataContext="{d:DesignInstance accountingTree1:AccountingTreeEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="500"
+             d:DesignWidth="600"
+             x:DataType="accountingTree1:AccountingTreeEntryWindow"
+             FlowDirection="{CompiledBinding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Margin="25,40,25,0">
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{CompiledBinding ViewModel[AccountName]}" />
+                <TextBox Margin="0,10,0,0" Text="{CompiledBinding ViewModel.Model.Name}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[AccountType]}" />
+                <ComboBox Margin="0,10,0,0"
+                          ItemsSource="{Binding ViewModel.AccountTypes.Items}"
+                          SelectedItem="{Binding ViewModel.AccountTypes.SelectedItem}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OpeningCreditor]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.OpeningCreditor}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OpeningDebtor]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.OpeningDebtor}" />
+            </StackPanel>
+
+            <ContentControl Margin="0,10,0,0" Content="{Binding ViewModel.Accounts.Content}" />
+
+            <StackPanel Margin="0,25,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Margin="0,0,0,0"
+                        Command="{Binding ViewModel.CancelCommand}"
+                        Content="{Binding ViewModel[CancelButton]}" />
+                <Button Margin="15,0,0,0"
+                        Command="{Binding ViewModel.SaveCommand}"
+                        Content="{Binding ViewModel[SaveButton]}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

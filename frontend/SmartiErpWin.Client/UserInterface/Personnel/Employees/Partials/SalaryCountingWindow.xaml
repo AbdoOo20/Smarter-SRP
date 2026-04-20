@@ -1,0 +1,81 @@
+﻿<ui:FluentWindow
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Height="250"
+    ResizeMode="NoResize"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="450"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    d:DataContext="{d:DesignInstance local:SalaryCountingWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="250"
+    d:DesignWidth="450"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Personnel.Employees.Partials.SalaryCountingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SmartiErpWin.Client.UserInterface.Personnel.Employees.Partials"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ui:TitleBar
+            CloseWindowByDoubleClickOnIcon="True"
+            Grid.Row="0"
+            ShowMaximize="False"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            x:Name="TitleBar">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/wpfui-icon-256.png" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Visibility="{Binding ViewModel.UiVisibility}">
+
+            <TextBlock
+                FontSize="18"
+                HorizontalAlignment="Center"
+                Margin="0,25,0,0"
+                MaxWidth="350"
+                Text="{Binding ViewModel.InfoText}"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
+
+            <ui:TextBox
+                Margin="0,25,0,0"
+                PlaceholderText="{Binding ViewModel[MounthNumber]}"
+                Text="{Binding ViewModel.MounthNumber}"
+                Width="250" />
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <ui:Button
+                    Command="{Binding ViewModel.ActionCommand}"
+                    Content="{Binding ViewModel[CountingSalary]}"
+                    Height="35"
+                    Margin="0,25,0,0"
+                    Width="160" />
+            </StackPanel>
+        </StackPanel>
+        <prefabs:RefreshPrefab
+            Grid.Row="1"
+            IsRefreshing="{Binding ViewModel.IsRefreshing}"
+            LoadingInfo="{Binding ViewModel.LoadingInfo}"
+            LoadingTitle="{Binding ViewModel.LoadingTitle}"
+            LoadingTitleSize="20"
+            RingVisibility="{Binding ViewModel.RingVisibility}" />
+    </Grid>
+</ui:FluentWindow>

@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.ReceiptLookup.ReceiptLookupWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:common="clr-namespace:Leapay.Client.UserInterface.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dtoModels1="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:receiptLookup="clr-namespace:Leapay.Client.UserInterface.Common.ReceiptLookup"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             Width="400"
+             Height="250"
+             d:DataContext="{d:DesignInstance receiptLookup:ReceiptLookupWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             x:DataType="receiptLookup:ReceiptLookupWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="0,0,0,0" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    IsVisible="{Binding ViewModel.UiVisibility}">
+            <TextBlock MaxWidth="350"
+                       Margin="0,25,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="{Binding ViewModel.InfoText}"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap" />
+
+            <TextBox Width="250"
+                     Margin="0,25,0,0"
+                     Text="{Binding ViewModel.LookupNumber}"
+                     Watermark="{Binding ViewModel[InvoiceNumber]}" />
+
+            <StackPanel Orientation="Horizontal">
+                <Button Width="160"
+                        Height="38"
+                        Margin="0,25,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.ActionCommand}"
+                        CommandParameter="F"
+                        Content="{Binding ViewModel[ReturnAll]}" />
+
+                <Button Width="160"
+                        Height="38"
+                        Margin="15,25,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.ActionCommand}"
+                        CommandParameter="P"
+                        Content="{Binding ViewModel[SelectWhatToReturn]}" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding !ViewModel.UiVisibility}">
+            <suki:Loading Width="100"
+                          Height="100"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="28"
+                       Text="{Binding ViewModel.LoadingTitle}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       Text="{Binding ViewModel.LoadingInfo}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

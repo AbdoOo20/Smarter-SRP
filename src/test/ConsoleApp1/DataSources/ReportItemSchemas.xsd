@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" id="ReportItemSchemas" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://microsoft.com/wsdl/types/" />
+  <xs:element name="DtoBase" nillable="true" type="DtoBase" />
+  <xs:complexType name="DtoBase">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Id" type="Identifier" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CreateDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CreatedByName" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Identifier">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Value" xmlns:q1="http://microsoft.com/wsdl/types/" type="q1:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DtoStatment" nillable="true" type="DtoStatment" />
+  <xs:complexType name="DtoStatment">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Number" type="xs:long" />
+      <xs:element minOccurs="1" maxOccurs="1" name="AccountId" type="Identifier" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AccountName" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="StartDate" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="EndDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EntryDateString" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Credit" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Debit" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Balance" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Notes" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="DisplayNumber" type="xs:long" />
+      <xs:element minOccurs="1" maxOccurs="1" name="OprationType" nillable="true" type="OprationTypeEnum" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CollecttTheQuntitiesBeforTime" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="OprationTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Purchases" />
+      <xs:enumeration value="PurchasesCost" />
+      <xs:enumeration value="Sales" />
+      <xs:enumeration value="Marketer" />
+      <xs:enumeration value="AccountFinancial" />
+      <xs:enumeration value="ClientFinancial" />
+      <xs:enumeration value="EmployeeFinancial" />
+      <xs:enumeration value="ExpenseFinancial" />
+      <xs:enumeration value="SupplierFinancial" />
+      <xs:enumeration value="DiscountingFinancial" />
+      <xs:enumeration value="DiscountingItemFinancial" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema><?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://microsoft.com/wsdl/types/" elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/" id="ReportItemSchemas" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="guid">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

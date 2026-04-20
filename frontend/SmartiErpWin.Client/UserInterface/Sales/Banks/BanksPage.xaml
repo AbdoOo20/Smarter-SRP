@@ -1,0 +1,63 @@
+﻿<Page
+    x:Class="SmartiErpWin.Client.UserInterface.Sales.Banks.BanksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:banks="clr-namespace:SmartiErpWin.Client.UserInterface.Sales.Banks"
+    d:DataContext="{d:DesignInstance banks:BanksPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    SizeChanged="OnDataSizeChanged"
+
+    mc:Ignorable="d">
+
+    <ui:DynamicScrollViewer HorizontalScrollBarVisibility="Visible">
+        <DockPanel>
+                <StackPanel Orientation="Horizontal"   DockPanel.Dock="Top"
+                            HorizontalAlignment="Center">
+                    <prefabs:ToolbarPrefab x:Name="ToolbarPrefab"
+                                           ActionsEnabled="{Binding ViewModel.ActionsEnabled}"
+                                           SearchBar="{Binding ViewModel[SearchBar]}"
+                                           SearchText="{Binding ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           SearchButton="{Binding ViewModel[SearchButton]}"
+                                           RefreshCommand="{Binding ViewModel.RefreshCommand}"
+                                           AddCommand="{Binding ViewModel.AddCommand}"
+                                           PrimaryButtonColour="{Binding ViewModel.PrimaryButtonColour}"
+                                           SecondaryButtonColour="{Binding ViewModel.SecondaryButtonColour}"
+                                           NewButton="{Binding ViewModel[NewButton]}"
+                                           PrintText="{Binding ViewModel[PrintText]}"
+                                           AddVisibility="{Binding ViewModel.AddVisibility}"
+                                           PrintCommand="{Binding ViewModel.PrintCommand}"
+                                           PrintVisibility="{Binding ViewModel.PrintVisibility}"/>
+                </StackPanel>   
+                <mah:ProgressRing IsActive="{Binding ViewModel.IsRefreshing}" Visibility="{Binding ViewModel.RingVisibility}"
+                                 HorizontalAlignment="Center" Margin="0, 50, 0, 0" DockPanel.Dock="Top"
+                                 Width="35" Height="35"/>
+                
+                <StackPanel Margin="0, 25, 0, 0" Visibility="{Binding ViewModel.DataVisibility}">
+                    <ui:DynamicScrollViewer x:Name="DataScroller" Padding="0, 5, 0, 5"
+                                            HorizontalScrollBarVisibility="Visible">
+                        <StackPanel x:Name="DataGrid" />
+                    </ui:DynamicScrollViewer>
+
+                    <prefabs:PagerPrefab 
+                        Visibility="{Binding ViewModel.PagingVisibility}"
+                        Limit="{Binding ViewModel.Limit, Mode=TwoWay}" 
+                        PreviousButton="{Binding ViewModel[PreviousButton]}" 
+                        MoveOneDownCommand="{Binding ViewModel.MoveOneDownCommand}"
+                        PagesText="{Binding ViewModel.PagesText}" 
+                        NextButton="{Binding ViewModel[NextButton]}" 
+                        MoveOneUpCommand="{Binding ViewModel.MoveOneUpCommand}" />
+                </StackPanel>
+        </DockPanel>
+    </ui:DynamicScrollViewer>
+</Page>

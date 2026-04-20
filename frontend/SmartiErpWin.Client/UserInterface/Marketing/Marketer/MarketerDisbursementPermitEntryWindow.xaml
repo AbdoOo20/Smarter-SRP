@@ -1,0 +1,167 @@
+﻿<ui:FluentWindow
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Height="730"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="900"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    d:DataContext="{d:DesignInstance marketer:MarketerDisbursementPermitEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="730"
+    d:DesignWidth="900"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Marketing.Marketer.MarketerDisbursementPermitEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:marketer="clr-namespace:SmartiErpWin.Client.UserInterface.Marketing.Marketer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar
+            CloseWindowByDoubleClickOnIcon="True"
+            DockPanel.Dock="Top"
+            Grid.Row="0"
+            ShowMaximize="True"
+            ShowMinimize="True"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            x:Name="TitleBar">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Style="{StaticResource ImageIconStyle}" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+
+        <prefabs:RefreshPrefab
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            IsRefreshing="{Binding ViewModel.IsRefreshing}"
+            LoadingInfo="{Binding ViewModel.LoadingInfo}"
+            LoadingTitle="{Binding ViewModel.LoadingTitle}"
+            VerticalAlignment="Center"
+            Visibility="{Binding ViewModel.RingVisibility}" />
+
+        <ui:DynamicScrollViewer Grid.Row="1" Visibility="{Binding ViewModel.UiVisibility}">
+            <DockPanel Margin="0,0,0,0">
+                <StackPanel DockPanel.Dock="Top">
+                    <ui:Card Margin="25,10">
+                        <WrapPanel>
+                            <StackPanel Margin="10,0,0,0">
+                                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Number]}" />
+                                <TextBox
+                                    Margin="0,10,0,0"
+                                    MinWidth="130"
+                                    Text="{Binding ViewModel.InvoiceNumber}" />
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0" Visibility="{Binding ViewModel.SerialNumberVisibility}">
+                                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[SerialNumber]}" />
+                                <TextBox
+                                    Margin="0,10,0,0"
+                                    MinWidth="130"
+                                    Text="{Binding ViewModel.Model.DtoMarketerDisbursementPermit.SerialNumber}" />
+                            </StackPanel>
+
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Margin="10,10,0,0"
+                                Orientation="Vertical">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[Date]}" />
+                                <DatePicker
+                                    HorizontalAlignment="Left"
+                                    Margin="0,10,0,0"
+                                    MinWidth="150"
+                                    SelectedDate="{Binding ViewModel.Model.DtoMarketerDisbursementPermit.Date}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="10,0,0,0">
+                                <prefabs:TerAutoSuggestPrefab
+                                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}"
+                                    Margin="0,10,0,0"
+                                    MinComboWidth="160"
+                                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                                    TitleText="{Binding ViewModel[Marketer]}" />
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0">
+                                <prefabs:SecAutoSuggestPrefab
+                                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[1]}"
+                                    Margin="0,10,0,0"
+                                    MinComboWidth="160"
+                                    OnSelectionChanged="SecAutoSuggestPrefab_OnSelectionChanged"
+                                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[1]}"
+                                    TitleText="{Binding ViewModel[Store]}" />
+                            </StackPanel>
+                        </WrapPanel>
+                    </ui:Card>
+
+                    <ui:Card Margin="25,0" Padding="12,12">
+                        <StackPanel Margin="0,0,0,0">
+                            <TextBlock Margin="0,5,0,0" Text="{Binding ViewModel[Notes]}" />
+                            <TextBox
+                                Margin="0,5,0,0"
+                                Text="{Binding ViewModel.Model.DtoMarketerDisbursementPermit.Notes}"
+                                TextWrapping="Wrap" />
+                        </StackPanel>
+                    </ui:Card>
+                </StackPanel>
+
+                <StackPanel Margin="25,10">
+                    <ui:Card>
+                        <StackPanel>
+                            <ui:DynamicScrollViewer
+                                HorizontalScrollBarVisibility="Visible"
+                                Margin="0,10,0,0"
+                                Padding="5"
+                                x:Name="DataScroller">
+                                <StackPanel x:Name="DataGrid" />
+                            </ui:DynamicScrollViewer>
+                            <marketer:MarketerDisbursementPermitDetailsEntryWindow x:Name="EntryState" />
+                        </StackPanel>
+                    </ui:Card>
+
+                    <StackPanel
+                        DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="0,10,0,10"
+                        Orientation="Horizontal">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding ViewModel.CancelCommand}"
+                                Content="{Binding ViewModel[CancelButton]}"
+                                Height="35"
+                                Margin="0,0,0,0"
+                                MinWidth="100" />
+                            <Button
+                                Command="{Binding ViewModel.SavePrintCommand}"
+                                Content="{Binding ViewModel[SavePrintButton]}"
+                                Height="35"
+                                Margin="15,0,0,0"
+                                MinWidth="100" />
+                            <Button
+                                Command="{Binding ViewModel.SaveCommand}"
+                                Content="{Binding ViewModel[SaveButton]}"
+                                Height="35"
+                                Margin="15,0,0,0"
+                                MinWidth="100" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <StackPanel
+                        HorizontalAlignment="Left"
+                        Margin="20,35,0,0"
+                        Orientation="Horizontal" />
+                </StackPanel>
+            </DockPanel>
+        </ui:DynamicScrollViewer>
+    </Grid>
+</ui:FluentWindow>

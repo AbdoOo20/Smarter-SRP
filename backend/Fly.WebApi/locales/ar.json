@@ -1,0 +1,26 @@
+{
+  "entity-name": "إسم",
+
+
+  "validation-empty": "لا يمكن ترك {0} فارغا",
+
+
+  "page-websitetitle": "منصة",
+
+  "v-NotEmpty": "لا يمكن تركه فارغا",
+  "v-NotNull": "لا يمكن تركه فارغا",
+  "v-exists": "{0} موجود مسبقا",
+
+  "v-RoleGroupCreateUpdate-details": "طلبك لا يحتوي على محتيات",
+
+  "v-grator-than": "{0} يجب أن يكون أكبر من {1}",
+  "unit-not-found": "لم يتم العثور على الوحدة",
+
+
+
+  "PrimaryUnitNotFound": "لم يتم العثور على الوحدة الأساسية",
+  "salaries-for": "رواتب  {0}.",
+  "already-returned": "تم ترجيع الفاتورة بالكامل",
+  "Invoice-not-found" : "لم يتم العثور على الفاتورة"
+
+}

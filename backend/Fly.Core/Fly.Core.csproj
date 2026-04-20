@@ -1,0 +1,113 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Migrations0\**" />
+	  <EmbeddedResource Remove="Migrations0\**" />
+	  <None Remove="Migrations0\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="files\scripts.sql" />
+		<None Remove="Modules\F\Financial\Reports\ClientReceipt.rdlc" />
+		<None Remove="Modules\F\Financial\Reports\employeeReceipt.rdlc" />
+		<None Remove="Modules\F\Financial\Reports\ReceiptItemDisount.rdlc" />
+		<None Remove="Modules\F\Financial\Reports\ReceiptNormal.rdlc" />
+		<None Remove="Modules\F\Financial\Reports\Representative001.rdlc" />
+		<None Remove="Modules\F\Financial\Reports\supplierReceipt.rdlc" />
+		<None Remove="Modules\H\DbQueries\SalesCollectionInsights.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="files\scripts.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Modules\F\Financial\Reports\employeeReceipt.rdlc" />
+	  <EmbeddedResource Include="Modules\F\Financial\Reports\supplierReceipt.rdlc" />
+	  <EmbeddedResource Include="Modules\F\Financial\Reports\ClientReceipt.rdlc" />
+	  <EmbeddedResource Include="Modules\F\Financial\Reports\ReceiptItemDisount.rdlc" />
+	  <EmbeddedResource Include="Modules\F\Financial\Reports\ReceiptNormal.rdlc" />
+	  <EmbeddedResource Include="Modules\F\Financial\Reports\Representative001.rdlc" />
+	  <EmbeddedResource Include="Modules\H\DbQueries\SalesCollectionInsights.sql" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--Microsoft.CodeAnalysis.Common 4.8.0-3.final-->
+		<PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
+		<PackageReference Include="LinqKit.Core" Version="1.2.7" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0-3.final" />
+		<PackageReference Include="ReportViewerCore.NETCore" Version="15.1.22" />
+		<PackageReference Include="Mapster" Version="7.4.0" />
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.2" />
+
+		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+
+		<PackageReference Include="MediatR" Version="12.4.1" />
+
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\freamework\Fly.Framework.Server\Fly.Framework.Server.csproj" />
+		<ProjectReference Include="..\..\shared\Fly.Shared\Fly.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Modules\A\Controller\" />
+		<Folder Include="Modules\A\Config\" />
+		<Folder Include="Modules\A\Mapping\" />
+		<Folder Include="Modules\A\Models\DbModels\" />
+		<Folder Include="Modules\A\Services\" />
+		<Folder Include="Modules\A\RequestHandlers\" />
+		<Folder Include="Modules\D\Personnel\Mapping\" />
+		<Folder Include="Modules\D\Personnel\RequestHandlers\" />
+		<Folder Include="Modules\D\Personnel\Services\" />
+		<Folder Include="Modules\E\Store\RequestHandlers\" />
+		<Folder Include="Modules\Factoring\ManufacturingFacilities\Services\GlobalServices\" />
+		<Folder Include="Modules\Factoring\ManufacturingFacilities\Services\InternalServices\" />
+		<Folder Include="Modules\F\Financial\Config\" />
+		<Folder Include="Modules\F\Financial\Mapping\" />
+		<Folder Include="Modules\F\Financial\Models\DbModels\" />
+		<Folder Include="Modules\F\Financial\RequestHandlers\" />
+		<Folder Include="Modules\F\Financial\Services\" />
+		<Folder Include="Modules\F\Maintenance\MaintenanceSectors\Services\GlobalServices\" />
+		<Folder Include="Modules\F\Maintenance\MaintenanceSectors\Services\InternalServices\" />
+		<Folder Include="Modules\F\Marketers\Config\" />
+		<Folder Include="Modules\F\Marketers\Mapping\" />
+		<Folder Include="Modules\F\Marketers\RequestHandlers\" />
+		<Folder Include="Modules\F\PurchaseAndSales\Config\" />
+		<Folder Include="Modules\F\PurchaseAndSales\Mapping\" />
+		<Folder Include="Modules\F\PurchaseAndSales\RequestHandlers\" />
+		<Folder Include="Modules\F\PurchaseAndSales\Services\ModuleService\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="files\delete-data.sql">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>

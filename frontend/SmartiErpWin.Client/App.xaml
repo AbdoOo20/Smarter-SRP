@@ -1,0 +1,27 @@
+﻿<Application
+    DispatcherUnhandledException="OnDispatcherUnhandledException"
+    Exit="OnExit"
+    Startup="OnStartup"
+    x:Class="SmartiErpWin.Client.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:converters="clr-namespace:SmartiErpWin.Client.Converters"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <converters:TextBoxConverter x:Key="TextBoxConverter" />
+            <converters:LocaleConverter x:Key="LocaleConverter" />
+            <converters:ComboSwitcherConverter x:Key="ComboSwitcher" />
+            <converters:SearchableSwitcherConverter x:Key="SearchableSwitcher" />
+
+            <Style TargetType="ui:ImageIcon" x:Key="ImageIconStyle">
+                <Setter Property="Source" Value="pack://application:,,,/Assets/wpfui-icon-256.png" />
+            </Style>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

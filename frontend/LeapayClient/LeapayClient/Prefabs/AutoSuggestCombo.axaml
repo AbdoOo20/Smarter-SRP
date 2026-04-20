@@ -1,0 +1,73 @@
+﻿<bases1:UserControlBase x:Class="Leapay.Client.UserInterface.Reports.GeneralReport.AutoSuggestCombo"
+                        xmlns="https://github.com/avaloniaui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                        xmlns:bases1="clr-namespace:Leapay.Client.Polymorphism.Bases"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:dtoModels="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels"
+                        xmlns:generalReport="clr-namespace:Leapay.Client.UserInterface.Reports.GeneralReport"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                        x:Name="SuggestBox"
+                        d:DataContext="{d:DesignInstance generalReport:GeneralReportPage,
+                                                         IsDesignTimeCreatable=False}"
+                        d:DesignHeight="450"
+                        d:DesignWidth="800"
+                        x:DataType="generalReport:AutoSuggestCombo"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        mc:Ignorable="d">
+    <Style Selector="generalReport|AutoSuggestCombo">
+        <Setter Property="Template">
+            <Template>
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="{TemplateBinding TitleText}" />
+
+                        <suki:GlassCard x:Name="CardControl"
+                                        Width="{TemplateBinding MinComboWidth}"
+                                        Margin="0,10,0,0"
+                                        Padding="0">
+                            <Button Height="35" Click="OpenClick">
+                                <DockPanel Width="{Binding Width, RelativeSource={RelativeSource AncestorType=UserControl}}" FlowDirection="RightToLeft">
+                                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                        <avalonia:MaterialIcon Margin="0,0,10,0" Kind="Search" />
+                                        <TextBlock Margin="5,3,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding SelectedItem.Display}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Button>
+                        </suki:GlassCard>
+
+                        <Popup x:Name="DataPopup"
+                               IsOpen="{TemplateBinding IsPopupOpen}"
+                               PlacementTarget="{Binding ElementName=SuggestBox}">
+                            <Border Background="White"
+                                    BorderBrush="Black"
+                                    BorderThickness="1">
+                                <suki:GlassCard Width="{TemplateBinding MinComboWidth}" Padding="10">
+                                    <StackPanel Spacing="10">
+                                        <TextBox x:Name="SearchBox"
+                                                 Text="{TemplateBinding Search}"
+                                                 TextChanged="OnTextChanged"
+                                                 Watermark="{TemplateBinding SearchPlaceholder, Converter={StaticResource LocaleConverter}}" />
+
+                                        <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Visible">
+                                            <ListBox ItemsSource="{TemplateBinding InternalItems}" SelectedItem="{TemplateBinding InternalSelectedItem}">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                                                        <TextBlock Margin="10,7" Text="{Binding Display}" />
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </suki:GlassCard>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </Grid>
+            </Template>
+        </Setter>
+    </Style>
+</bases1:UserControlBase>

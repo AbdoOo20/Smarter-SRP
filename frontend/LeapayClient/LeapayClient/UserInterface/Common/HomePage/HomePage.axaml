@@ -1,0 +1,414 @@
+﻿<base:UserControlBase x:Class="Leapay.Client.UserInterface.Common.HomePage.HomePage"
+                      xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:animations="clr-namespace:SukiUI.Animations;assembly=SukiUI"
+                      xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                      xmlns:base="clr-namespace:Leapay.Client.Polymorphism.Bases"
+                      xmlns:charts="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:homePage="clr-namespace:Leapay.Client.UserInterface.Common.HomePage"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:models="clr-namespace:Leapay.Client.ClientModels.Ui"
+                      xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                      x:Name="HomePageName"
+                      d:DesignHeight="450"
+                      d:DesignWidth="800"
+                      x:DataType="homePage:HomePage"
+                      FlowDirection="{CompiledBinding ViewModel.FlowDirection}"
+                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                      mc:Ignorable="d">
+    <ScrollViewer Padding="10">
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="10">
+            <TextBlock x:Name="WelcomeText"
+                       HorizontalAlignment="Center"
+                       FontSize="74"
+                       FontWeight="Bold"
+                       Text="{Binding ViewModel.WelcomeText}" />
+            <suki:GlassCard x:Name="FavouritedViewsTextTop"
+                            Width="0"
+                            Height="0"
+                            Padding="5">
+                <StackPanel Spacing="5">
+                    <suki:GlassCard x:Name="FavouritedViewsText"
+                                    Width="0"
+                                    Height="0"
+                                    Margin="0,5,0,0"
+                                    Padding="10"
+                                    HorizontalAlignment="Left"
+                                    IsOpaque="True">
+                        <Viewbox>
+                            <StackPanel Orientation="Horizontal">
+                                <PathIcon Data="M12,17.27 L18.18,21 L16.54,13.97 L22,9.24 L14.81,8.63 L12,2 L9.19,8.63 L2,9.24 L7.46,13.97 L5.82,21 z" Foreground="Gold" />
+                                <TextBlock Margin="10,4,0,0"
+                                           HorizontalAlignment="Center"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Text="{Binding ViewModel[FavouritedViews]}" />
+                            </StackPanel>
+                        </Viewbox>
+
+                    </suki:GlassCard>
+
+                    <suki:InfoBar x:Name="FavViewsInfoBar"
+                                  MaxWidth="400"
+                                  Margin="0,-15,0,0"
+                                  HorizontalAlignment="Center"
+                                  FontSize="24"
+                                  FontWeight="Bold"
+                                  IsClosable="False"
+                                  IsOpen="True"
+                                  IsVisible="False"
+                                  Message="{Binding ViewModel[FavouriteViewsNotice]}" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                        <ItemsControl x:Name="Favourites"
+                                      Margin="5"
+                                      ItemsSource="{Binding ViewModel.FavouritedViews}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel MaxWidth="{Binding Bounds.Width}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Top"
+                                                Orientation="Horizontal"
+                                                Spacing="3" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <suki:GlassCard Padding="12"
+                                                    animations:SquishyOverExtensions.Enable="True"
+                                                    animations:SquishyOverExtensions.Intensity="0.10"
+                                                    Command="{Binding CardModel.ActionCommand}"
+                                                    IsInteractive="True"
+                                                    IsOpaque="False">
+                                        <StackPanel Orientation="Horizontal">
+                                            <avalonia:MaterialIcon Kind="{Binding CardModel.CardSymbol}" />
+                                            <TextBlock Margin="10,0,0,0" Text="{Binding CardModel.CardName}" />
+                                        </StackPanel>
+                                    </suki:GlassCard>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+
+            </suki:GlassCard>
+
+            <suki:GlassCard x:Name="CardsTop"
+                            Width="0"
+                            Height="0"
+                            Padding="5">
+                <ScrollViewer>
+                    <StackPanel IsVisible="{Binding ViewModel.HasPermissions}" Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <suki:GlassCard Width="250"
+                                            Height="53"
+                                            Margin="0,5,0,0"
+                                            Padding="10"
+                                            HorizontalAlignment="Left"
+                                            IsOpaque="True">
+                                <StackPanel Orientation="Horizontal">
+                                    <avalonia:MaterialIcon Foreground="Gold" Kind="Salesforce" />
+                                    <TextBlock Margin="10,4,0,0"
+                                               HorizontalAlignment="Center"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[FinancialStatistics]}" />
+                                </StackPanel>
+                            </suki:GlassCard>
+
+                            <Button Width="100"
+                                    Height="40"
+                                    Margin="0,10,0,0"
+                                    Classes="Flat Rounded"
+                                    Command="{Binding ViewModel.LoadCardsCommand}"
+                                    Content="{Binding ViewModel[Refresh]}" />
+
+                            <StackPanel>
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[Time]}" />
+                                <ComboBox Margin="0,3,0,0"
+                                          ItemsSource="{Binding ViewModel.TimeFilterCombo.Items}"
+                                          SelectedItem="{Binding ViewModel.TimeFilterCombo.SelectedItem}" />
+                            </StackPanel>
+
+                            <StackPanel HorizontalAlignment="Left"
+                                        IsVisible="{Binding ViewModel.EnterCustom}"
+                                        Orientation="Vertical">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[StartDate]}" />
+                                <DatePicker MinWidth="120"
+                                            Margin="0,8,0,0"
+                                            HorizontalAlignment="Left"
+                                            SelectedDate="{Binding ViewModel.StartDate, Mode=TwoWay}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="10,0,0,0"
+                                        HorizontalAlignment="Right"
+                                        IsVisible="{Binding ViewModel.EnterCustom}"
+                                        Orientation="Vertical">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[EndDate]}" />
+                                <DatePicker MinWidth="120"
+                                            Margin="0,8,0,0"
+                                            HorizontalAlignment="Left"
+                                            SelectedDate="{Binding ViewModel.EndDate}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <suki:InfoBar x:Name="CardsViewsInfoBar"
+                                          MaxWidth="400"
+                                          HorizontalAlignment="Center"
+                                          FontSize="24"
+                                          FontWeight="Bold"
+                                          IsClosable="False"
+                                          IsOpen="True"
+                                          IsVisible="{Binding ViewModel.FinancialStatsCardsNoticeVisible}"
+                                          Message="{Binding ViewModel[FinancialStatsCardsNotice]}" />
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsVisible="{Binding ViewModel.IsRefreshing}">
+                                <suki:Loading Width="100"
+                                              Height="100"
+                                              Margin="0,0,0,0"
+                                              HorizontalAlignment="Center"
+                                              DockPanel.Dock="Top"
+                                              IsVisible="{Binding ViewModel.IsRefreshing}" />
+                                <TextBlock Margin="0,10,0,0"
+                                           HorizontalAlignment="Center"
+                                           FontSize="28"
+                                           Text="{Binding ViewModel.LoadingTitle}" />
+                                <TextBlock Margin="0,10,0,0"
+                                           HorizontalAlignment="Center"
+                                           FontSize="22"
+                                           Text="{Binding ViewModel.LoadingInfo}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ItemsControl x:Name="Cards"
+                                              Margin="25"
+                                              ItemsSource="{Binding ViewModel.Cards}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel MaxWidth="1300"
+                                                       HorizontalAlignment="Left"
+                                                       VerticalAlignment="Top"
+                                                       ItemSpacing="3" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:DashboardCardModel" DataType="{x:Type models:DashboardCardModel}">
+                                            <suki:GlassCard Width="1"
+                                                            Height="1"
+                                                            Margin="5"
+                                                            animations:SquishyOverExtensions.Enable="True"
+                                                            animations:SquishyOverExtensions.Intensity="0.15"
+                                                            CornerRadius="15"
+                                                            IsOpaque="False"
+                                                            IsVisible="{Binding Visible}">
+                                                <Grid RowDefinitions="Auto,*">
+
+                                                    <TextBlock Grid.Row="0"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Top"
+                                                               Text="{Binding Name}" />
+
+                                                    <ContentControl Grid.Row="1"
+                                                                    HorizontalAlignment="Center"
+                                                                    VerticalAlignment="Center"
+                                                                    Content="{Binding Content}" />
+                                                </Grid>
+                                            </suki:GlassCard>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <suki:GlassCard Width="750"
+                                                Height="420"
+                                                HorizontalContentAlignment="Center"
+                                                IsVisible="{Binding ViewModel.ProfitsExist}">
+                                    <StackPanel Width="750"
+                                                HorizontalAlignment="Center"
+                                                Spacing="5">
+                                        <DockPanel>
+                                            <StackPanel Margin="20,0,0,0"
+                                                        Orientation="Horizontal"
+                                                        Spacing="10">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Ellipse Width="20"
+                                                             Height="20"
+                                                             Fill="Red"
+                                                             Stroke="Red"
+                                                             StrokeThickness="2" />
+                                                    <TextBlock Margin="0,22,0,0"
+                                                               FontSize="14"
+                                                               Text="{Binding ViewModel.RedIndicator}" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Ellipse Width="20"
+                                                             Height="20"
+                                                             Fill="Yellow"
+                                                             Stroke="Yellow"
+                                                             StrokeThickness="2" />
+                                                    <TextBlock Margin="0,22,0,0"
+                                                               FontSize="14"
+                                                               Text="{Binding ViewModel.YellowIndicator}" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Ellipse Width="20"
+                                                             Height="20"
+                                                             Fill="Green"
+                                                             Stroke="Green"
+                                                             StrokeThickness="2" />
+                                                    <TextBlock Margin="0,22,0,0"
+                                                               FontSize="14"
+                                                               Text="{Binding ViewModel.GreenIndicator}" />
+                                                </StackPanel>
+
+                                            </StackPanel>
+                                            <StackPanel MaxWidth="150" DockPanel.Dock="Right">
+                                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[ChartType]}" />
+                                                <ComboBox Margin="0,3,0,0"
+                                                          ItemsSource="{Binding ViewModel.ChartsFilterCombo.Items}"
+                                                          SelectedItem="{Binding ViewModel.ChartsFilterCombo.SelectedItem}" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <charts:CartesianChart Width="750"
+                                                               Height="300"
+                                                               FlowDirection="LeftToRight"
+                                                               Series="{Binding ViewModel.Series}"
+                                                               XAxes="{Binding ViewModel.XAxes}"
+                                                               YAxes="{Binding ViewModel.YAxes}" />
+                                    </StackPanel>
+                                </suki:GlassCard>
+                            </StackPanel>
+
+                            <ScrollViewer HorizontalScrollBarVisibility="Visible" IsVisible="{Binding ViewModel.ProfitsExist}">
+                                <StackPanel Spacing="10">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <suki:GlassCard Width="250"
+                                                        Height="53"
+                                                        Margin="0,15,0,0"
+                                                        Padding="10"
+                                                        HorizontalAlignment="Left"
+                                                        IsOpaque="True">
+                                            <StackPanel Orientation="Horizontal">
+                                                <avalonia:MaterialIcon Foreground="Gold" Kind="TrendingUp" />
+                                                <TextBlock Margin="10,4,0,0"
+                                                           HorizontalAlignment="Center"
+                                                           FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding ViewModel[ProfitsPerItem]}" />
+                                            </StackPanel>
+                                        </suki:GlassCard>
+
+                                        <ItemsControl x:Name="ProfitPerItems"
+                                                      Margin="0,14,0,0"
+                                                      ItemsSource="{Binding ViewModel.ItemSales}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel MaxWidth="{Binding Bounds.Width, Converter={StaticResource MathConverter}, ConverterParameter='-,250'}"
+                                                               HorizontalAlignment="Left"
+                                                               VerticalAlignment="Top"
+                                                               ItemSpacing="5"
+                                                               LineSpacing="5"
+                                                               Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <suki:GlassCard Height="70"
+                                                                    MinWidth="70"
+                                                                    Padding="5"
+                                                                    animations:SquishyOverExtensions.Enable="True"
+                                                                    animations:SquishyOverExtensions.Intensity="0.10">
+                                                        <StackPanel Margin="0"
+                                                                    Orientation="Horizontal"
+                                                                    Spacing="5">
+                                                            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                                                                <TextBlock Margin="10,0,0,0" FontSize="12">
+                                                                    <TextBlock.Text>
+                                                                        <MultiBinding Converter="{StaticResource StringConcatConverter}">
+                                                                            <Binding Path="Name" />
+                                                                            <Binding Path="ItemSales" />
+                                                                        </MultiBinding>
+                                                                    </TextBlock.Text>
+                                                                </TextBlock>
+                                                            </StackPanel>
+
+                                                            <StackPanel Orientation="Horizontal" Spacing="3">
+                                                                <suki:CircleProgressBar Width="60"
+                                                                                        Height="60"
+                                                                                        BorderThickness="1"
+                                                                                        StrokeWidth="7"
+                                                                                        Value="{Binding ItemSalesPercentage}">
+                                                                    <TextBlock FontSize="12" Text="{Binding ItemSalesPercentageVal}" />
+                                                                </suki:CircleProgressBar>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </suki:GlassCard>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <suki:GlassCard Width="250"
+                                                        Height="53"
+                                                        Margin="0,15,0,0"
+                                                        Padding="10"
+                                                        HorizontalAlignment="Left"
+                                                        IsOpaque="True">
+                                            <StackPanel Orientation="Horizontal">
+                                                <avalonia:MaterialIcon Foreground="Gold" Kind="Store" />
+                                                <TextBlock Margin="10,4,0,0"
+                                                           HorizontalAlignment="Center"
+                                                           FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding ViewModel[ProfitsPerStorage]}" />
+                                            </StackPanel>
+                                        </suki:GlassCard>
+
+                                        <ItemsControl x:Name="ProfitPerStorage"
+                                                      Margin="0,14,0,0"
+                                                      ItemsSource="{Binding ViewModel.StorageSales}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel MaxWidth="{Binding Bounds.Width, Converter={StaticResource MathConverter}, ConverterParameter='-,250'}"
+                                                               HorizontalAlignment="Left"
+                                                               VerticalAlignment="Top"
+                                                               ItemSpacing="5"
+                                                               LineSpacing="5"
+                                                               Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <suki:GlassCard Height="55"
+                                                                    MinWidth="70"
+                                                                    Padding="5"
+                                                                    animations:SquishyOverExtensions.Enable="True"
+                                                                    animations:SquishyOverExtensions.Intensity="0.10">
+                                                        <StackPanel Margin="0"
+                                                                    Orientation="Vertical"
+                                                                    Spacing="5">
+                                                            <TextBlock Margin="10,0,0,0" Text="{Binding Name}" />
+                                                            <StackPanel Orientation="Horizontal" Spacing="3">
+                                                                <TextBlock Margin="10,0,0,0" Text="{Binding ItemSales}" />
+                                                                <ProgressBar Background="{Binding ItemSalesPercentage, Converter={StaticResource ProgressValueConverter}}"
+                                                                             ProgressTextFormat="{}{0:0.##}%"
+                                                                             ShowProgressText="True"
+                                                                             Value="{Binding ItemSalesPercentage}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </suki:GlassCard>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </suki:GlassCard>
+        </StackPanel>
+    </ScrollViewer>
+</base:UserControlBase>

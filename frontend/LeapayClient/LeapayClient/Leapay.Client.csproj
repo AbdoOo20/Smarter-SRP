@@ -1,0 +1,1171 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+	<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+	<LangVersion>preview</LangVersion>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <HotAvaloniaAutoEnable>true</HotAvaloniaAutoEnable>
+    <ApplicationIcon>Assets/app_ic.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <Version>1.0.0.0</Version>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+<!--  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>-->
+
+  <ItemGroup>
+    
+    <PackageReference Include="AsyncImageLoader.Avalonia" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" />
+    <PackageReference Include="Avalonia.Controls.ItemsRepeater" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Xaml.Interactions" />
+    <PackageReference Include="AvaloniaEdit.TextMate" />
+    <PackageReference Include="ClosedXML" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Dock.Avalonia" />
+    <PackageReference Include="Dock.Model" />
+    <PackageReference Include="Dock.Model.Avalonia" />
+    <PackageReference Include="Dock.Model.Mvvm" />
+    <PackageReference Include="Dock.Serializer" />
+
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" />
+    <PackageReference Include="Mapster" />
+    <PackageReference Include="Material.Icons.Avalonia" />
+    <PackageReference Include="Markdown.Avalonia" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="PdfSharpCore" />
+    <PackageReference Include="ReportViewerCore.NETCore" />
+    <PackageReference Include="Sandreas.Avalonia.Preferences" />
+    <PackageReference Include="ShowMeTheXaml.Avalonia" />
+    <PackageReference Include="ShowMeTheXaml.Avalonia.Generator" />
+    <PackageReference Include="Squirrel.Windows" />
+    <PackageReference Include="System.Text.Json" />
+    <PackageReference Include="Velopack" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Leapay.Windows\Leapay.Windows.csproj" />
+    <ProjectReference Include="..\..\..\src\tools\Fly.Framework.Desktop\Fly.Framework.Desktop.csproj" />
+    <ProjectReference Include="..\..\SmartiErpWin.Core\SmartiErpWin.Core.csproj" />
+    <ProjectReference Include="..\LeapayUi\SukiUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-windows'">
+    <ProjectReference Include="..\..\..\Leapay.Windows\Leapay.Windows.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Assets\OIG.N5o-removebg-preview.png" />
+    <None Remove="Assets\cat.jpeg" />
+    <None Remove="Assets\cat-modified.png" />
+    <None Remove="Assets\desktopbackground.jpg" />
+    <AvaloniaResource Include="Assets\desktopbackground.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\icons8-note-48 (1).png" />
+    <None Remove="Assets\Icons\mail.png" />
+    <AvaloniaResource Include="Assets\Icons\mail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\notes.png" />
+    <AvaloniaResource Include="Assets\Icons\notes.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\Mail\icons8-trash-96.png" />
+    <AvaloniaResource Include="Assets\Icons\Mail\icons8-trash-96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\Mail\icons8-mailbox-96.png" />
+    <AvaloniaResource Include="Assets\Icons\Mail\icons8-mailbox-96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\Mail\icons8-folder-96.png" />
+    <AvaloniaResource Include="Assets\Icons\Mail\icons8-folder-96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\Mail\icons8-draft-96.png" />
+    <AvaloniaResource Include="Assets\Icons\Mail\icons8-draft-96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\Mail\icons8-user-male-96.png" />
+    <AvaloniaResource Include="Assets\Icons\Mail\icons8-user-male-96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\Icons\Mail\icons8-female-user-96.png" />
+    <AvaloniaResource Include="Assets\Icons\Mail\icons8-female-user-96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Update="Reports\FactoringInvoiceReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SellReturnInvoiceReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SellInvoiceNewDesgin.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SaleInvoiceReportExpired.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SellInvoiceNewSedin_Confirmed.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SellInvoiceNewSedin_Confirmed - Copy.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SaleInvoiceReport1.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SaleInvoiceReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\SaleAndReturnInvoiceReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\PurchesReportExpire.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\PurchesReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\MovementReceipt.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\GeneralReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\General\AccountMovements.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\General\general.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\General\TheClientDebtionReportModel.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\Fixed\AccountMovements.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\Fixed\AccountMovements2.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\Fixed\ItemMovements.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\Fixed\TheClientDebtion.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Icons\copy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Icons\delete.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Icons\edit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Icons\print.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Remove="Assets\release_icon.ico" />
+    <AvaloniaResource Include="Assets\release_icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AvaloniaResource>
+    <None Remove="Assets\comp_logo.png" />
+    <AvaloniaResource Include="Assets\comp_logo.png" />
+    <None Remove="Assets\comp_logo.ico" />
+    <AvaloniaResource Include="Assets\comp_logo.ico" />
+    <None Remove="Assets\app_ic.ico" />
+    <AvaloniaResource Include="Assets\app_ic.ico" />
+    <None Remove="Assets\app_logo.jpg" />
+    <AvaloniaResource Include="Assets\app_logo.jpg" />
+    <None Remove="Assets\product-placeholder.png" />
+    <AvaloniaResource Include="Assets\product-placeholder.png" />
+    <None Update="Reports\MaintenanceInvoiceReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Remove="Assets\center_logo.jpg" />
+    <AvaloniaResource Include="Assets\center_logo.jpg" />
+    <None Remove="Assets\center_logo.png" />
+    <AvaloniaResource Include="Assets\center_logo.png" />
+    <None Update="Unmanaged\mysqldump.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Unmanaged\libcrypto-3-x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Unmanaged\libssl-3-x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <AvaloniaResource Include="Assets\InfoIcon.png" />
+    <None Remove="Assets\InfoIcon.png" />
+    <AvaloniaResource Include="Assets\InfoIcon.png" />
+    <None Update="Reports\ItemsTransferInvoiceReport.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\FactoringInvoiceReportDetails.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\def.data">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <AvaloniaResource Include="Assets\backend-frontend.png" />
+    <None Remove="Assets\backend-frontend.png" />
+    <AvaloniaResource Include="Assets\backend-frontend.png" />
+    <None Remove="Assets\frontend.png" />
+    <AvaloniaResource Include="Assets\frontend.png" />
+    <None Remove="Assets\erp_oveview.png" />
+    <AvaloniaResource Include="Assets\erp_oveview.png" />
+
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\space.sksl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\clouds.sksl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Assets\weird.sksl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Features\ControlsLibrary\Effects\EffectsView.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Features\Helpers\SpringEase\SpringEasing.axaml.cs">
+      <DependentUpon>SpringEasing.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Accounting\ExpenseTypes\ExpenseEntryWindow.axaml.cs">
+      <DependentUpon>ExpenseEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Accounting\ExpenseTypes\ExpensesPage.axaml.cs">
+      <DependentUpon>ExpensesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Accounting\ExpenseTypes\AssetEntryWindow.axaml.cs">
+      <DependentUpon>AssetEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Accounting\ExpenseTypes\AssetsPage.axaml.cs">
+      <DependentUpon>AssetsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Categories\CategoryEntryWindow.axaml.cs">
+      <DependentUpon>AssetEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Categories\CategoriesPage.axaml.cs">
+      <DependentUpon>AssetsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Stores\StoresPage.axaml.cs">
+      <DependentUpon>CategoriesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Stores\StoreEntryWindow.axaml.cs">
+      <DependentUpon>CategoryEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Suppliers\SupplierEntryWindow.axaml.cs">
+      <DependentUpon>StoreEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Suppliers\SuppliersPage.axaml.cs">
+      <DependentUpon>StoresPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Units\UnitEntryWindow.axaml.cs">
+      <DependentUpon>SupplierEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Units\UnitsPage.axaml.cs">
+      <DependentUpon>SuppliersPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\CostCentres\CostCentreEntryWindow.axaml.cs">
+      <DependentUpon>StoreEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\CostCentres\CostCentresPage.axaml.cs">
+      <DependentUpon>StoresPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Management\Users\UsersPage.axaml.cs">
+      <DependentUpon>CategoriesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Management\Users\UserEntryWindow.axaml.cs">
+      <DependentUpon>CategoryEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Management\Groups\GroupsPage.axaml.cs">
+      <DependentUpon>UsersPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Management\Groups\GroupEntryWindow.axaml.cs">
+      <DependentUpon>UserEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Departments\DepartmentEntryWindow.axaml.cs">
+      <DependentUpon>CostCentreEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Departments\DepartmentsPage.axaml.cs">
+      <DependentUpon>CostCentresPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Employees\EmployeeEntryWindow.axaml.cs">
+      <DependentUpon>UserEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Employees\EmployeesPage.axaml.cs">
+      <DependentUpon>UsersPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Employees\Windows\SalaryCountingEntryWindow.axaml.cs">
+      <DependentUpon>UserEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Assignments\AssignmentEntryWindow.axaml.cs">
+      <DependentUpon>EmployeeEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Assignments\AssignmentsPage.axaml.cs">
+      <DependentUpon>EmployeesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\DiscountIncrease\DiscountIncreaseEntryWindow.axaml.cs">
+      <DependentUpon>AssignmentEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\DiscountIncrease\DiscountIncreasesPage.axaml.cs">
+      <DependentUpon>AssignmentsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\Banks\BankEntryWindow.axaml.cs">
+      <DependentUpon>CostCentreEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\Banks\BanksPage.axaml.cs">
+      <DependentUpon>CostCentresPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\BankBranches\BankBranchesPage.axaml.cs">
+      <DependentUpon>CategoriesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\BankBranches\BankBranchEntryWindow.axaml.cs">
+      <DependentUpon>CategoryEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\Clients\ClientEntryWindow.axaml.cs">
+      <DependentUpon>BankEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\Clients\ClientsPage.axaml.cs">
+      <DependentUpon>BanksPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\Safes\SafeEntryWindow.axaml.cs">
+      <DependentUpon>BankBranchEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\Safes\SafesPage.axaml.cs">
+      <DependentUpon>BankBranchesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Personnel\Employees\EmployeesPage.axaml.cs">
+      <DependentUpon>EmployeesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Reports\Navigator\ReportsNavigatorPage.axaml.cs">
+      <DependentUpon>ClientsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Reports\GeneralReport\GeneralReportPage.axaml.cs">
+      <DependentUpon>AssignmentsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\FinancingOperationsPage.axaml.cs">
+      <DependentUpon>EmployeesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\AccountEntryWindow.axaml.cs">
+      <DependentUpon>EmployeeEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\ClientBillEntryWindow.axaml.cs">
+      <DependentUpon>ClientBillEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\ClientRepresentativeReceiptEntryWindow.axaml.cs">
+      <DependentUpon>ClientRepresentativeReceiptEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\DiscountDepositEntryWindow.axaml.cs">
+      <DependentUpon>DiscountDepositEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\DiscountItemEntryWindow.axaml.cs">
+      <DependentUpon>DiscountItemEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\EmployeeFinanceEntryWindow.axaml.cs">
+      <DependentUpon>EmployeeFinanaceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\GeneralExpenseEntryWindow.axaml.cs">
+      <DependentUpon>GeneralExpenseEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\MarketerFinanceEntryWindow.axaml.cs">
+      <DependentUpon>MarketerFinanceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\FinancingOperations\OperationWindows\SupplierBillEntryWindow.axaml.cs">
+      <DependentUpon>SupplierBillEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Prefabs\AutoSuggestCombo.axaml.cs">
+      <DependentUpon>AutoSuggestCombo.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SalesPoint\SalesPointPage.axaml.cs">
+      <DependentUpon>SalesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SalesPoint\MarketerPage.axaml.cs">
+      <DependentUpon>MarketerPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Marketer\MarketerEntry\MarketerEntryWindow.axaml.cs">
+      <DependentUpon>MarketerEntry.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\BankBranches\BankBranchEntryWindow.axaml.cs">
+      <DependentUpon>BankBranchEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\BankBranches\BankBranchesPage.axaml.cs">
+      <DependentUpon>BankBranchesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SaleInvoices\SafeEntryWindow.axaml.cs">
+      <DependentUpon>SafeEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SaleInvoices\SafesPage.axaml.cs">
+      <DependentUpon>SafesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\ItemSelectionWindow.axaml.cs">
+      <DependentUpon>ItemSelectionWindowWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Maintenance\MaintenanceSector\MaintenanceSectorsPage.axaml.cs">
+      <DependentUpon>ClientsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Maintenance\MaintenanceSector\MaintenanceSectorEntryWindow.axaml.cs">
+      <DependentUpon>ClientEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Factoring\ManufacturingFacility\ManufacturingFacilitiesPage.axaml.cs">
+      <DependentUpon>MaintenanceSectorsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Factoring\ManufacturingFacility\ManufacturingFacilityEntryWindow.axaml.cs">
+      <DependentUpon>MaintenanceSectorEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\HomePage\HomePage.axaml.cs">
+      <DependentUpon>AssetsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Purchases\PurchasesInvoice\PurchaseInvoiceEntryWindow.axaml.cs">
+      <DependentUpon>EntriesEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Purchases\PurchasesInvoice\PurchaseInvoicesPage.axaml.cs">
+      <DependentUpon>EntryPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Items\ItemEntryWindow.axaml.cs">
+      <DependentUpon>PurchaseInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Items\ItemsPage.axaml.cs">
+      <DependentUpon>PurchaseInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\ItemVariance\ItemVarianceEntryWindow.axaml.cs">
+      <DependentUpon>CostCentreEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\ItemVariance\ItemVariancesPage.axaml.cs">
+      <DependentUpon>CostCentresPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\ItemCompositions\ItemCompositionEntryWindow.axaml.cs">
+      <DependentUpon>ItemEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\ItemCompositions\ItemCompositionsPage.axaml.cs">
+      <DependentUpon>ItemsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Maintenance\MaintenanceInvoice\MaintenanceInvoiceEntryWindow.axaml.cs">
+      <DependentUpon>PurchaseInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Maintenance\MaintenanceInvoice\MaintenanceInvoicesPage.axaml.cs">
+      <DependentUpon>PurchaseInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Factoring\FactoringInvoice\FactoringInvoiceEntryWindow.axaml.cs">
+      <DependentUpon>MaintenanceInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Factoring\FactoringInvoice\FactoringInvoicesPage.axaml.cs">
+      <DependentUpon>MaintenanceInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\SupplyPermits\SupplyPermitEntryWindow.axaml.cs">
+      <DependentUpon>ItemCompositionEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\SupplyPermits\SupplyPermitPage.axaml.cs">
+      <DependentUpon>ItemCompositionsPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\DisbursementPermits\DisbursementPermitEntryWindow.axaml.cs">
+      <DependentUpon>SupplyPermitEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\DisbursementPermits\DisbursementPermitPage.axaml.cs">
+      <DependentUpon>SupplyPermitPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\QuantityCrediting\QuantityCreditingEntryWindow.axaml.cs">
+      <DependentUpon>PurchaseInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\QuantityCrediting\QuantityCreditingPage.axaml.cs">
+      <DependentUpon>PurchaseInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SalesReturnInvoice\SalesReturnInvoicesPage.axaml.cs">
+      <DependentUpon>QuantityCreditingPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SalesReturnInvoice\SalesReturnInvoiceEntryWindow.axaml.cs">
+      <DependentUpon>QuantityCreditingEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Purchases\PurchaseReturnInvoice\PurchaseReturnInvoiceEntryWindow.axaml.cs">
+      <DependentUpon>PurchaseInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Purchases\PurchaseReturnInvoice\PurchaseReturnInvoicesPage.axaml.cs">
+      <DependentUpon>PurchaseInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Marketer\MarketerDisbursementPermits\MarketerDisbursementPermitEntryWindow.axaml.cs">
+      <DependentUpon>PurchaseInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Marketer\MarketerDisbursementPermits\MarketerDisbursementPermitsPage.axaml.cs">
+      <DependentUpon>PurchaseInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Misc\Configuration\CompanyInfoPage.axaml.cs">
+      <DependentUpon>PurchaseInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Stores\Partials\MoveItemsEntryWindow.axaml.cs">
+      <DependentUpon>ItemCompositionEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\Stores\DamagedPartial\DamageItemsEntryWindow.axaml.cs">
+      <DependentUpon>MoveItemsEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\SysConfigPage\SysConfigPage.axaml.cs">
+      <DependentUpon>ItemSelectionWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\SysConfigPage\Internals\SysConfigInitialEntryWindow.axaml.cs">
+      <DependentUpon>SalaryCountingEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\ItemsTransferInvoice\ItemsTransferInvoicesPage.axaml.cs">
+      <DependentUpon>MaintenanceInvoicesPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\StoresAndCategories\ItemsTransferInvoice\ItemsTransferInvoiceEntryWindow.axaml.cs">
+      <DependentUpon>MaintenanceInvoiceEntryWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\Items\ItemsSelectionWindow.axaml.cs">
+      <DependentUpon>ItemSelectionWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Routing\TabbedNavigationalPage.axaml.cs">
+      <DependentUpon>TabbedNavigationalPage.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\ReceiptLookup\ReceiptLookupWindow.axaml.cs">
+      <DependentUpon>ItemSelectionWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Sales\SalesPoint\SuspendedInvoices\SuspendedInvoicesWindow.axaml.cs">
+      <DependentUpon>ReceiptLookupWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\ReceiptLookupPurchase\PurchaseReceiptLookupWindow.axaml.cs">
+      <DependentUpon>ReceiptLookupWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\BarcodePrintDialogue\BarcodePrintDialogueWindow.axaml.cs">
+      <DependentUpon>ReceiptLookupWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserInterface\Common\ImportDialogue\ImportDialogueWindow.axaml.cs">
+      <DependentUpon>BarcodePrintDialogueWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientModels\Dto\DtoModels\CustomModels\" />
+    <Folder Include="ClientModels\Dto\DtoModels\ManagementModels\" />
+    <Folder Include="Reports\Invoices\" />
+    <Folder Include="UserInterface\Sales\SalesInvoice\Partials\" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <Page Include="Prefabs\AutoSuggestCombo.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+
+    <Page Include="UserInterface\Accounting\AccountingTree\AccountingTreeEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Accounting\AccountingTree\AccountingTreePage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Accounting\Assets\AssetEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Accounting\Assets\AssetsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Accounting\Entries\EntriesEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Accounting\Entries\EntryPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Accounting\ExpenseTypes\ExpenseEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Accounting\ExpenseTypes\ExpensesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Authentication\LoginWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\BarcodePrintDialogue\BarcodePrintDialogueWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\HomePage\HomePage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\ImportDialogue\ImportDialogueWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\ItemSelectionWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\Items\ItemsSelectionWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\ReceiptLookupPurchase\PurchaseReceiptLookupWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\ReceiptLookup\ReceiptLookupWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\SysConfigPage\Internals\SysConfigInitialEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Common\SysConfigPage\SysConfigPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Factoring\FactoringInvoice\FactoringInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Factoring\FactoringInvoice\FactoringInvoicesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Factoring\ManufacturingFacility\ManufacturingFacilityEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Factoring\ManufacturingFacility\ManufacturingFacilitiesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\FinancingOperationsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\AccountEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\ClientBillEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\ClientRepresentativeReceiptEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\DiscountDepositEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\DiscountItemEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\EmployeeFinanceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\GeneralExpenseEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\MarketerFinanceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\FinancingOperations\OperationWindows\SupplierBillEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Maintenance\MaintenanceInvoice\MaintenanceInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Maintenance\MaintenanceInvoice\MaintenanceInvoicesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Maintenance\MaintenanceSector\MaintenanceSectorEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Maintenance\MaintenanceSector\MaintenanceSectorsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Management\Groups\GroupEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Management\Groups\GroupsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Management\Users\UsersPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Management\Users\UserEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Marketer\MarketerDisbursementPermits\MarketerDisbursementPermitEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Marketer\MarketerDisbursementPermits\MarketerDisbursementPermitsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Marketer\MarketerEntry\MarketerEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Marketer\MarketerEntry\MarketerPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Misc\Configuration\CompanyInfoPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Personnel\Assignments\AssignmentEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\Assignments\AssignmentsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\Departments\DepartmentEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\Departments\DepartmentsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\DiscountIncrease\DiscountIncreaseEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\DiscountIncrease\DiscountIncreasesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\Employees\EmployeeEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\Employees\EmployeesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Personnel\Employees\Windows\SalaryCountingEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Purchases\PurchaseReturnInvoice\PurchaseReturnInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Purchases\PurchaseReturnInvoice\PurchaseReturnInvoicesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Purchases\PurchasesInvoice\PurchaseInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Purchases\PurchasesInvoice\PurchaseInvoicesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Reports\GeneralReport\GeneralReportPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Reports\Navigator\ReportsNavigatorPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Routing\MedianPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Routing\TabbedNavigationalPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\BankBranches\BankBranchEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Sales\BankBranches\BankBranchesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Sales\Banks\BankEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\Banks\BanksPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\Clients\ClientEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\Clients\ClientsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\QuantityCrediting\QuantityCreditingEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Sales\QuantityCrediting\QuantityCreditingPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Sales\Safes\SafeEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\Safes\SafesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\SalesInvoice\SalesInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\SalesInvoice\SalesInvoicePage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\SalesPoint\SalesPointPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\SalesPoint\SuspendedInvoices\SuspendedInvoicesWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Sales\SalesReturnInvoice\SalesReturnInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Sales\SalesReturnInvoice\SalesReturnInvoicesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Categories\CategoryEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Categories\CategoriesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\CostCentres\CostCentreEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\CostCentres\CostCentresPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\DisbursementPermits\DisbursementPermitEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\DisbursementPermits\DisbursementPermitPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\ItemCompositions\ItemCompositionEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\ItemCompositions\ItemCompositionsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\ItemsTransferInvoice\ItemsTransferInvoiceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\ItemsTransferInvoice\ItemsTransferInvoicesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Items\ItemEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Items\ItemsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\ItemVariance\ItemVarianceEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\ItemVariance\ItemVariancesPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Stores\DamagedPartial\DamageItemsEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Stores\Partials\MoveItemsEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Stores\StoresPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Stores\StoreEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Suppliers\SupplierEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Suppliers\SuppliersPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\SupplyPermits\SupplyPermitEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\SupplyPermits\SupplyPermitPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Units\UnitEntryWindow.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\StoresAndCategories\Units\UnitsPage.axaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Reports\Fixed\ItemMovements.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\Fixed\TheClientDebtion.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\Fixed\AccountMovements.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\Fixed\AccountMovements2.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\General\TheClientDebtionReportModel.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\General\AccountMovements.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\General\general.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\MovementReceipt.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\GeneralReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\PurchesReportExpire.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\PurchesReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\SaleAndReturnInvoiceReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\SaleInvoiceReportExpired.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\SellReturnInvoiceReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\SaleInvoiceReport1.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Reports\SaleInvoiceReport.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

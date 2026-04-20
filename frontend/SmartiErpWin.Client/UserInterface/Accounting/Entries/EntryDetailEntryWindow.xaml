@@ -1,0 +1,61 @@
+﻿<UserControl
+    x:Class="SmartiErpWin.Client.UserInterface.Accounting.Entries.EntryDetailEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+    xmlns:entries="clr-namespace:SmartiErpWin.Client.UserInterface.Accounting.Entries"
+    Width="750"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    Height="100"
+    d:DesignHeight="100"
+    d:DesignWidth="750"
+    d:DataContext="{d:DesignInstance entries:EntryDetailEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    PreviewKeyDown="OnPreviewKeyDown"
+    mc:Ignorable="d"
+    FlowDirection="RightToLeft">
+
+    <StackPanel Margin="10, 5" Orientation="Horizontal" HorizontalAlignment="Center">
+
+        <StackPanel MinWidth="200" Margin="10, 0">
+
+            <!--<TextBlock Text="{Binding ViewModel[Account]}" Margin="0, 10, 0, 0" />
+            <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}" Margin="0, 10, 0, 0"
+                      SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                      x:Name="FocusScapegoatCombo">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                        <TextBlock Text="{Binding Display}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>-->
+
+            <prefabs:SecAutoSuggestPrefab ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}" Margin="0, 10, 0, 0"
+                       SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                       TitleText="{Binding ViewModel[Account]}"
+                       MinComboWidth="150"
+                       x:Name="FocusScapegoatCombo"/>
+        </StackPanel>
+
+        <StackPanel MinWidth="170" Margin="10, 0">
+            <TextBlock Text="{Binding ViewModel[Credit]}" Margin="0, 10, 0, 0" />
+            <TextBox Text="{Binding ViewModel.Model.Credit, Converter={StaticResource TextBoxConverter}}"
+                     Margin="0, 10, 0, 0" />
+        </StackPanel>
+
+        <StackPanel MinWidth="170" Margin="10, 0">
+            <TextBlock Text="{Binding ViewModel[Debit]}" Margin="0, 10, 0, 0" />
+            <TextBox Text="{Binding ViewModel.Model.Debit, Converter={StaticResource TextBoxConverter}}"
+                     Margin="0, 10, 0, 0" />
+        </StackPanel>
+
+        <Button Width="45" Height="45" Margin="10, 20, 0, 0"
+                Command="{Binding ViewModel.SaveCommand}">
+            <ui:SymbolIcon Symbol="{Binding ViewModel.Symbol}" />
+        </Button>
+    </StackPanel>
+</UserControl>

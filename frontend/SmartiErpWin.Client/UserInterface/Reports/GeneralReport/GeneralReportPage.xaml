@@ -1,0 +1,247 @@
+﻿<Page
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    SizeChanged="OnDataSizeChanged"
+    d:DataContext="{d:DesignInstance generalReport:GeneralReportPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Reports.GeneralReport.GeneralReportPage"
+    x:Name="ReportPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+    xmlns:generalReport="clr-namespace:SmartiErpWin.Client.UserInterface.Reports.GeneralReport"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:requests="clr-namespace:Fly.Shared.Modules.Global.Requests;assembly=Fly.Shared"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ui:DynamicScrollViewer Margin="-15,09,0,0">
+        <DockPanel>
+            <Button
+                Command="{Binding ViewModel.BackCommand}"
+                DockPanel.Dock="Left"
+                Height="60"
+                Margin="0,0,5,0"
+                Width="40">
+                <ui:SymbolIcon Symbol="ArrowRight48" />
+            </Button>
+            <StackPanel DockPanel.Dock="Top" Margin="0,0,0,0">
+                <DockPanel>
+                    <TextBlock
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Margin="7,0,0,0"
+                        Text="{Binding ViewModel.Title}" />
+
+                    <StackPanel
+                        HorizontalAlignment="Right"
+                        Margin="0,0,25,0"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding ViewModel.PrintCommand}"
+                            Content="{Binding ViewModel[Print]}"
+                            Height="37"
+                            Margin="0,0,7,0"
+                            Width="80" />
+                        <Button
+                            Command="{Binding ViewModel.QueryCommand}"
+                            Content="{Binding ViewModel[Query]}"
+                            Height="37"
+                            Width="80" />
+                    </StackPanel>
+                </DockPanel>
+
+                <StackPanel Margin="5,5,0,0">
+                    <ui:Card Margin="0,0,25,0">
+                        <WrapPanel Orientation="Horizontal">
+
+                            <StackPanel
+                                HorizontalAlignment="Left"
+                                Orientation="Vertical"
+                                Visibility="{Binding ViewModel.DatesVisibility}">
+                                <TextBlock Margin="0,5,0,0" Text="{Binding ViewModel[StartDate]}" />
+                                <DatePicker
+                                    HorizontalAlignment="Left"
+                                    Margin="0,10,0,0"
+                                    MinWidth="120"
+                                    SelectedDate="{Binding ViewModel.QueryRequest.StartDate}" />
+                            </StackPanel>
+
+                            <StackPanel
+                                HorizontalAlignment="Right"
+                                Margin="10,5,0,0"
+                                Orientation="Vertical"
+                                Visibility="{Binding ViewModel.DatesVisibility}">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[EndDate]}" />
+                                <DatePicker
+                                    HorizontalAlignment="Left"
+                                    Margin="0,10,0,0"
+                                    MinWidth="120"
+                                    SelectedDate="{Binding ViewModel.QueryRequest.EndDate}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="10,5,0,0" Visibility="{Binding ViewModel.AccountTypeVisibility}">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[AccountType]}" />
+                                <ComboBox
+                                    ItemsSource="{Binding ViewModel.ComboModelBase.StaticComboItems}"
+                                    Margin="0,10,0,0"
+                                    MinWidth="110"
+                                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedStaticComboItem}"
+                                    SelectionChanged="OnAccountTypeSelectionChanged" />
+                            </StackPanel>
+
+                            <!--<StackPanel Margin="10, 5, 0, 0" Visibility="{Binding ViewModel.ComboVisibility}">
+                                <TextBlock Text="{Binding ViewModel.ComboName}" Margin="0, 0, 0, 0" />
+                                <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}"
+                                          Margin="0, 10, 0, 0"
+                                          SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                                          MinWidth="110">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                                            <TextBlock Text="{Binding Display}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>-->
+
+                            <StackPanel
+                                Margin="10,10,0,0"
+                                Visibility="{Binding ViewModel.ComboVisibility}"
+                                x:Name="MainComboPanel">
+
+                                <!--  Using auto suggest approach  -->
+                                <!--<prefabs:SecAutoSuggestPrefab
+                                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}"
+                                    Margin="0,0,0,0"
+                                    MinComboWidth="{Binding Width}"
+                                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                                    TitleText="{Binding ViewModel.ComboName}" />
+                                ~1~  MinComboWidth="{Binding Width}"  @1@-->
+                            </StackPanel>
+
+                            <WrapPanel Margin="0,10,0,0" x:Name="CombosWrap" />
+                            <!--<ui:VirtualizingItemsControl
+                                Margin="10, 4, 0, 0"
+                                ItemsSource="{Binding ViewModel.DynamicCombos}">
+
+                                <ui:VirtualizingItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="1"/>
+                                    </ItemsPanelTemplate>
+                                </ui:VirtualizingItemsControl.ItemsPanel>
+
+                                <ui:VirtualizingItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type requests:DynamicCombo}">
+                                        <StackPanel Margin="0" Orientation="Vertical">
+
+                                            <prefabs:DynamicAutoSuggestPrefab
+                                                    Visibility="{Binding IsSearchable, Converter={StaticResource SearchableSwitcher}}"
+                                                    ItemsSource="{Binding Combos}"
+                                                    SelectedItem="{Binding SelectedCombo , Mode=TwoWay}"
+                                                    TitleText="{Binding Title}"
+                                                    MinComboWidth="{Binding ComboWidth}"
+                                                />
+                                            ~1~GotFocus="DynamicAutoSuggestPrefab_GotFocus"@1@
+
+                                            <StackPanel
+                                                    Visibility="{Binding IsSearchable, Converter={StaticResource ComboSwitcher}}">
+                                                <TextBlock Text="{Binding Title}"
+                                                               Margin="0, 0, 0, 0" />
+                                                <ComboBox
+                                                        ItemsSource="{Binding Combos}"
+                                                        Margin="0, 10, 0, 0"
+                                                        SelectedItem="{Binding SelectedCombo}"
+                                                        MinWidth="150">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate
+                                                                DataType="{x:Type dtoModels:ComboModel}">
+                                                            <TextBlock
+                                                                    Text="{Binding Display}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ui:VirtualizingItemsControl.ItemTemplate>
+
+                            </ui:VirtualizingItemsControl>-->
+
+                            <ui:VirtualizingItemsControl
+                                HorizontalAlignment="Left"
+                                HorizontalContentAlignment="Left"
+                                ItemsSource="{Binding ViewModel.DynamicFields}"
+                                Margin="5,-2,0,0">
+                                <ui:VirtualizingItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="1" />
+                                    </ItemsPanelTemplate>
+                                </ui:VirtualizingItemsControl.ItemsPanel>
+
+                                <ui:VirtualizingItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type requests:DynamicField}">
+                                        <StackPanel Margin="5,0,0,0" Orientation="Vertical">
+                                            <TextBlock Margin="0,8,0,0" Text="{Binding Title}" />
+                                            <TextBox
+                                                Margin="0,8,0,0"
+                                                MinWidth="120"
+                                                Text="{Binding Value}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ui:VirtualizingItemsControl.ItemTemplate>
+                            </ui:VirtualizingItemsControl>
+
+
+                        </WrapPanel>
+                    </ui:Card>
+
+                </StackPanel>
+                <!--
+                <ui:CardExpander IsExpanded="True" Header="{Binding ViewModel[AdditionalQueries]}"
+                                 Margin="5, 3, 25, 0"
+                                 Visibility="{Binding ViewModel.AdditionalQueriesExpanderVisibility}">
+                    <ui:DynamicScrollViewer HorizontalScrollBarVisibility="Visible"
+                                            HorizontalContentAlignment="Left"
+                                            HorizontalAlignment="Left">
+                    </ui:DynamicScrollViewer>
+                </ui:CardExpander>
+                -->
+
+            </StackPanel>
+
+            <mah:ProgressRing
+                DockPanel.Dock="Top"
+                Height="35"
+                HorizontalAlignment="Center"
+                IsActive="{Binding ViewModel.IsRefreshing}"
+                Margin="0,50,0,0"
+                Visibility="{Binding ViewModel.RingVisibility}"
+                Width="35" />
+
+            <StackPanel Margin="5,7,0,0" Visibility="{Binding ViewModel.DataVisibility}">
+                <WrapPanel
+                    MaxWidth="{Binding ActualWidth, ElementName=ReportPage}"
+                    Orientation="Horizontal"
+                    x:Name="UpperPanel" />
+                <ui:DynamicScrollViewer
+                    HorizontalScrollBarVisibility="Visible"
+                    Padding="0,5,0,25"
+                    x:Name="DataScroller">
+                    <StackPanel x:Name="DataGrid" />
+                </ui:DynamicScrollViewer>
+                <WrapPanel
+                    MaxWidth="{Binding ActualWidth, ElementName=ReportPage}"
+                    Orientation="Horizontal"
+                    x:Name="LowerPanel" />
+            </StackPanel>
+        </DockPanel>
+    </ui:DynamicScrollViewer>
+</Page>

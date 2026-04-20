@@ -1,0 +1,252 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.Items.ItemsSelectionWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:items="clr-namespace:Leapay.Client.UserInterface.Common.Items"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:Leapay.Client.UserInterface.Common.Items.Models"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             x:Name="ItemsSelectionControl"
+             Width="800"
+             Height="750"
+             d:DataContext="{d:DesignInstance items:ItemsSelectionWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             x:DataType="items:ItemsSelectionWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             KeyDown="OnPreviewKeyDown"
+             mc:Ignorable="d">
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.RingVisibility}">
+            <suki:Loading Width="65"
+                          Height="65"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="0"
+                    Width="700"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top">
+
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="FocusTarget"
+                         MinWidth="450"
+                         MaxHeight="35"
+                         Margin="0,10,0,0"
+                         TabIndex="0"
+                         Text="{Binding ViewModel.SearchText}"
+                         TextChanged="OnSearch"
+                         UseFloatingWatermark="True"
+                         Watermark="{Binding ViewModel[Search]}" />
+                <StackPanel MinWidth="120" Margin="5,0">
+                    <ComboBox Width="350"
+                              MaxWidth="260"
+                              Margin="0,10,0,0"
+                              DisplayMemberBinding="{Binding Display}"
+                              ItemsSource="{Binding ViewModel.Storages.Items}"
+                              SelectedItem="{Binding ViewModel.Storages.SelectedItem}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.IsSharedSizeScope="True" IsVisible="{Binding ViewModel.UiVisibility}">
+                <suki:GlassCard Width="730"
+                                Margin="0,2,0,0"
+                                Padding="10,4,0,4"
+                                Background="{Binding ViewModel.BackgroundTheme}">
+                    <suki:GlassCard.RenderTransform>
+                        <TranslateTransform>
+                            <TranslateTransform.X>-8</TranslateTransform.X>
+                        </TranslateTransform>
+                    </suki:GlassCard.RenderTransform>
+                    <Grid VerticalAlignment="Center" ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="SelectColumn" />
+                            <ColumnDefinition SharedSizeGroup="NameColumn" />
+                            <ColumnDefinition SharedSizeGroup="PriceColumn" />
+                            <ColumnDefinition SharedSizeGroup="QuantityColumn" />
+                            <ColumnDefinition SharedSizeGroup="UnitColumn" />
+                            <ColumnDefinition SharedSizeGroup="InStorageColumn" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="{Binding ViewModel[Select]}" />
+                        <TextBlock Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="{Binding ViewModel[ItemName]}" />
+                        <TextBlock Grid.Column="2"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="{Binding ViewModel[Price]}" />
+                        <TextBlock Grid.Column="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="{Binding ViewModel[Quantity]}" />
+                        <TextBlock Grid.Column="4"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="{Binding ViewModel[Unit]}" />
+                        <TextBlock Grid.Column="5"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Text="{Binding ViewModel[InStorage]}" />
+                    </Grid>
+                </suki:GlassCard>
+
+                <ScrollViewer x:Name="ActiveDataScrollViewer"
+                              Width="750"
+                              Height="550"
+                              MaxHeight="550"
+                              Margin="0,0,0,0"
+                              HorizontalAlignment="Stretch"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Visible">
+                    <ItemsControl ItemsSource="{Binding ViewModel.Models}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:ItemsSelectionModel">
+                                <suki:GlassCard Margin="0,3"
+                                                Padding="10,3"
+                                                Opacity="{Binding IsVisible, Converter={StaticResource BoolOpacityConverter}}">
+                                    <Interaction.Behaviors>
+                                        <EventTriggerBehavior EventName="DoubleTapped">
+                                            <InvokeCommandAction Command="{Binding ViewModel.ToggleSelectionCommand, ElementName=ItemsSelectionControl}" CommandParameter="{Binding .}" />
+                                        </EventTriggerBehavior>
+                                    </Interaction.Behaviors>
+                                    <Grid VerticalAlignment="Center" ColumnSpacing="10">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="SelectColumn" />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="NameColumn" />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="PriceColumn" />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="QuantityColumn" />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn" />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="InStorageColumn" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0"
+                                                  Margin="10,0,0,0"
+                                                  VerticalAlignment="Center"
+                                                  IsChecked="{Binding IsSelected}">
+                                            <CheckBox.RenderTransform>
+                                                <ScaleTransform ScaleX="1.5" ScaleY="1.4" />
+                                            </CheckBox.RenderTransform>
+                                        </CheckBox>
+
+
+                                        <!--<Border Grid.Column="1"
+                                            Width="40"
+                                            Height="40"
+                                            Margin="10,0,0,0"
+                                            ClipToBounds="True"
+                                            CornerRadius="10">
+                                        <asyncImageLoader:AdvancedImage Source="{Binding ImageLink}" Stretch="UniformToFill" />
+                                    </Border>-->
+
+                                        <TextBlock Grid.Column="1"
+                                                   MinWidth="280"
+                                                   Margin="7,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="16"
+                                                   Text="{Binding ItemName}"
+                                                   TextWrapping="Wrap" />
+
+                                        <StackPanel Grid.Column="2"
+                                                    Margin="0,3,0,0"
+                                                    IsVisible="{Binding $parent[items:ItemsSelectionWindow].ViewModel.PriceVisibility}"
+                                                    Spacing="3">
+                                            <TextBox MinWidth="80" Text="{Binding ItemCustomPrice, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="3"
+                                                    Margin="0,3,0,0"
+                                                    Spacing="3">
+                                            <TextBox MinWidth="60" Text="{Binding Quantity}" />
+                                        </StackPanel>
+
+
+                                        <ComboBox Grid.Column="4"
+                                                  MinWidth="90"
+                                                  VerticalAlignment="Bottom"
+                                                  ItemsSource="{Binding Units}"
+                                                  SelectedItem="{Binding SelectedUnit}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UnitName}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+
+                                        <StackPanel Grid.Column="5"
+                                                    Margin="0,0,0,2"
+                                                    VerticalAlignment="Bottom">
+                                            <suki:GlassCard Width="50"
+                                                            Height="40"
+                                                            Padding="0"
+                                                            Background="{Binding ViewModel.BackgroundTheme, ElementName=ItemsSelectionControl}">
+                                                <StackPanel HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            Orientation="Horizontal">
+                                                    <TextBlock FontSize="15" Text="{Binding SelectedUnit.QuantityInStorage}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+                                        </StackPanel>
+                                    </Grid>
+                                </suki:GlassCard>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
+
+
+            <StackPanel HorizontalAlignment="Center"
+                        IsVisible="{Binding ViewModel.UiVisibility}"
+                        Orientation="Horizontal">
+                <!--<StackPanel Orientation="Horizontal" Spacing="3">
+                    <ToggleSwitch IsChecked="{Binding ViewModel.ShowZero}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               Text="{Binding ViewModel[ShowZeroItemsInStorage]}" />
+                </StackPanel>-->
+                <Button Width="120"
+                        Margin="20,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.CloseCommand}"
+                        Content="{Binding ViewModel[Cancel]}" />
+                <Button Width="110"
+                        Margin="3,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.NewCommand}"
+                        Content="{Binding ViewModel[NewButton]}"
+                        IsVisible="{Binding ViewModel.AddVisibility}" />
+                <Button Width="110"
+                        Margin="3,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.SelectCommand}"
+                        Content="{Binding ViewModel[Confirm]}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

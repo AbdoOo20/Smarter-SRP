@@ -1,0 +1,12 @@
+{
+  "locale": "ar",
+  "temporaryJwt": null,
+  "theme": "dark",
+  "autoLocalize": false,
+  "paneDisplayType": "left",
+  "backendUrl": null,
+  "INTERNAL_useWindowsHello": false,
+  "serialNumberVisible": false,
+  "financialInternalNotesVisible": false,
+  "droplistMenu": true
+}

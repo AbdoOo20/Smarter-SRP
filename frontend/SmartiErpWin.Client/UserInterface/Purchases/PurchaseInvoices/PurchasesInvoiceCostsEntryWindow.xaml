@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="SmartiErpWin.Client.UserInterface.Purchases.PurchaseInvoices.PurchasesInvoiceCostsEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:purchaseInvoices="clr-namespace:SmartiErpWin.Client.UserInterface.Purchases.PurchaseInvoices"
+
+    d:DataContext="{d:DesignInstance purchaseInvoices:PurchasesInvoiceCostsEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    Width="750"
+    Height="100"
+    d:DesignHeight="100"
+    d:DesignWidth="750"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+
+    PreviewKeyDown="OnPreviewKeyDown"
+    mc:Ignorable="d"
+    FlowDirection="RightToLeft">
+    <StackPanel Margin="10, 5" Orientation="Horizontal" HorizontalAlignment="Center">
+
+        <StackPanel MinWidth="200" MaxWidth="200" Margin="10, 0">
+            <TextBlock Text="{Binding ViewModel[Name]}" Margin="0, 10, 0, 0" />
+            <TextBox Text="{Binding ViewModel.Model.Name}" Margin="0, 10, 0, 0"
+                     x:Name="FocusScapegoatBox" />
+        </StackPanel>
+
+        <StackPanel MinWidth="200" MaxWidth="200" Margin="10, 0">
+            <TextBlock Text="{Binding ViewModel[Amount]}" Margin="0, 10, 0, 0" />
+            <ui:NumberBox Text="{Binding ViewModel.Model.Ammount, Converter={StaticResource TextBoxConverter}}"
+                          Margin="0, 10, 0, 0" />
+        </StackPanel>
+
+        <StackPanel MinWidth="200" MaxWidth="200" Margin="10, 0">
+            <TextBlock Text="{Binding ViewModel[Notes]}" Margin="0, 10, 0, 0" />
+            <TextBox Text="{Binding ViewModel.Model.Notes}" Margin="0, 10, 0, 0" />
+        </StackPanel>
+
+        <Button Width="45" Height="45" Margin="10, 20, 0, 0"
+                Command="{Binding ViewModel.SaveCommand}">
+            <ui:SymbolIcon Symbol="{Binding ViewModel.Symbol}" />
+        </Button>
+    </StackPanel>
+
+</UserControl>

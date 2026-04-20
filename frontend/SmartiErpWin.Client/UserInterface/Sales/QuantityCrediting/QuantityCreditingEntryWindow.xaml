@@ -1,0 +1,145 @@
+﻿<ui:FluentWindow
+    x:Class="SmartiErpWin.Client.UserInterface.Sales.QuantityCrediting.QuantityCreditingEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:quantityCrediting="clr-namespace:SmartiErpWin.Client.UserInterface.Sales.QuantityCrediting"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="1000"
+    Height="770"
+    d:DesignWidth="1000"
+    d:DesignHeight="770"
+    
+    d:DataContext="{d:DesignInstance quantityCrediting:QuantityCreditingEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+    FlowDirection="{Binding ViewModel.FlowDirection}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <prefabs:RefreshPrefab Grid.Row="1" Visibility="{Binding ViewModel.RingVisibility}"
+                               LoadingInfo="{Binding ViewModel.LoadingInfo}"
+                               LoadingTitle="{Binding ViewModel.LoadingTitle}"
+                               IsRefreshing="{Binding ViewModel.IsRefreshing}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <ui:TitleBar DockPanel.Dock="Top"
+                     x:Name="TitleBar"
+                     Title="{Binding ViewModel.ApplicationTitle}"
+                     Grid.Row="0"
+                     CloseWindowByDoubleClickOnIcon="True"
+                     ShowMinimize="True"
+                     ShowMaximize="True">
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Style="{StaticResource ImageIconStyle}" />
+            </ui:TitleBar.Icon>
+        </ui:TitleBar>
+        <ui:DynamicScrollViewer Grid.Row="1" Visibility="{Binding ViewModel.UiVisibility}">
+
+            <DockPanel Margin="0, 0, 0, 0">
+                <StackPanel  DockPanel.Dock="Top">
+                    <ui:Card Margin="25, 0">
+                    <WrapPanel>
+                            <StackPanel>
+                                <TextBlock Text="{Binding ViewModel[InvoiceNumber]}" Margin="0, 10, 0, 0" />
+                                <TextBox Text="{Binding ViewModel.InvoiceNumber}" MinWidth="100" Margin="0, 10, 0, 0"
+                                         IsReadOnly="True" />
+                            </StackPanel>
+
+                            <StackPanel Margin="10, 0, 0, 0" Visibility="{Binding ViewModel.SerialNumberVisibility}">
+                                <TextBlock Text="{Binding ViewModel[SerialNumber]}" Margin="0, 10, 0, 0" />
+                                <TextBox Text="{Binding ViewModel.Model.DtoQuantityCrediting.SerialNumber}"
+                                         MinWidth="120"
+                                         Margin="0, 10, 0, 0" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Left"
+                                        Margin="10, 10, 0, 0">
+                                <TextBlock Text="{Binding ViewModel[Date]}"
+                                           Margin="0, 0, 0, 0" />
+                                <DatePicker MinWidth="140"
+                                            Margin="0, 10, 0, 0"
+                                            HorizontalAlignment="Left"
+                                            SelectedDate="{Binding ViewModel.Model.DtoQuantityCrediting.Date}" />
+                            </StackPanel>
+                            <StackPanel Margin="10, 10, 0, 0">
+                                <TextBlock Text="{Binding ViewModel[Store]}"
+                                           Margin="0, 0, 0, 0" />
+                                <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[1]}"
+                                          Margin="0, 10, 0, 0"
+                                          SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[1]}"
+                                          SelectionChanged="StoreSelectionChanged"
+                                          MinWidth="170">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                                            <TextBlock Text="{Binding Display}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                    </WrapPanel>
+                </ui:Card>
+                    
+                    <ui:Card Margin="25, 0" Padding="12, 12">
+                        <StackPanel Margin="0, 0, 0, 0">
+                            <TextBlock Text="{Binding ViewModel[Notes]}" Margin="0, 5, 0, 0"/>
+                            <TextBox Text="{Binding ViewModel.Model.DtoQuantityCrediting.Notes}"
+                                     Margin="0, 5, 0, 0"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </ui:Card>
+                </StackPanel>
+
+                <StackPanel Margin="25, 5">
+                    <ui:Card>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:InfoBar IsOpen="True" IsClosable="False"
+                                            Margin="0, 0, 0, 0"
+                                            Title="{Binding ViewModel[TotalPrice]}"
+                                            Message="{Binding ViewModel.TotalPrice}"
+                                            MinWidth="200" HorizontalAlignment="Left" />
+                            </StackPanel>
+
+                            <ui:DynamicScrollViewer x:Name="DataScroller" Padding="5" Margin="0, 10, 0, 0"
+                                                    HorizontalScrollBarVisibility="Visible">
+                                <StackPanel x:Name="DataGrid" />
+                            </ui:DynamicScrollViewer>
+
+                            <quantityCrediting:QuantityCreditingDetailsEntryWindow x:Name="EntryState" MinHeight="200" />
+                        </StackPanel>
+                    </ui:Card>
+
+                    <StackPanel Orientation="Horizontal" Margin="0, 15, 0, 10"
+                                HorizontalAlignment="Right" DockPanel.Dock="Bottom">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="{Binding ViewModel[CancelButton]}"
+                                    Margin="0, 0, 0, 0"
+                                    Command="{Binding ViewModel.CancelCommand}"
+                                    MinWidth="100"
+                                    Height="35"/>
+                            <Button Content="{Binding ViewModel[SaveButton]}"
+                                    Command="{Binding ViewModel.SaveCommand}"
+                                    Margin="15, 0, 0, 0"
+                                    MinWidth="100"
+                                    Height="35"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="20, 35, 0, 0" HorizontalAlignment="Left" />
+                </StackPanel>
+            </DockPanel>
+        </ui:DynamicScrollViewer>
+    </Grid>
+</ui:FluentWindow>

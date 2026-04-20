@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.BarcodePrintDialogue.BarcodePrintDialogueWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:barcodePrintDialogue="clr-namespace:Leapay.Client.UserInterface.Common.BarcodePrintDialogue"
+             xmlns:common="clr-namespace:Leapay.Client.UserInterface.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dtoModels1="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:receiptLookup="clr-namespace:Leapay.Client.UserInterface.Common.ReceiptLookup"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             Width="440"
+             Height="330"
+             d:DataContext="{d:DesignInstance barcodePrintDialogue:BarcodePrintDialogueWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             x:DataType="barcodePrintDialogue:BarcodePrintDialogueWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="0,0,0,0" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock MaxWidth="400"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           Text="{Binding ViewModel[Name]}"
+                           TextAlignment="Center" />
+
+                <TextBox Width="350" Text="{Binding ViewModel.ItemName}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock MaxWidth="400"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           Text="{Binding ViewModel[Barcode]}"
+                           TextAlignment="Center" />
+
+                <TextBox Width="350" Text="{Binding ViewModel.ItemBarcode}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock MaxWidth="400"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           Text="{Binding ViewModel[Price]}"
+                           TextAlignment="Center" />
+
+                <TextBox Width="350" Text="{Binding ViewModel.ItemPrice}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock MaxWidth="400"
+                           HorizontalAlignment="Center"
+                           FontSize="16"
+                           Text="{Binding ViewModel[Count]}"
+                           TextAlignment="Center" />
+
+                <TextBox Width="350" Text="{Binding ViewModel.ItemCount}" />
+            </StackPanel>
+
+            <Button Width="160"
+                    Height="38"
+                    Margin="0,25,0,0"
+                    HorizontalAlignment="Center"
+                    Command="{Binding ViewModel.ActionCommand}"
+                    Content="{Binding ViewModel[Print]}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

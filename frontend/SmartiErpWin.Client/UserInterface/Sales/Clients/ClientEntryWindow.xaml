@@ -1,0 +1,93 @@
+﻿<ui:FluentWindow
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Height="500"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="600"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    d:DataContext="{d:DesignInstance clients:ClientEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="500"
+    d:DesignWidth="600"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Sales.Clients.ClientEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:clients="clr-namespace:SmartiErpWin.Client.UserInterface.Sales.Clients"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar
+            CloseWindowByDoubleClickOnIcon="True"
+            Grid.Row="0"
+            ShowMaximize="False"
+            ShowMinimize="False"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            x:Name="TitleBar" />
+
+        <StackPanel Grid.Row="0" Margin="25,40,25,0">
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[ClientName]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Name}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Phone]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Phone}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Email]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Email}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+
+                <StackPanel MinWidth="270">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Address]}" />
+                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Address}" />
+                </StackPanel>
+
+                <StackPanel Margin="10,0,0,0" MinWidth="270">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[MaxDebt]}" />
+                    <ui:NumberBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.MaxDebt}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel MinWidth="270">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OpeningDebtor]}" />
+                    <ui:NumberBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.AccountOpeningDebtor}" />
+                </StackPanel>
+
+                <StackPanel Margin="10,0,0,0" MinWidth="270">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OpeningCredtior]}" />
+                    <ui:NumberBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.AccountOpeningCreditor}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel
+                HorizontalAlignment="Center"
+                Margin="0,25,0,0"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding ViewModel.CancelCommand}"
+                    Content="{Binding ViewModel[CancelButton]}"
+                    Margin="0,0,0,0" />
+                <Button
+                    Command="{Binding ViewModel.SaveCommand}"
+                    Content="{Binding ViewModel[SaveButton]}"
+                    Margin="15,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

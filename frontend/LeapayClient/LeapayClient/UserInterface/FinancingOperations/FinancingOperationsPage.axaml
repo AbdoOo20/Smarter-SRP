@@ -1,0 +1,54 @@
+﻿<bases1:UserControlBase x:Class="Leapay.Client.UserInterface.FinancingOperations.FinancingOperationsPage"
+                        xmlns="https://github.com/avaloniaui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                        xmlns:bases1="clr-namespace:Leapay.Client.Polymorphism.Bases"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:financingOperations="clr-namespace:Leapay.Client.UserInterface.FinancingOperations"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                        xmlns:uiModels="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels.UiModels"
+                        d:DataContext="{d:DesignInstance financingOperations:FinancingOperationsPage,
+                                                         IsDesignTimeCreatable=False}"
+                        d:DesignHeight="450"
+                        d:DesignWidth="800"
+                        x:DataType="financingOperations:FinancingOperationsPage"
+                        FlowDirection="{CompiledBinding ViewModel.FlowDirection}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        mc:Ignorable="d">
+    <StackPanel>
+        <suki:GlassCard Width="400"
+                        Margin="25"
+                        Padding="6"
+                        HorizontalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       Text="{Binding ViewModel[FinancingOperationsTab]}" />
+        </suki:GlassCard>
+        <ItemsControl MaxWidth="1400"
+                      Margin="0,10,0,0"
+                      ItemsSource="{Binding ViewModel.Cards}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type uiModels:CardModel}">
+                    <suki:GlassCard Width="300"
+                                    Height="65"
+                                    Margin="5"
+                                    Command="{Binding ActionCommand}"
+                                    IsInteractive="True"
+                                    IsVisible="{Binding IsVisible}">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="{Binding CardSymbol}" />
+                            <TextBlock Margin="10,0,0,0" Text="{Binding CardName, Converter={StaticResource LocaleConverter}}" />
+                        </StackPanel>
+                    </suki:GlassCard>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</bases1:UserControlBase>

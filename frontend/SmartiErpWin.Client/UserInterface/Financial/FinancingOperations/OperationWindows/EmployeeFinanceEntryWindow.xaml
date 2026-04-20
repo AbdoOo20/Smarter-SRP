@@ -1,0 +1,115 @@
+﻿<ui:FluentWindow
+    x:Class="SmartiErpWin.Client.UserInterface.Financial.FinancingOperations.OperationWindows.EmployeeFinanceEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+    xmlns:operationWindows="clr-namespace:SmartiErpWin.Client.UserInterface.Financial.FinancingOperations.OperationWindows"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="600"
+    Height="710"
+    d:DataContext="{d:DesignInstance operationWindows:EmployeeFinanceEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="710"
+    d:DesignWidth="600"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d"
+    FlowDirection="{Binding ViewModel.FlowDirection}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar
+            x:Name="TitleBar"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            Grid.Row="0"
+            CloseWindowByDoubleClickOnIcon="True"
+            ShowMinimize="False"
+            ShowMaximize="False"/>
+        
+        <StackPanel Grid.Row="0" Margin="25, 40, 25, 0">
+
+            <StackPanel Orientation="Horizontal">
+
+                <StackPanel Orientation="Vertical" MinWidth="270" Margin="0, 10, 0, 0">
+                    <TextBlock Text="{Binding ViewModel[Date]}" />
+                    <DatePicker SelectedDate="{Binding ViewModel.Model.Date}" Margin="0, 10, 0, 0" />
+                </StackPanel>
+
+                <StackPanel Visibility="{Binding ViewModel.SerialNumberVisibility}" MinWidth="270" Margin="10, 10, 0, 0">
+                    <TextBlock Text="{Binding ViewModel[SerialNumber]}" />
+                    <TextBox Text="{Binding ViewModel.Model.SerialNumber}" Margin="0, 10, 0, 0"/>
+                </StackPanel>
+
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding ViewModel.InternalNotesVisibility}">
+                <TextBlock Text="{Binding ViewModel[InternalNotes]}" Margin="0, 10, 0, 0"/>
+                <TextBox Text="{Binding ViewModel.Model.InternalNotes}" Margin="0, 10, 0, 0"/>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Text="{Binding ViewModel[OperationType]}" Margin="0, 10, 0, 0"/>
+                <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.StaticComboItems}" Margin="0, 10, 0, 0"
+                          SelectedItem="{Binding ViewModel.ComboModelBase.SelectedStaticComboItem}"
+                          MinWidth="300" />
+            </StackPanel>
+            
+            <StackPanel>
+                <TextBlock Text="{Binding ViewModel[EmployeeName]}" Margin="0, 10, 0, 0"/>
+                <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}" Margin="0, 10, 0, 0"
+                          SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                          MinWidth="300">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                            <TextBlock Text="{Binding Display}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            
+            <StackPanel>
+                <TextBlock Text="{Binding ViewModel[Amount]}" Margin="0, 10, 0, 0"/>
+                <ui:NumberBox Text="{Binding ViewModel.Model.Amount}" Margin="0, 10, 0, 0"/>
+            </StackPanel>
+            
+            <StackPanel>
+                <TextBlock Text="{Binding ViewModel[Safe]}" Margin="0, 10, 0, 0"/>
+                <ComboBox ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[1]}" Margin="0, 10, 0, 0"
+                          SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[1]}"
+                          MinWidth="300">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                            <TextBlock Text="{Binding Display}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Margin="0, 10, 0, 0">
+                <TextBlock Text="{Binding ViewModel[Notes]}" Margin="0, 10, 0, 0"/>
+                <TextBox Text="{Binding ViewModel.Model.Note}"
+                         Margin="0, 10, 0, 0"
+                         TextWrapping="Wrap"
+                         MinHeight="100"
+                         MinLines="1"
+                         MaxHeight="100"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0, 25, 0, 0" HorizontalAlignment="Center">
+                <Button Content="{Binding ViewModel[CancelButton]}" Margin="0, 0, 0, 0"
+                        Command="{Binding ViewModel.CancelCommand}"/>
+                <Button Content="{Binding ViewModel[SaveButton]}"
+                        Command="{Binding ViewModel.SaveCommand}" Margin="15, 0, 0, 0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

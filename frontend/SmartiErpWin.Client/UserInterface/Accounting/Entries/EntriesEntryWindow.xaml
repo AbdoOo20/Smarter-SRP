@@ -1,0 +1,106 @@
+﻿<ui:FluentWindow
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Height="750"
+    SizeChanged="OnDataSizeChanged"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="800"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    d:DataContext="{d:DesignInstance entries:EntriesEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="750"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Accounting.Entries.EntriesEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:entries="clr-namespace:SmartiErpWin.Client.UserInterface.Accounting.Entries"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <prefabs:RefreshPrefab
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            IsRefreshing="{Binding ViewModel.IsRefreshing}"
+            LoadingInfo="{Binding ViewModel.LoadingInfo}"
+            LoadingTitle="{Binding ViewModel.LoadingTitle}"
+            VerticalAlignment="Center"
+            Visibility="{Binding ViewModel.RingVisibility}" />
+
+        <ui:TitleBar
+            CloseWindowByDoubleClickOnIcon="True"
+            DockPanel.Dock="Top"
+            Grid.Row="0"
+            ShowMaximize="True"
+            ShowMinimize="True"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            x:Name="TitleBar" />
+        <ui:DynamicScrollViewer Grid.Row="1" Visibility="{Binding ViewModel.UiVisibility}">
+
+            <DockPanel>
+
+                <StackPanel DockPanel.Dock="Top">
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0"
+                        Orientation="Horizontal">
+                        <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OperationDate]}" />
+                        <DatePicker
+                            HorizontalAlignment="Left"
+                            Margin="15,0,0,0"
+                            MinWidth="300"
+                            SelectedDate="{Binding ViewModel.Model.DtoEntry.Date}"
+                            x:Name="CalenderBox" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Margin="25">
+                    <ui:Card>
+                        <StackPanel>
+
+                            <ui:DynamicScrollViewer
+                                HorizontalScrollBarVisibility="Visible"
+                                Margin="0,10,0,0"
+                                MaxHeight="550"
+                                MaxWidth="750"
+                                Padding="5"
+                                x:Name="DataScroller">
+                                <StackPanel x:Name="DataGrid" />
+                            </ui:DynamicScrollViewer>
+                            <entries:EntryDetailEntryWindow x:Name="EntryState" />
+                        </StackPanel>
+                    </ui:Card>
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        Margin="0,30,0,10"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Bottom">
+
+                        <ui:Card Margin="10,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Button
+                                    Command="{Binding ViewModel.CancelCommand}"
+                                    Content="{Binding ViewModel[CancelButton]}"
+                                    Margin="0,0,0,0" />
+                                <Button
+                                    Command="{Binding ViewModel.SaveCommand}"
+                                    Content="{Binding ViewModel[SaveButton]}"
+                                    Margin="15,0,0,0" />
+                            </StackPanel>
+                        </ui:Card>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </ui:DynamicScrollViewer>
+    </Grid>
+</ui:FluentWindow>

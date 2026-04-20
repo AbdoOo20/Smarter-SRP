@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.StoresAndCategories.SupplyPermits.SupplyPermitEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:SupplyPermits="clr-namespace:Leapay.Client.UserInterface.StoresAndCategories.SupplyPermits"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             d:DataContext="{d:DesignInstance SupplyPermits:SupplyPermitEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             x:DataType="SupplyPermits:SupplyPermitEntryWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.RingVisibility}">
+            <suki:Loading Width="65"
+                          Height="65"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       Text="{Binding ViewModel.LoadingTitle}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="{Binding ViewModel.LoadingInfo}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" IsVisible="{Binding ViewModel.UiVisibility}">
+            <DockPanel Margin="0,0,0,0" VerticalSpacing="5">
+                <StackPanel DockPanel.Dock="Top">
+                    <suki:GlassCard Margin="25,0">
+                        <WrapPanel>
+                            <StackPanel Margin="10,10,0,0"
+                                        HorizontalAlignment="Left"
+                                        Orientation="Vertical">
+                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[Date]}" />
+                                <DatePicker MinWidth="140"
+                                            Margin="0,10,0,0"
+                                            HorizontalAlignment="Left"
+                                            SelectedDate="{Binding ViewModel.Model.Date, Converter={StaticResource DateOffsetConverter}}" />
+                            </StackPanel>
+                            <StackPanel Margin="10,10,0,0">
+                                <ContentControl Content="{Binding ViewModel.Suppliers.Content}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="5,10,0,0">
+                                <TextBlock Text="{Binding ViewModel[Store]}" />
+                                <ComboBox MinWidth="200"
+                                          Margin="0,5,0,0"
+                                          DisplayMemberBinding="{Binding Display}"
+                                          ItemsSource="{Binding ViewModel.Stores.Items}"
+                                          SelectedItem="{Binding ViewModel.Stores.SelectedItem}" />
+                            </StackPanel>
+                        </WrapPanel>
+                    </suki:GlassCard>
+                </StackPanel>
+
+                <StackPanel Margin="0,5,0,0">
+                    <StackPanel Margin="25,10">
+                        <suki:GlassCard>
+                            <StackPanel>
+                                <ScrollViewer x:Name="DataScroller"
+                                              MaxHeight="550"
+                                              Margin="0,10,0,0"
+                                              Padding="5"
+                                              HorizontalScrollBarVisibility="Visible">
+                                    <StackPanel x:Name="DataGrid" />
+                                </ScrollViewer>
+
+                                <ScrollViewer Margin="0,0,0,5" HorizontalScrollBarVisibility="Visible">
+                                    <suki:GlassCard>
+                                        <WrapPanel>
+
+                                            <StackPanel Margin="10,5"
+                                                        HorizontalAlignment="Center"
+                                                        Orientation="Horizontal">
+
+                                                <suki:GlassCard>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <suki:InfoBar x:Name="ItemInfoBar"
+                                                                      Title="{Binding ViewModel[Item]}"
+                                                                      Margin="0,0,0,0"
+                                                                      FontSize="24"
+                                                                      IsClosable="False"
+                                                                      IsOpen="True"
+                                                                      Message="{Binding ViewModel.SelectedItemStatus}" />
+
+                                                        <Button Width="120"
+                                                                Margin="5,0,0,0"
+                                                                Command="{Binding ViewModel.SelectItemCommand}"
+                                                                Content="{Binding ViewModel[SelectItem]}" />
+                                                    </StackPanel>
+                                                </suki:GlassCard>
+
+                                            </StackPanel>
+
+                                            <StackPanel Margin="10,5"
+                                                        HorizontalAlignment="Center"
+                                                        Orientation="Horizontal">
+
+                                                <StackPanel Margin="5,0,0,0">
+                                                    <StackPanel>
+                                                        <TextBlock Margin="3,10,0,0" Text="{Binding ViewModel[Unit]}" />
+                                                        <ComboBox x:Name="FocusTarget"
+                                                                  MinWidth="200"
+                                                                  Margin="0,6,0,0"
+                                                                  DisplayMemberBinding="{Binding Display}"
+                                                                  ItemsSource="{Binding ViewModel.Units.Items}"
+                                                                  SelectedItem="{Binding ViewModel.Units.SelectedItem}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Margin="5,5,0,0">
+                                                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Quantity]}" />
+                                                <TextBox MinWidth="200"
+                                                         Margin="0,10,0,0"
+                                                         Text="{Binding ViewModel.ModelDetails.Model.Quantity}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="13,10,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        Orientation="Vertical">
+                                                <TextBlock Margin="0,0,0,0" Text="{Binding ViewModel[ExpireDate]}" />
+                                                <DatePicker MinWidth="140"
+                                                            Margin="0,10,0,0"
+                                                            HorizontalAlignment="Left"
+                                                            SelectedDate="{Binding ViewModel.ModelDetails.Model.ExpireDate, Converter={StaticResource DateOffsetConverter}}" />
+                                            </StackPanel>
+
+                                            <Button Width="50"
+                                                    Height="50"
+                                                    Margin="10,10,0,0"
+                                                    Command="{Binding ViewModel.SubmitCommand}">
+                                                <avalonia:MaterialIcon Margin="-4,0,0,0" Kind="{Binding ViewModel.ModelDetails.Symbol}" />
+                                            </Button>
+                                        </WrapPanel>
+                                    </suki:GlassCard>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </suki:GlassCard>
+
+
+                    </StackPanel>
+
+
+                    <StackPanel Margin="0,10,25,10"
+                                HorizontalAlignment="Right"
+                                DockPanel.Dock="Bottom"
+                                Orientation="Horizontal">
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button MinWidth="100"
+                                    Margin="0,0,0,0"
+                                    Command="{Binding ViewModel.CancelCommand}"
+                                    Content="{Binding ViewModel[CancelButton]}" />
+                            <Button MinWidth="100"
+                                    Margin="15,0,0,0"
+                                    Command="{Binding ViewModel.SaveCommand}"
+                                    Content="{Binding ViewModel[SaveButton]}" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <StackPanel Margin="20,35,0,0"
+                                HorizontalAlignment="Left"
+                                Orientation="Horizontal" />
+                </StackPanel>
+            </DockPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

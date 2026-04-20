@@ -1,0 +1,247 @@
+<UserControl x:Class="Leapay.Client.Features.Theming.ThemingView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:theming1="clr-namespace:Leapay.Client.Features.Theming"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="theming1:ThemingView"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <generic:List x:Key="Collection" x:TypeArguments="suki:SettingsLayoutItem">
+            <suki:SettingsLayoutItem x:Name="AccountHeader" Header="الحساب">
+                <suki:SettingsLayoutItem.Content>
+                    <StackPanel>
+                        <suki:GlassCard Margin="0,45,0,0" Padding="25">
+                            <StackPanel Spacing="40">
+                                <DockPanel>
+                                    <Button Command="{Binding ViewModel.LogoutCommand}"
+                                            Content="{Binding ViewModel[LogoutText]}"
+                                            DockPanel.Dock="Right" />
+                                    <StackPanel DockPanel.Dock="Left">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding ViewModel[Username]}" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel.Session.UserInfo.Name}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </StackPanel>
+                        </suki:GlassCard>
+                    </StackPanel>
+                </suki:SettingsLayoutItem.Content>
+            </suki:SettingsLayoutItem>
+            <suki:SettingsLayoutItem x:Name="AppSettingsHeader" Header="عام">
+                <suki:SettingsLayoutItem.Content>
+                    <StackPanel>
+                        <suki:GlassCard Margin="0,45,0,0" Padding="25">
+                            <StackPanel Spacing="40">
+                                <DockPanel>
+                                    <ComboBox DockPanel.Dock="Right"
+                                              ItemsSource="{Binding ViewModel.AvailableLanguages}"
+                                              SelectedItem="{Binding ViewModel.SelectedLanguage}" />
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding ViewModel[Language]}" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel[LanguageSelectInfo]}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </StackPanel>
+                        </suki:GlassCard>
+                    </StackPanel>
+                </suki:SettingsLayoutItem.Content>
+            </suki:SettingsLayoutItem>
+            <suki:SettingsLayoutItem x:Name="ThemeHeader" Header="النمط الأساسي">
+                <suki:SettingsLayoutItem.Content>
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="20">
+                        <RadioButton Width="180"
+                                     Height="160"
+                                     Padding="0"
+                                     Classes="GigaChips"
+                                     GroupName="RadioBaseTheme"
+                                     IsChecked="{Binding ViewModel.IsLightTheme}">
+                            <Border Margin="-50"
+                                    Background="#fafafa"
+                                    CornerRadius="{DynamicResource MediumCornerRadius}">
+                                <Grid>
+                                    <TextBlock Margin="58,42,42,42"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Bottom"
+                                               FontWeight="DemiBold"
+                                               Foreground="#555555"
+                                               Text="{Binding ViewModel[LightMode]}" />
+                                </Grid>
+                            </Border>
+                        </RadioButton>
+
+                        <RadioButton Width="180"
+                                     Height="160"
+                                     Classes="GigaChips"
+                                     GroupName="RadioBaseTheme"
+                                     IsChecked="{Binding !ViewModel.IsLightTheme}">
+                            <Border Margin="-50"
+                                    Background="#222222"
+                                    CornerRadius="{DynamicResource MediumCornerRadius}">
+                                <Grid>
+                                    <TextBlock Margin="58,42,42,42"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Bottom"
+                                               FontWeight="DemiBold"
+                                               Foreground="#fafafa"
+                                               Text="{Binding ViewModel[DarkMode]}" />
+                                </Grid>
+                            </Border>
+                        </RadioButton>
+                    </StackPanel>
+                </suki:SettingsLayoutItem.Content>
+            </suki:SettingsLayoutItem>
+
+            <suki:SettingsLayoutItem x:Name="ColourThemeHeader" Header="نمط اللون">
+                <suki:SettingsLayoutItem.Content>
+                    <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding ViewModel.AvailableColors}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel HorizontalAlignment="Center"
+                                            Orientation="Horizontal"
+                                            Spacing="10" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="suki:SukiColorTheme">
+                                <RadioButton Width="50"
+                                             Height="50"
+                                             Classes="GigaChips"
+                                             Command="{Binding ((theming1:ThemingView)DataContext).ViewModel.SwitchToColorThemeCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type theming1:ThemingView}}}"
+                                             CommandParameter="{Binding}"
+                                             CornerRadius="50"
+                                             GroupName="RadioColorTheme">
+                                    <Border Margin="-30"
+                                            Background="{Binding PrimaryBrush}"
+                                            CornerRadius="50" />
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </suki:SettingsLayoutItem.Content>
+            </suki:SettingsLayoutItem>
+
+            <suki:SettingsLayoutItem x:Name="BackgroundHeader" Header="الخلفية">
+                <suki:SettingsLayoutItem.Content>
+                    <StackPanel>
+                        <suki:GlassCard Margin="0,25,0,0" Padding="25">
+                            <StackPanel Spacing="40">
+                                <DockPanel>
+                                    <ComboBox DockPanel.Dock="Right"
+                                              ItemsSource="{Binding ViewModel.BackgroundStyles.Items}"
+                                              SelectedItem="{Binding ViewModel.BackgroundStyles.SelectedItem}" />
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding ViewModel[BackgroundStyleTitle]}" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel[BackgroundStyleInfo]}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <DockPanel>
+                                    <ToggleSwitch VerticalAlignment="Top"
+                                                  Classes="Switch"
+                                                  DockPanel.Dock="Right"
+                                                  IsChecked="{Binding ViewModel.BackgroundAnimations}" />
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding ViewModel[BackgroundAnimations]}" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel[BackgroundAnimationsInfo]}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <DockPanel>
+                                    <ToggleSwitch VerticalAlignment="Top"
+                                                  DockPanel.Dock="Right"
+                                                  IsChecked="{Binding ViewModel.BackgroundTransitions}" />
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="{Binding ViewModel[BackgroundTransitions]}" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel[BackgroundTransitionsInfo]}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </StackPanel>
+                        </suki:GlassCard>
+                        <!--
+                        <suki:GlassCard Margin="0,45,0,0" Padding="25">
+                            <StackPanel Spacing="40">
+                                <DockPanel>
+                                    <ComboBox DockPanel.Dock="Right"
+                                              ItemsSource="{Binding ViewModel.AvailableBackgroundStyles}"
+                                              SelectedItem="{Binding ViewModel.BackgroundStyle}" />
+                                    <StackPanel HorizontalAlignment="Left">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="Background Style" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="Select from the included background styles."
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <DockPanel>
+                                    <StackPanel HorizontalAlignment="Left" DockPanel.Dock="Top">
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="DemiBold"
+                                                   Text="Custom Shaders" />
+                                        <TextBlock Margin="0,12,70,0"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="Click any of the buttons below to enable a background shader."
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <ItemsControl Margin="0,15,0,0" ItemsSource="{Binding ViewModel.CustomShaders}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Margin="10"
+                                                        Command="{Binding $parent[theming1:ThemingView].((theming1:ThemingView)DataContext).ViewModel.TryCustomShaderCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="{Binding}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <UniformGrid Rows="1" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </DockPanel>
+                            </StackPanel>
+                        </suki:GlassCard>
+                        -->
+                    </StackPanel>
+                </suki:SettingsLayoutItem.Content>
+            </suki:SettingsLayoutItem>
+        </generic:List>
+    </UserControl.Resources>
+
+    <suki:SukiStackPage Margin="20">
+        <suki:SukiStackPage.Content>
+            <suki:SettingsLayout Name="{Binding ViewModel[SettingsTab]}" Items="{StaticResource Collection}" />
+        </suki:SukiStackPage.Content>
+    </suki:SukiStackPage>
+</UserControl>

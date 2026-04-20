@@ -1,0 +1,656 @@
+﻿<bases1:UserControlBase x:Class="Leapay.Client.UserInterface.Sales.SalesPoint.SalesPointPage"
+                        xmlns="https://github.com/avaloniaui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+                        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                        xmlns:bases1="clr-namespace:Leapay.Client.Polymorphism.Bases"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:fastSales="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels.FastSales"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:salesPoint="clr-namespace:Leapay.Client.UserInterface.Sales.SalesPoint"
+                        xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                        xmlns:virtualizingWrapPanel="clr-namespace:Leapay.Client.Controls.VirtualizingWrapPanel"
+                        x:Name="SalesPoint"
+                        d:DataContext="{d:DesignInstance salesPoint:SalesPointPage,
+                                                         IsDesignTimeCreatable=False}"
+                        d:DesignHeight="450"
+                        d:DesignWidth="800"
+                        x:DataType="salesPoint:SalesPointPage"
+                        FlowDirection="{CompiledBinding ViewModel.FlowDirection}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        mc:Ignorable="d">
+    <bases1:UserControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="./SalesPointItemTemplates.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </bases1:UserControlBase.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <suki:Loading Grid.Row="1"
+                      Width="45"
+                      Height="45"
+                      Margin="0,50,0,0"
+                      HorizontalAlignment="Center"
+                      DockPanel.Dock="Top"
+                      IsVisible="{Binding ViewModel.RingVisibility}" />
+
+        <ScrollViewer Grid.Row="1" IsVisible="{Binding ViewModel.UiVisibility}">
+            <Grid RowDefinitions="*,Auto">
+                <Grid Grid.Row="0"
+                      Margin="0,5,0,0"
+                      ColumnDefinitions="Auto,0.52*"
+                      ColumnSpacing="5">
+
+                    <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                        <suki:GlassCard Grid.Row="0">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <StackPanel x:Name="ItemsSearchPanel" Orientation="Horizontal" />
+                                <TextBlock HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           FontSize="15"
+                                           Text="{Binding ViewModel[Or]}">
+                                    <TextBlock.RenderTransform>
+                                        <TranslateTransform>
+                                            <TranslateTransform.Y>4</TranslateTransform.Y>
+                                        </TranslateTransform>
+                                    </TextBlock.RenderTransform>
+                                </TextBlock>
+                                <Button Height="40"
+                                        Margin="0,8,0,0"
+                                        Classes="Flat Rounded"
+                                        Command="{Binding ViewModel.SelectItemsCommand}">
+                                    <TextBlock FontSize="14" Text="{Binding ViewModel[SelectItems]}" />
+                                </Button>
+                            </StackPanel>
+                        </suki:GlassCard>
+                        <suki:GlassCard Grid.Row="1" Margin="0,5,0,0">
+                            <Grid RowDefinitions="Auto,*">
+                                <DockPanel Margin="5">
+                                    <TextBlock HorizontalAlignment="Left"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[Items]}" />
+                                    <suki:GlassCard Padding="5"
+                                                    HorizontalAlignment="Right"
+                                                    IsOpaque="True"
+                                                    IsVisible="{Binding ViewModel.Data.HeaderActive}">
+                                        <TextBlock Margin="5,0,0,0"
+                                                   FontSize="18"
+                                                   FontWeight="Bold"
+                                                   Text="{Binding ViewModel.Data.CurrentItemsCount}" />
+                                    </suki:GlassCard>
+                                </DockPanel>
+
+                                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible">
+                                    <StackPanel Grid.IsSharedSizeScope="True"
+                                                IsVisible="{Binding ViewModel.Data.HeaderActive}"
+                                                Spacing="2">
+                                        <suki:GlassCard Padding="0" Background="{Binding ViewModel.BackgroundTheme}">
+                                            <Grid Margin="10,5,10,5"
+                                                  VerticalAlignment="Center"
+                                                  ColumnSpacing="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition SharedSizeGroup="ImageColumn" />
+                                                    <ColumnDefinition SharedSizeGroup="NameColumn" />
+                                                    <ColumnDefinition SharedSizeGroup="PriceColumn" />
+                                                    <ColumnDefinition SharedSizeGroup="DiscountColumn" />
+                                                    <ColumnDefinition SharedSizeGroup="QuantityColumn" />
+                                                    <ColumnDefinition SharedSizeGroup="UnitColumn" />
+                                                    <ColumnDefinition SharedSizeGroup="DeleteColumn" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="1"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="16"
+                                                           Text="{Binding ViewModel[ItemName]}" />
+                                                <TextBlock Grid.Column="2"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="16"
+                                                           Text="{Binding ViewModel[Price]}" />
+                                                <TextBlock Grid.Column="3"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="16"
+                                                           Text="{Binding ViewModel[Discount]}" />
+                                                <TextBlock Grid.Column="4"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="16"
+                                                           Text="{Binding ViewModel[Quantity]}" />
+                                                <TextBlock Grid.Column="5"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="16"
+                                                           Text="{Binding ViewModel[Unit]}" />
+                                                <TextBlock Grid.Column="6"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="16"
+                                                           Text="{Binding ViewModel[Delete]}" />
+                                            </Grid>
+                                        </suki:GlassCard>
+                                        <ScrollViewer MaxHeight="{Binding Bounds.Height, ElementName=SalesPoint, Converter={StaticResource MathConverter}, ConverterParameter='*,0.36'}">
+                                            <ItemsControl Margin="0,3,0,0" ItemsSource="{Binding ViewModel.Data.Items}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <VirtualizingStackPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <suki:GlassCard Padding="0">
+                                                            <Grid Margin="10,8,10,5"
+                                                                  VerticalAlignment="Center"
+                                                                  ColumnSpacing="10">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ImageColumn" />
+                                                                    <ColumnDefinition Width="*" SharedSizeGroup="NameColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PriceColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="DiscountColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="QuantityColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="UnitColumn" />
+                                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="DeleteColumn" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <Border Grid.Column="0"
+                                                                        Width="40"
+                                                                        Height="40"
+                                                                        Background="Transparent"
+                                                                        ClipToBounds="True"
+                                                                        CornerRadius="10">
+                                                                    <asyncImageLoader:AdvancedImage Width="40"
+                                                                                                    Height="40"
+                                                                                                    Source="{Binding Item.ImageLink, Converter={StaticResource ImageLinkConverter}}"
+                                                                                                    Stretch="UniformToFill" />
+                                                                </Border>
+
+                                                                <TextBlock Grid.Column="1"
+                                                                           VerticalAlignment="Center"
+                                                                           FontSize="16"
+                                                                           Text="{Binding Item.Name}"
+                                                                           TextWrapping="Wrap"
+                                                                           ToolTip.ShowDelay="500"
+                                                                           ToolTip.Tip="{Binding Item.Name}" />
+
+                                                                <TextBox Grid.Column="2"
+                                                                         VerticalAlignment="Center"
+                                                                         FontSize="16"
+                                                                         Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"
+                                                                         TextWrapping="WrapWithOverflow">
+                                                                    <Interaction.Behaviors>
+                                                                        <EventTriggerBehavior EventName="TextChanged">
+                                                                            <InvokeCommandAction Command="{Binding ViewModel.UpdateItemCommand, ElementName=SalesPoint}" />
+                                                                        </EventTriggerBehavior>
+                                                                    </Interaction.Behaviors>
+                                                                </TextBox>
+
+                                                                <TextBox Grid.Column="3"
+                                                                         VerticalAlignment="Center"
+                                                                         FontSize="16"
+                                                                         Text="{Binding Discount, UpdateSourceTrigger=PropertyChanged}"
+                                                                         TextWrapping="WrapWithOverflow">
+                                                                    <Interaction.Behaviors>
+                                                                        <EventTriggerBehavior EventName="TextChanged">
+                                                                            <InvokeCommandAction Command="{Binding ViewModel.UpdateItemCommand, ElementName=SalesPoint}" />
+                                                                        </EventTriggerBehavior>
+                                                                    </Interaction.Behaviors>
+                                                                </TextBox>
+
+                                                                <Grid Grid.Column="4"
+                                                                      VerticalAlignment="Center"
+                                                                      ColumnDefinitions="Auto,Auto,Auto">
+                                                                    <Button Grid.Column="0"
+                                                                            Width="35"
+                                                                            Height="35"
+                                                                            HorizontalContentAlignment="Center"
+                                                                            VerticalContentAlignment="Center"
+                                                                            Classes="Flat"
+                                                                            Command="{Binding ViewModel.DecreaseQuantityCommand, ElementName=SalesPoint}"
+                                                                            CommandParameter="{Binding .}"
+                                                                            CornerRadius="10, 0, 0, 10">
+                                                                        <avalonia:MaterialIcon Kind="Minus">
+                                                                            <avalonia:MaterialIcon.RenderTransform>
+                                                                                <TranslateTransform>
+                                                                                    <TranslateTransform.X>-10</TranslateTransform.X>
+                                                                                </TranslateTransform>
+                                                                            </avalonia:MaterialIcon.RenderTransform>
+                                                                        </avalonia:MaterialIcon>
+                                                                    </Button>
+                                                                    <TextBox Grid.Column="1"
+                                                                             MinWidth="40"
+                                                                             VerticalAlignment="Center"
+                                                                             HorizontalContentAlignment="Center"
+                                                                             Background="{DynamicResource SukiControlBorderBrush}"
+                                                                             BorderThickness="0"
+                                                                             CornerRadius="0"
+                                                                             Text="{Binding Quantity}">
+                                                                        <Interaction.Behaviors>
+                                                                            <EventTriggerBehavior EventName="LostFocus">
+                                                                                <InvokeCommandAction Command="{Binding ViewModel.UpdateItemCommand, ElementName=SalesPoint}" />
+                                                                            </EventTriggerBehavior>
+                                                                        </Interaction.Behaviors>
+                                                                    </TextBox>
+                                                                    <Button Grid.Column="2"
+                                                                            Width="35"
+                                                                            Height="35"
+                                                                            HorizontalContentAlignment="Center"
+                                                                            VerticalContentAlignment="Center"
+                                                                            Classes="Flat"
+                                                                            Command="{Binding ViewModel.IncreaseQuantityCommand, ElementName=SalesPoint}"
+                                                                            CommandParameter="{Binding .}"
+                                                                            CornerRadius="0, 10, 10, 0">
+                                                                        <avalonia:MaterialIcon Kind="Plus">
+                                                                            <avalonia:MaterialIcon.RenderTransform>
+                                                                                <TranslateTransform>
+                                                                                    <TranslateTransform.X>-10</TranslateTransform.X>
+                                                                                </TranslateTransform>
+                                                                            </avalonia:MaterialIcon.RenderTransform>
+                                                                        </avalonia:MaterialIcon>
+                                                                    </Button>
+                                                                </Grid>
+
+                                                                <ComboBox Grid.Column="5"
+                                                                          VerticalAlignment="Center"
+                                                                          DisplayMemberBinding="{Binding Name}"
+                                                                          ItemsSource="{Binding AvailableUnits}"
+                                                                          SelectedItem="{Binding Unit}" />
+
+                                                                <Button Grid.Column="6"
+                                                                        Width="35"
+                                                                        Height="35"
+                                                                        HorizontalContentAlignment="Center"
+                                                                        VerticalContentAlignment="Center"
+                                                                        Classes="Flat"
+                                                                        Command="{Binding ViewModel.DeleteItemCommand, ElementName=SalesPoint}"
+                                                                        CommandParameter="{Binding .}">
+                                                                    <avalonia:MaterialIcon Kind="Delete">
+                                                                        <avalonia:MaterialIcon.RenderTransform>
+                                                                            <TranslateTransform>
+                                                                                <TranslateTransform.X>-9</TranslateTransform.X>
+                                                                            </TranslateTransform>
+                                                                        </avalonia:MaterialIcon.RenderTransform>
+                                                                    </avalonia:MaterialIcon>
+                                                                </Button>
+                                                            </Grid>
+                                                        </suki:GlassCard>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </suki:GlassCard>
+                    </Grid>
+
+                    <Expander Grid.Column="0"
+                              ExpandDirection="Right"
+                              Header="{Binding ViewModel.BrowseCategoriesText}"
+                              IsExpanded="{Binding ViewModel.CategoriesExpanderOpen}">
+                        <suki:GlassCard x:Name="LeftGlassCard"
+                                        MaxWidth="{Binding Bounds.Width, Converter={StaticResource MathConverter}, ConverterParameter='*,0.48'}"
+                                        Margin="0,0,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <ScrollViewer Grid.Row="1">
+                                    <TabControl>
+                                        <TabItem Padding="3">
+                                            <TabItem.Header>
+                                                <suki:GlassCard Padding="8" IsOpaque="True">
+                                                    <TextBlock HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding ViewModel[ByPrimaryCategories]}" />
+                                                </suki:GlassCard>
+                                            </TabItem.Header>
+                                            <TabControl HorizontalContentAlignment="Left"
+                                                        ItemsSource="{Binding ViewModel.TabCategories}"
+                                                        SelectedItem="{Binding ViewModel.SelectedTabCategory}">
+                                                <TabControl.Template>
+                                                    <ControlTemplate TargetType="TabControl">
+                                                        <DockPanel>
+                                                            <ScrollViewer AllowAutoHide="False"
+                                                                          DockPanel.Dock="Top"
+                                                                          HorizontalScrollBarVisibility="Auto"
+                                                                          VerticalScrollBarVisibility="Disabled">
+                                                                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                                            </ScrollViewer>
+                                                            <ContentPresenter Name="PART_SelectedContentHost"
+                                                                              Margin="{TemplateBinding Padding}"
+                                                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                              Content="{TemplateBinding SelectedContent}"
+                                                                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+                                                        </DockPanel>
+                                                    </ControlTemplate>
+                                                </TabControl.Template>
+                                                <TabControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </TabControl.ItemsPanel>
+                                                <TabControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center"
+                                                                   Text="{Binding Name}" />
+                                                    </DataTemplate>
+                                                </TabControl.ItemTemplate>
+                                                <TabControl.DataTemplates>
+                                                    <DataTemplate DataType="fastSales:CategoryModel">
+                                                        <ScrollViewer MaxHeight="{Binding Bounds.Height, ElementName=SalesPoint, Converter={StaticResource MathConverter}, ConverterParameter='*,0.47'}">
+                                                            <ItemsRepeater ItemTemplate="{StaticResource SalesPointItemTemplate}" ItemsSource="{Binding Items}">
+                                                                <ItemsRepeater.Layout>
+                                                                    <UniformGridLayout MinColumnSpacing="5"
+                                                                                       MinRowSpacing="5"
+                                                                                       Orientation="Horizontal" />
+                                                                </ItemsRepeater.Layout>
+                                                            </ItemsRepeater>
+                                                        </ScrollViewer>
+                                                    </DataTemplate>
+                                                </TabControl.DataTemplates>
+                                            </TabControl>
+                                        </TabItem>
+                                        <TabItem Padding="3">
+                                            <TabItem.Header>
+                                                <suki:GlassCard Padding="8" IsOpaque="True">
+                                                    <TextBlock HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding ViewModel[ByFavourites]}" />
+                                                </suki:GlassCard>
+                                            </TabItem.Header>
+                                            <ScrollViewer MaxHeight="{Binding Bounds.Height, ElementName=SalesPoint, Converter={StaticResource MathConverter}, ConverterParameter='*,0.47'}">
+                                                <ItemsRepeater ItemTemplate="{StaticResource SalesPointItemTemplate}" ItemsSource="{Binding ViewModel.FavouritedItems}">
+                                                    <ItemsRepeater.Layout>
+                                                        <UniformGridLayout MinColumnSpacing="5"
+                                                                           MinRowSpacing="5"
+                                                                           Orientation="Horizontal" />
+                                                    </ItemsRepeater.Layout>
+                                                </ItemsRepeater>
+                                            </ScrollViewer>
+                                        </TabItem>
+                                        <TabItem Padding="3">
+                                            <TabItem.Header>
+                                                <suki:GlassCard Padding="8" IsOpaque="True">
+                                                    <TextBlock HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding ViewModel[ByNoBarcode]}" />
+                                                </suki:GlassCard>
+                                            </TabItem.Header>
+                                            <ScrollViewer MaxHeight="{Binding Bounds.Height, ElementName=SalesPoint, Converter={StaticResource MathConverter}, ConverterParameter='*,0.47'}">
+                                                <ItemsRepeater ItemTemplate="{StaticResource SalesPointItemTemplate}" ItemsSource="{Binding ViewModel.NoBarcodeItems}">
+                                                    <ItemsRepeater.Layout>
+                                                        <UniformGridLayout MinColumnSpacing="5"
+                                                                           MinRowSpacing="5"
+                                                                           Orientation="Horizontal" />
+                                                    </ItemsRepeater.Layout>
+                                                </ItemsRepeater>
+                                            </ScrollViewer>
+                                        </TabItem>
+                                    </TabControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </suki:GlassCard>
+
+                    </Expander>
+
+                </Grid>
+
+                <StackPanel Grid.Row="1"
+                            Margin="0,5,0,10"
+                            VerticalAlignment="Bottom">
+                    <suki:GlassCard>
+                        <ScrollViewer HorizontalScrollBarVisibility="Visible">
+                            <DockPanel Margin="0,5,0,0">
+                                <WrapPanel HorizontalAlignment="Left">
+                                    <suki:GlassCard Margin="0,0,0,0">
+                                        <StackPanel MinHeight="100">
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <avalonia:MaterialIcon Foreground="{Binding ViewModel.BackgroundTheme}" Kind="CreditCard" />
+                                                <TextBlock FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding ViewModel[Payment]}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,7,0,0" Spacing="10">
+                                                <StackPanel Spacing="10">
+                                                    <TextBlock Margin="3,0,0,0" Text="{Binding ViewModel[PaymentMethod]}" />
+                                                    <ComboBox MinWidth="120"
+                                                              ItemsSource="{Binding ViewModel.PaymentTypes.Items}"
+                                                              SelectedItem="{Binding ViewModel.PaymentTypes.SelectedItem}" />
+                                                </StackPanel>
+
+                                                <StackPanel IsVisible="{Binding ViewModel.SafeVisibility}" Spacing="10">
+                                                    <TextBlock Margin="3,0,0,0" Text="{Binding ViewModel[Safe]}" />
+                                                    <ComboBox MinWidth="120"
+                                                              DisplayMemberBinding="{Binding Display}"
+                                                              ItemsSource="{Binding ViewModel.Safes.Items}"
+                                                              SelectedItem="{Binding ViewModel.Safes.SelectedItem}" />
+                                                </StackPanel>
+
+                                                <StackPanel IsVisible="{Binding ViewModel.BankVisibility}" Spacing="10">
+                                                    <TextBlock Margin="3,0,0,0" Text="{Binding ViewModel[Bank]}" />
+                                                    <ComboBox MinWidth="120"
+                                                              DisplayMemberBinding="{Binding Display}"
+                                                              ItemsSource="{Binding ViewModel.Banks.Items}"
+                                                              SelectedItem="{Binding ViewModel.Banks.SelectedItem}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                    </suki:GlassCard>
+
+                                    <suki:GlassCard Margin="5,0,0,0">
+                                        <StackPanel MinHeight="100">
+                                            <ContentControl Margin="0,0,0,0" Content="{Binding ViewModel.Clients.Content}" />
+
+                                            <StackPanel Margin="0,10,0,0"
+                                                        Orientation="Horizontal"
+                                                        Spacing="5">
+                                                <avalonia:MaterialIcon Foreground="{Binding ViewModel.BackgroundTheme}" Kind="Storage" />
+                                                <TextBlock FontSize="15"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding ViewModel[Storage]}" />
+                                            </StackPanel>
+                                            <ComboBox MinWidth="180"
+                                                      Margin="0,5,0,0"
+                                                      DisplayMemberBinding="{Binding Display}"
+                                                      ItemsSource="{Binding ViewModel.Stores.Items}"
+                                                      SelectedItem="{Binding ViewModel.Stores.SelectedItem}" />
+                                        </StackPanel>
+                                    </suki:GlassCard>
+
+                                    <suki:GlassCard Margin="5,0,0,0">
+                                        <StackPanel MinHeight="100">
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <avalonia:MaterialIcon Foreground="{Binding ViewModel.BackgroundTheme}" Kind="Discount" />
+                                                <TextBlock FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding ViewModel[Discounts]}" />
+                                            </StackPanel>
+                                            <TextBlock Margin="0,5,0,5" Text="{Binding ViewModel[Value]}" />
+
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <TextBox Height="20"
+                                                         MinWidth="80"
+                                                         Text="{Binding ViewModel.CurrentDiscountValue, UpdateSourceTrigger=PropertyChanged}" />
+                                                <ComboBox Width="110"
+                                                          Padding="3"
+                                                          ItemsSource="{Binding ViewModel.DiscountType.Items}"
+                                                          SelectedItem="{Binding ViewModel.DiscountType.SelectedItem}" />
+                                            </StackPanel>
+
+                                            <StackPanel Margin="0,5,0,0"
+                                                        Orientation="Horizontal"
+                                                        Spacing="5">
+                                                <avalonia:MaterialIcon Foreground="{Binding ViewModel.BackgroundTheme}" Kind="MoneyOff" />
+                                                <TextBlock FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding ViewModel[Taxes]}" />
+                                            </StackPanel>
+                                            <TextBlock Margin="0,5,0,5" Text="{Binding ViewModel[TaxValue]}" />
+
+                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                <TextBox Height="20"
+                                                         MinWidth="80"
+                                                         Text="{Binding ViewModel.CurrentTaxValue, UpdateSourceTrigger=PropertyChanged}" />
+                                                <ComboBox Width="110"
+                                                          Padding="3"
+                                                          ItemsSource="{Binding ViewModel.TaxType.Items}"
+                                                          SelectedItem="{Binding ViewModel.TaxType.SelectedItem}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </suki:GlassCard>
+
+                                    <suki:GlassCard Margin="5,0,0,0">
+                                        <StackPanel MinHeight="100" Spacing="5">
+                                            <suki:GlassCard Padding="5">
+                                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                                    <avalonia:MaterialIcon Width="25"
+                                                                           Height="25"
+                                                                           Foreground="{Binding ViewModel.BackgroundTheme}"
+                                                                           Kind="Tag" />
+                                                    <TextBlock FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding ViewModel[SubtotalPriceDotted]}" />
+                                                    <TextBlock FontSize="18"
+                                                               FontWeight="Normal"
+                                                               Text="{Binding ViewModel.Data.SubtotalPrice}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+
+                                            <suki:GlassCard Padding="5">
+                                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                                    <avalonia:MaterialIcon Width="25"
+                                                                           Height="25"
+                                                                           Foreground="{Binding ViewModel.BackgroundTheme}"
+                                                                           Kind="Discount" />
+                                                    <TextBlock FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding ViewModel[DiscountDottedLonged]}" />
+                                                    <TextBlock FontSize="18"
+                                                               FontWeight="Normal"
+                                                               Text="{Binding ViewModel.Data.DiscountedPrice}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+
+                                            <suki:GlassCard Padding="5">
+                                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                                    <avalonia:MaterialIcon Width="25"
+                                                                           Height="25"
+                                                                           Foreground="{Binding ViewModel.BackgroundTheme}"
+                                                                           Kind="MoneyOff" />
+                                                    <TextBlock FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding ViewModel[TaxDotted]}" />
+                                                    <TextBlock FontSize="18"
+                                                               FontWeight="Normal"
+                                                               Text="{Binding ViewModel.Data.FinalTax}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+
+                                            <suki:GlassCard MinWidth="150" Padding="5">
+                                                <StackPanel Orientation="Horizontal" Spacing="5">
+                                                    <avalonia:MaterialIcon Width="25"
+                                                                           Height="25"
+                                                                           Foreground="{Binding ViewModel.BackgroundTheme}"
+                                                                           Kind="CheckAll" />
+                                                    <TextBlock FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding ViewModel[TotalDotted]}" />
+                                                    <TextBlock FontSize="18"
+                                                               FontWeight="Normal"
+                                                               Text="{Binding ViewModel.Data.TotalPrice}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+                                        </StackPanel>
+                                    </suki:GlassCard>
+
+                                </WrapPanel>
+
+                                <StackPanel HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Spacing="5">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <StackPanel Orientation="Vertical" Spacing="5">
+                                            <Button Width="160"
+                                                    Height="50"
+                                                    Command="{Binding ViewModel.ShowSuspendedCommand}">
+                                                <TextBlock FontSize="20" Text="{Binding ViewModel[SuspendedKeyed]}" />
+                                            </Button>
+                                            <Button Width="160"
+                                                    Height="50"
+                                                    Margin="10,0,0,0"
+                                                    Command="{Binding ViewModel.ReturnSalesCommand}">
+                                                <TextBlock FontSize="20" Text="{Binding ViewModel[ReturnSalesKeyed]}" />
+                                            </Button>
+
+                                            <Button Width="160"
+                                                    Height="50"
+                                                    Margin="10,0,0,0"
+                                                    Command="{Binding ViewModel.EditSalesCommand}">
+                                                <TextBlock FontSize="20" Text="{Binding ViewModel[EditSalesKeyed]}" />
+                                            </Button>
+                                        </StackPanel>
+
+                                        <StackPanel Spacing="5">
+                                            <StackPanel Orientation="Horizontal" Spacing="1">
+                                                <Button Width="115"
+                                                        Height="50"
+                                                        Background="DarkOrange"
+                                                        BorderThickness="0"
+                                                        Command="{Binding ViewModel.PutOnHoldCommand}">
+                                                    <TextBlock FontSize="20"
+                                                               Foreground="Black"
+                                                               Text="{Binding ViewModel[InvoiceOnHoldButton]}" />
+                                                </Button>
+                                                <Button Width="115"
+                                                        Height="50"
+                                                        Margin="10,0,0,0"
+                                                        Background="OrangeRed"
+                                                        BorderThickness="0"
+                                                        Command="{Binding ViewModel.AbortCommand}">
+                                                    <TextBlock FontSize="20"
+                                                               Foreground="Black"
+                                                               Text="{Binding ViewModel[InvoiceAbort]}" />
+                                                </Button>
+                                            </StackPanel>
+                                            <Button Width="245"
+                                                    Height="50"
+                                                    Margin="0,0,0,0"
+                                                    Background="DarkSeaGreen"
+                                                    Command="{Binding ViewModel.PayCommand}">
+                                                <TextBlock FontSize="20"
+                                                           Foreground="White"
+                                                           Text="{Binding ViewModel[InvoicePay]}" />
+                                            </Button>
+                                            <Button Width="245"
+                                                    Height="50"
+                                                    Margin="0,0,0,0"
+                                                    Background="ForestGreen"
+                                                    BorderThickness="0"
+                                                    Command="{Binding ViewModel.PayCommand}"
+                                                    CommandParameter="true">
+                                                <TextBlock FontSize="20"
+                                                           Foreground="White"
+                                                           Text="{Binding ViewModel[InvoicePayPrint]}" />
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </ScrollViewer>
+                    </suki:GlassCard>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</bases1:UserControlBase>

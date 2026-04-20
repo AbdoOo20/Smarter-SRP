@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="SmartiErpWin.Client.Prefabs.ComboPrefabObsolete"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:SmartiErpWin.Client.Prefabs"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+      mc:Ignorable="d"
+      d:DataContext="{d:DesignInstance local:ComboPrefabObsolete,
+                                     IsDesignTimeCreatable=True}"
+      x:Name="ComboControl"
+      ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+      ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <StackPanel Margin="0, 0, 0, 0">
+                    <prefabs:QuaAutoSuggestPrefab 
+                        ItemsSource="{Binding ItemsSource, ElementName=ComboControl}"
+                        Margin="0, 10, 0, 0"
+                        TitleText="{Binding TitleText, ElementName=ComboControl}"
+                        MinComboWidth="{Binding MinComboWidth, ElementName=ComboControl}"
+                        SelectedItem="{Binding SelectedItem, ElementName=ComboControl, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Margin="0, 38, 0, 0">
+                    <Button Margin="10, 0, 0, 0" Height="37" Visibility="{Binding AddVisibility, ElementName=ComboControl}"
+                        Click="OnAdd">
+                        <ui:SymbolIcon Symbol="Add12" />
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

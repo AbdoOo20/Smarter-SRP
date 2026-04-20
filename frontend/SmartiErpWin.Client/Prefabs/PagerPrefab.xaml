@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="SmartiErpWin.Client.Prefabs.PagerPrefab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SmartiErpWin.Client.Prefabs"
+             mc:Ignorable="d"
+             x:Name="PagerControl"
+             d:DataContext="{d:DesignInstance local:PagerPrefab,
+                                     IsDesignTimeCreatable=False}">
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                DockPanel.Dock="Bottom"
+                Margin="0, 15, 0, 0">
+        <ComboBox SelectedItem="{Binding Limit, ElementName=PagerControl, Mode=TwoWay}" Margin="0, 0, 15, 0"
+                  ItemsSource="{Binding Limits, ElementName=PagerControl}"/>
+        <Button Content="{Binding PreviousButton, ElementName=PagerControl}"
+                Command="{Binding MoveOneDownCommand, ElementName=PagerControl}"/>
+        <TextBlock Text="{Binding PagesText, ElementName=PagerControl}" Margin="10"/>
+        <Button Content="{Binding NextButton, ElementName=PagerControl}"
+                Command="{Binding MoveOneUpCommand, ElementName=PagerControl}" Margin="0, 0, 0, 0"/>
+    </StackPanel>
+</UserControl>

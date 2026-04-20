@@ -1,0 +1,240 @@
+﻿@Fly.WebApi_HostAddress = http://localhost:5093
+@WebApi_HostAddress2 = https://localhost:44321
+
+GET {{Fly.WebApi_HostAddress}}/Currency/
+Accept: application/json
+###
+
+
+GET {{Fly.WebApi_HostAddress}}/Account/accounts/
+Accept: application/json
+
+###
+
+//  Account
+//  0490fb8d-4f54-43ed-b681-bb1f996d4f8e - 100
+//  2930ed05-fcde-4dc2-94d6-c13811b87875 - 101
+//  08dca34f-5f8c-496e-8f11-cce68c95f438 - 102
+
+POST {{WebApi_HostAddress2}}/Account/save
+Accept: application/json
+Content-Type: application/json
+
+{
+  "number": 1005,
+  "name": "account-1005-new",
+  "openingDebtor": 0,
+  "openingCreditor": 0,
+  "parentId": null,
+  "currencyId": {
+    "value" : "fc75d0d6-b4f0-4d5d-953c-ce6f44324a4f"
+  }
+}
+
+###
+
+POST {{WebApi_HostAddress2}}/Account/save
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id" : {
+    "value" : "08dca34f-5f8c-496e-8f11-cce68c95f438"
+  },
+  "number": 102,
+  "name": "account-102-edit",
+  "openingDebtor": 0,
+  "openingCreditor": 0,
+  "parentId": {
+    "value" : "08dca34f-07c4-4251-8b0c-a6bac204a4d9"
+  },
+  "currencyId": {
+    "value" : "fc75d0d6-b4f0-4d5d-953c-ce6f44324a4f"
+  }
+}
+
+###
+
+GET {{WebApi_HostAddress2}}/Account/accounts/balance
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accountId": {
+    "value": "08dca34f-07c4-4251-8b0c-a6bac204a4d9"
+  }
+}
+###
+
+POST {{WebApi_HostAddress2}}/Currency/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "isPrimary": false,
+  "transfereRate": 7.6,
+  "name": "دولاؤ"
+}
+###
+
+POST {{WebApi_HostAddress2}}/Entry/simple
+Accept: application/json
+Content-Type: application/json
+
+{
+  "date": "2024-07-13T16:18:48.625Z",
+  "amount": 80,
+  "fromAccount": {
+    "value": "08dca34f-5f8c-496e-8f11-cce68c95f438"
+  },
+  "toAccount": {
+    "value": "08dca34f-07c4-4251-8b0c-a6bac204a4d9"
+  },
+  "note": "مصروف"
+}
+###
+
+POST {{WebApi_HostAddress2}}/DisbursementPermit/Create
+Accept: application/json
+Content-Type: application/json
+
+{
+  "costCenterId": {
+    "value": "08dcc13a-a6c6-48ae-85f4-48df7a2c905b"
+  },
+  "storeId": {
+    "value": "08dcc13a-9fd7-41c8-8e89-a5fb08fb4355"
+  },
+  "date": "2024-08-16T13:53:05.487Z",
+  "disbursementPermitDetails": [
+    {
+      "itemId": {
+        "value": "08dcc140-8b5e-4ad5-84af-ba7f12015e96"
+      },
+      "unitId": {
+        "value": "08dcc13a-addf-4aa4-8069-570b80df3909" 
+      },
+      "quantity": 20,
+      "expireDate": "2024-08-16T13:53:05.487Z"
+    }
+  ]
+}
+###
+// "08dcbad8-e125-4936-835e-e7755df0d6ec" == 1 - قطعة
+// "08dcbad8-e498-4c3c-8aa8-d566d5493f59" == 24 - صندوق 
+###
+
+POST {{WebApi_HostAddress2}}/SupplyPermit
+Accept: application/json
+Content-Type: application/json
+
+{
+  "supplierId": {
+    "value": "08dcc13a-d307-4524-8e61-1366278ded78"
+  },
+  "storeId": {
+    "value": "08dcc13a-9fd7-41c8-8e89-a5fb08fb4355"
+  },
+  "date": "2024-08-20T18:03:42.986Z",
+  "supplyPermitDetails": [
+    {
+      "itemId": {
+        "value": "08dcc140-8b5e-4ad5-84af-ba7f12015e96"
+      },
+      "unitId": {
+        "value": "08dcc13a-addf-4aa4-8069-570b80df3909"
+      },
+      "quantity": 20,
+      "expireDate": "2024-08-20T18:03:42.986Z"
+    }
+  ]
+}
+###
+
+POST {{WebApi_HostAddress2}}/Sales/ItemInfo
+Accept: application/json
+Content-Type: application/json
+
+{
+  "storeId": {
+    "value": "08dcbb6d-16eb-4376-8abb-c1f220a64028"
+  },
+  "itemId": {
+    "value": "08dcbbbe-1a32-4b95-8a2f-20d67e102904"
+  },
+  "unitId": {
+    "value": "08dcbad8-e125-4936-835e-e7755df0d6ec"
+  }
+}
+###
+
+POST {{WebApi_HostAddress2}}/Sales
+Accept: application/json
+Content-Type: application/json
+
+{
+  "date": "2024-08-17T09:17:30.633Z",
+  "number": 10,
+  "isPaid": false,
+  "peymentType": 0,
+  "discountType": 0,
+  "discount": 0,
+  "clientId": {
+    "value": "08dcbc64-8952-405b-8d6d-1099adb4c7ec"
+  },
+  "storeId": {
+    "value": "08dcbb6d-16eb-4376-8abb-c1f220a64028"
+  },
+  "safeId": {
+    "value": "08dcbb78-0943-440c-8de9-ff7cd990ce8b"
+  },
+  "details": [
+    {
+      "unitId": {
+        "value": "08dcbad8-e498-4c3c-8aa8-d566d5493f59"
+      },
+      "itemId": {
+        "value": "08dcbbbe-1a32-4b95-8a2f-20d67e102904"
+      },
+      "quantity": 50,
+      "price": 60,
+      "discount": 0
+    }
+  ]
+}
+### 
+
+POST {{WebApi_HostAddress2}}/MarketerDisbursementPermit
+Accept: application/json
+Content-Type: application/json
+
+{
+  "date": "2024-08-17T15:49:44.691Z",
+  "number": 0,
+  "isPaid": false,
+  "peymentType": 1,
+  "discountType": 0,
+  "discount": 0,
+  "marketerId": {
+    "value": "08dcbec9-260d-4f76-8392-e89e45d00630"
+  },
+  "StoreId": {
+    "value": "08dcbb6d-16eb-4376-8abb-c1f220a64028"
+  },
+  "details": [
+    {
+      "unitId": {
+        "value": "08dcbad8-e125-4936-835e-e7755df0d6ec"
+      },
+      "itemId": {
+        "value": "08dcbbbe-1a32-4b95-8a2f-20d67e102904"
+      },
+      "quantity": 10,
+      "price": 250,
+      "discount": 0
+    }
+  ]
+}
+###
+
+

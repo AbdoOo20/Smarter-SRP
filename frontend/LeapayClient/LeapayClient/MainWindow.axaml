@@ -1,0 +1,417 @@
+<suki:SukiWindow x:Class="Leapay.Client.MainWindow"
+                 xmlns="https://github.com/avaloniaui"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:client="clr-namespace:Leapay.Client"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                 x:Name="MainView"
+                 Title="{Binding ViewModel.ApplicationTitle}"
+                 d:DesignHeight="450"
+                 d:DesignWidth="800"
+                 x:DataType="client:MainWindow"
+                 BackgroundAnimationEnabled="{Binding ViewModel.AnimationsEnabled}"
+                 BackgroundShaderFile="{Binding ViewModel.CustomShaderFile}"
+                 BackgroundStyle="{Binding BackgroundStyle}"
+                 BackgroundTransitionsEnabled="{Binding ViewModel.TransitionsEnabled}"
+                 CanFullScreen="True"
+                 CanMinimize="{Binding !ViewModel.WindowLocked}"
+                 CanMove="{Binding !ViewModel.WindowLocked}"
+                 CanPin="True"
+                 CanResize="{Binding !ViewModel.WindowLocked}"
+                 FlowDirection="{Binding ViewModel.FlowDirection}"
+                 Icon="Assets/comp_logo.png"
+                 IsTitleBarVisible="{Binding ViewModel.TitleBarVisible, Mode=TwoWay}"
+                 KeyDown="VerifyWindow"
+                 ShowBottomBorder="{Binding ViewModel.ShowBottomBar}"
+                 ShowTitlebarBackground="{Binding ViewModel.ShowTitleBar}"
+                 TitleBarVisibilityOnFullScreen="Unchanged"
+                 WindowStartupLocation="CenterScreen"
+                 WindowState="Maximized"
+                 mc:Ignorable="d">
+    <suki:SukiWindow.Hosts>
+        <suki:SukiToastHost Manager="{Binding ViewModel.ToastManager}" />
+        <suki:SukiDialogHost Manager="{Binding ViewModel.DialogManager}" />
+    </suki:SukiWindow.Hosts>
+    <suki:SukiWindow.LogoContent>
+        <Image Width="20"
+               Height="20"
+               Source="Assets/app_logo.jpg" />
+    </suki:SukiWindow.LogoContent>
+
+    <Viewbox Stretch="Uniform">
+        <suki:BusyArea BusyText="{Binding ViewModel.BusyText}"
+                       CommandAction="{Binding ViewModel.CommandBusyAction}"
+                       CommandText="{Binding ViewModel.CommandBusyText}"
+                       IsBusy="{Binding ViewModel.IsBusy}"
+                       SecondaryBusyText="{Binding ViewModel.SecondaryBusyText}">
+            <Grid IsEnabled="{Binding !ViewModel.IsBusy}">
+                <DockPanel>
+                    <Grid x:Name="MainGrid"
+                          DockPanel.Dock="Top"
+                          RowDefinitions="*, Auto">
+                        <suki:SukiSideMenu x:Name="MainSideMenu"
+                                           AutoScrollToSelectedItem="True"
+                                           IsSearchEnabled="False"
+                                           IsVisible="{Binding ViewModel.ShouldShowUi}"
+                                           OpenPaneLength="280"
+                                           ScrollViewer.VerticalScrollBarVisibility="Visible">
+                            <suki:SukiSideMenu.Styles>
+                                <Style Selector="Image.AppIcon">
+                                    <Setter Property="Transitions">
+                                        <Transitions>
+                                            <DoubleTransition Property="Opacity" Duration="0.1" />
+                                        </Transitions>
+                                    </Setter>
+                                    <Style Selector="^:pointerover">
+                                        <Setter Property="Opacity" Value="0.5" />
+                                    </Style>
+                                </Style>
+                            </suki:SukiSideMenu.Styles>
+
+                            <suki:SukiSideMenu.HeaderContent>
+                                <suki:GlassCard Margin="10,0,10,10"
+                                                Padding="0"
+                                                CornerRadius="20"
+                                                IsOpaque="True">
+                                    <Image Width="200"
+                                           Height="200"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Source="Assets/center_logo.png" />
+                                </suki:GlassCard>
+
+                            </suki:SukiSideMenu.HeaderContent>
+                        </suki:SukiSideMenu>
+
+                        <StackPanel Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{Binding ViewModel.ShouldShowLoading}">
+                            <suki:CircleProgressBar Width="100"
+                                                    Height="100"
+                                                    Margin="0,0,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    DockPanel.Dock="Top"
+                                                    IsIndeterminate="True"
+                                                    IsVisible="{Binding ViewModel.IsRefreshing}" />
+                            <TextBlock Margin="0,10,0,0"
+                                       HorizontalAlignment="Center"
+                                       FontSize="28"
+                                       Text="{Binding ViewModel.LoadingTitle}" />
+                            <TextBlock Margin="0,10,0,0"
+                                       HorizontalAlignment="Center"
+                                       FontSize="22"
+                                       Text="{Binding ViewModel.LoadingInfo}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{Binding ViewModel.ShouldShowUpdating}">
+                            <StackPanel HorizontalAlignment="Center"
+                                        Orientation="Horizontal"
+                                        Spacing="13">
+                                <suki:CircleProgressBar x:Name="CircleUpdate"
+                                                        Width="80"
+                                                        Height="80"
+                                                        Margin="0,0,0,0"
+                                                        HorizontalAlignment="Center"
+                                                        DockPanel.Dock="Top"
+                                                        IsIndeterminate="False"
+                                                        Value="{Binding ViewModel.UpdatePercentage}">
+                                    <TextBlock IsVisible="{Binding !IsIndeterminate, ElementName=CircleUpdate}" Text="{Binding ViewModel.UpdatePercentage, StringFormat={}{0:0}%}" />
+                                </suki:CircleProgressBar>
+                                <TextBlock Margin="0,18,0,0"
+                                           HorizontalAlignment="Center"
+                                           FontSize="28"
+                                           Text="{Binding ViewModel.UpdateInfo}" />
+                            </StackPanel>
+
+                            <TextBlock Margin="0,10,0,0"
+                                       HorizontalAlignment="Center"
+                                       FontSize="22"
+                                       IsVisible="{Binding ViewModel.IsUpdating}"
+                                       Text="{Binding ViewModel[UpdateDescription]}" />
+                        </StackPanel>
+                        <Grid x:Name="SetupBackendGrid"
+                              Grid.Row="0"
+                              Margin="15"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Top"
+                              IsVisible="{Binding ViewModel.ShouldShowSetup}"
+                              RowDefinitions="*,*,*">
+                            <StackPanel Orientation="Vertical" Spacing="10">
+
+                                <Border Width="300"
+                                        Height="300"
+                                        ClipToBounds="True"
+                                        CornerRadius="20">
+                                    <Image Width="300"
+                                           Height="300"
+                                           Source="Assets/erp_oveview.png" />
+                                </Border>
+
+                                <TextBlock HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Text="{Binding ViewModel[SelectSystemTypeMessage]}" />
+
+                                <StackPanel Margin="0,10,0,0"
+                                            Orientation="Horizontal"
+                                            Spacing="10">
+                                    <Button Command="{Binding ViewModel.SelectBackendTypeCommand}" CommandParameter="full">
+                                        <StackPanel Spacing="5">
+                                            <Border Width="250"
+                                                    Height="250"
+                                                    ClipToBounds="True"
+                                                    CornerRadius="20">
+                                                <Image Width="250"
+                                                       Height="250"
+                                                       Source="Assets/backend-frontend.png" />
+                                            </Border>
+                                            <TextBlock HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="26"
+                                                       FontWeight="Bold"
+                                                       Text="{Binding ViewModel[BackendAndFrontendTitle]}" />
+
+                                            <TextBlock MaxWidth="300"
+                                                       Margin="8"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="15"
+                                                       Text="{Binding ViewModel[BackendAndFrontendMessage]}"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="WrapWithOverflow" />
+
+                                        </StackPanel>
+                                    </Button>
+
+                                    <Button Command="{Binding ViewModel.SelectBackendTypeCommand}" CommandParameter="frontend">
+                                        <StackPanel Spacing="5">
+                                            <Border Width="250"
+                                                    Height="250"
+                                                    ClipToBounds="True"
+                                                    CornerRadius="20">
+                                                <Image Width="250"
+                                                       Height="250"
+                                                       Source="Assets/frontend.png" />
+                                            </Border>
+                                            <TextBlock HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="26"
+                                                       FontWeight="Bold"
+                                                       Text="{Binding ViewModel[FrontendTitle]}" />
+
+                                            <TextBlock MaxWidth="300"
+                                                       Margin="8"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="15"
+                                                       Text="{Binding ViewModel[FrontendMessage]}"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="WrapWithOverflow" />
+
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+
+                        <Grid x:Name="SelectBackendGrid"
+                              Grid.Row="0"
+                              Margin="15"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Top"
+                              IsVisible="{Binding ViewModel.IsUserSelectingBackend}"
+                              RowDefinitions="*,*,*">
+                            <StackPanel Orientation="Vertical" Spacing="10">
+
+                                <Border Width="300"
+                                        Height="300"
+                                        ClipToBounds="True"
+                                        CornerRadius="20">
+                                    <Image Width="300"
+                                           Height="300"
+                                           Source="Assets/backend-frontend.png" />
+                                </Border>
+
+                                <TextBlock HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Text="{Binding ViewModel[SelectAServer]}" />
+
+                                <suki:InfoBar Margin="0,10,0,0"
+                                              IsClosable="False"
+                                              IsOpen="True"
+                                              Message="{Binding ViewModel.ConnectionInfoText}" />
+
+                                <Button Width="200"
+                                        Margin="0,10,0,0"
+                                        HorizontalAlignment="Center"
+                                        Classes="Flat Rounded"
+                                        Command="{Binding ViewModel.InitializeBackendSetupPromptCommand}"
+                                        Content="{Binding ViewModel[CreateLocalBackend]}"
+                                        IsVisible="{Binding ViewModel.IsCreateOwnBackendVisible}" />
+
+                                <StackPanel Margin="0,10,0,0" Spacing="10">
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontSize="26"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[PreviousConnections]}" />
+                                    <suki:GlassCard IsOpaque="True">
+                                        <StackPanel>
+                                            <suki:InfoBar Margin="5"
+                                                          IsClosable="False"
+                                                          IsOpen="True"
+                                                          Message="{Binding ViewModel[ConnectionsWillBeUpdatedAuto]}" />
+                                            <ItemsControl Margin="5" ItemsSource="{Binding ViewModel.Connections}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Spacing="7" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <suki:GlassCard Padding="20"
+                                                                        Command="{Binding ViewModel.SelectBackendCommand, ElementName=MainView}"
+                                                                        CommandParameter="{Binding .}"
+                                                                        IsEnabled="{Binding IsCurrentlyAvailable}"
+                                                                        IsInteractive="True">
+                                                            <DockPanel>
+                                                                <TextBlock HorizontalAlignment="Left"
+                                                                           FontSize="15"
+                                                                           Foreground="{Binding IsCurrentlyAvailable, Converter={StaticResource ForegroundStateConverter}}"
+                                                                           Text="{Binding UiDeviceName}"
+                                                                           TextWrapping="Wrap" />
+                                                                <StackPanel HorizontalAlignment="Right"
+                                                                            IsVisible="{Binding ShowLastConnectedTo}"
+                                                                            Orientation="Horizontal">
+                                                                    <TextBlock FontSize="15"
+                                                                               Text="{Binding ViewModel[LastConnected], ElementName=MainView}"
+                                                                               TextWrapping="Wrap" />
+                                                                    <TextBlock Margin="3,0,0,0"
+                                                                               FontSize="15"
+                                                                               Text="{Binding LastConnectedToText}"
+                                                                               TextWrapping="Wrap" />
+                                                                </StackPanel>
+                                                            </DockPanel>
+                                                        </suki:GlassCard>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </suki:GlassCard>
+                                </StackPanel>
+                            </StackPanel>
+
+                        </Grid>
+                        <Grid x:Name="SignInGrid"
+                              Grid.Row="0"
+                              Margin="15"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsVisible="{Binding ViewModel.ShouldShowLogin}">
+                            <Grid.RenderTransform>
+                                <ScaleTransform ScaleX="1.1" ScaleY="1.1" />
+                            </Grid.RenderTransform>
+                            <suki:GlassCard Width="500" Margin="0,0,0,25">
+                                <suki:BusyArea Name="BusySignIn"
+                                               BusyText="{Binding ViewModel[SigningIn]}"
+                                               IsBusy="{Binding ViewModel.IsLoggingIn}">
+                                    <StackPanel>
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   FontSize="32"
+                                                   FontWeight="ExtraBold"
+                                                   Text="Leapay"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Margin="0,13,0,27"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="24"
+                                                   Text="{Binding ViewModel[AppTitle]}"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Margin="0,6,0,27"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="16"
+                                                   Text="{Binding ViewModel.LoginInfoText}"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Margin="0,0,0,3"
+                                                   FontWeight="DemiBold"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel[UsernamePlaceholder]}" />
+                                        <TextBox x:Name="UsernameTextBox"
+                                                 Margin="0,8,5,0"
+                                                 suki:TextBoxExtensions.Prefix=""
+                                                 KeyDown="UsernameOnKeyDown"
+                                                 Text="{Binding ViewModel.Username}"
+                                                 Watermark="abc" />
+                                        <TextBlock Margin="6,17,0,3"
+                                                   FontWeight="DemiBold"
+                                                   Foreground="{DynamicResource SukiLowText}"
+                                                   Text="{Binding ViewModel[PasswordPlaceholder]}" />
+                                        <TextBox x:Name="PasswordTextBox"
+                                                 Margin="0,8,5,40"
+                                                 suki:TextBoxExtensions.AddDeleteButton="False"
+                                                 KeyDown="PasswordOnKeyDown"
+                                                 PasswordChar="*"
+                                                 Text="{Binding ViewModel.Password}"
+                                                 Watermark="***" />
+                                    </StackPanel>
+                                </suki:BusyArea>
+                            </suki:GlassCard>
+                            <Button x:Name="SignInButton"
+                                    Name="ButtonSignIn"
+                                    Width="160"
+                                    Height="40"
+                                    Margin="0,0,0,7"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    suki:ButtonExtensions.ShowProgress="{Binding ViewModel.IsLoggingIn}"
+                                    Classes="Flat Rounded"
+                                    Command="{Binding ViewModel.LoginCommand}"
+                                    Content="{Binding ViewModel[SignInText]}"
+                                    FontWeight="DemiBold" />
+                        </Grid>
+                    </Grid>
+                    <Border Margin="0,10,0,10"
+                            VerticalAlignment="Bottom"
+                            CornerRadius="5"
+                            DockPanel.Dock="Bottom">
+                        <Border.IsVisible>
+                            <MultiBinding Converter="{StaticResource BoolAndConverter}" ConverterParameter="^2|">
+                                <Binding Path="!ViewModel.ShouldShowLoading" />
+                                <Binding Path="ViewModel.ShouldShowLogin" />
+                                <Binding Path="ViewModel.ShouldShowUi" />
+                            </MultiBinding>
+                        </Border.IsVisible>
+                        <ItemsControl Margin="5" ItemsSource="{Binding ViewModel.ContactInformation}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel ItemSpacing="5" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <suki:GlassCard Padding="8"
+                                                    Background="{Binding ViewModel.BackgroundTheme, ElementName=MainView}"
+                                                    Command="{Binding ViewModel.CopyContactInfoCommand, ElementName=MainView}"
+                                                    CommandParameter="{Binding .}"
+                                                    IsInteractive="True">
+                                        <TextBlock FontSize="13"
+                                                   Text="{Binding}"
+                                                   TextWrapping="Wrap" />
+                                    </suki:GlassCard>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </DockPanel>
+            </Grid>
+
+        </suki:BusyArea>
+    </Viewbox>
+</suki:SukiWindow>

@@ -1,0 +1,78 @@
+﻿<Page
+    x:Class="SmartiErpWin.Client.Views.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:pages="clr-namespace:SmartiErpWin.Client.Views.Pages"
+    xmlns:helpers="clr-namespace:SmartiErpWin.Client.Helpers"
+    Title="SettingsPage"
+    d:DataContext="{d:DesignInstance pages:SettingsPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    </Page.Resources>
+    <StackPanel>
+        <StackPanel>
+            <Button Command="{Binding ViewModel.LogoutCommand}"
+                    Content="{Binding ViewModel[LogoutText]}" />
+
+            <ui:Card Margin="0, 10, 0, 0">
+                <StackPanel>
+                    <ui:Card Margin="0, 10, 0, 0">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="{Binding ViewModel[LanguageChangeText]}" Margin="0, 10, 0, 0" />
+                            <ComboBox ItemsSource="{Binding ViewModel.AvailableLanguages}" Margin="10, 0, 0, 0"
+                                      SelectedItem="{Binding ViewModel.SelectedLanguage}"
+                                      MinWidth="200"/>
+                        </StackPanel>
+                    </ui:Card>
+
+                    <ui:Card Margin="0, 10, 0, 0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ViewModel[DisplayTypeSettingsTitle]}" Margin="0, 10, 0, 0" />
+                            <ComboBox ItemsSource="{Binding ViewModel.DisplayTypes}" Margin="10, 0, 0, 0"
+                                      SelectedItem="{Binding ViewModel.SelectedDisplayType}" 
+                                      MinWidth="200"/>
+                        </StackPanel>
+                    </ui:Card>
+                    
+                    <ui:Card Margin="0, 10, 0, 0">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:ToggleSwitch IsChecked="{Binding ViewModel.DroplistMenu}" Margin="0, 0, 0, 0"/>
+                            <TextBlock Text="{Binding ViewModel[ShowMenuItemListChildren]}" Margin="8, 0, 0, 0" />
+                        </StackPanel> 
+                    </ui:Card>
+
+                    <ui:Card Margin="0,12,0,0">
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding ViewModel[ThemeColour]}" />
+                            <RadioButton
+                                Margin="0,8,0,0"
+                                Command="{Binding ViewModel.ChangeThemeCommand, Mode=OneWay}"
+                                CommandParameter="theme_light"
+                                Content="{Binding ViewModel[Light]}"
+                                GroupName="themeSelect"
+                                IsChecked="{Binding ViewModel.CurrentTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}" />
+                            <RadioButton
+                                Margin="0,8,0,0"
+                                Command="{Binding ViewModel.ChangeThemeCommand, Mode=OneWay}"
+                                CommandParameter="theme_dark"
+                                Content="{Binding ViewModel[Dark]}"
+                                GroupName="themeSelect"
+                                IsChecked="{Binding ViewModel.CurrentTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}" />
+                        </StackPanel>
+                    </ui:Card>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </StackPanel>
+</Page>

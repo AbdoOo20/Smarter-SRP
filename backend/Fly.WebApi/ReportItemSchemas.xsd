@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" id="ReportItemSchemas" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="RTModel" nillable="true" type="RTModel" />
+  <xs:complexType name="RTModel" />
+  <xs:element name="RTRepresentative" nillable="true" type="RTRepresentative" />
+  <xs:complexType name="RTRepresentative">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RTModel">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Amount" type="xs:decimal" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Balance" type="xs:decimal" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ClientName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MarketerName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Date" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

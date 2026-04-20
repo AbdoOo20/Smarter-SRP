@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Modules\A0\Enums\" />
+        <Folder Include="Modules\Factoring\Response\" />
+        <Folder Include="Modules\Factoring\SeededData\" />
+        <Folder Include="Modules\Financial\Response\" />
+        <Folder Include="Modules\Financial\SeededData\" />
+        <Folder Include="Modules\Marketers\Enums\" />
+        <Folder Include="Modules\Marketers\SeededData\" />
+        <Folder Include="Modules\PurchaseAndSales\Response\" />
+        <Folder Include="Modules\PurchaseAndSales\SeededData\" />
+        <Folder Include="Modules\A0\Dtos\" />
+        <Folder Include="Modules\A0\Features\" />
+        <Folder Include="Modules\A0\SeededData\" />
+        <Folder Include="Modules\A0\Response\" />
+        <Folder Include="Modules\A0\Requests\" />
+    </ItemGroup>
+
+    <ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+	</ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\freamework\Fly.Framework.Shared\Fly.Framework.Shared.csproj" />
+    </ItemGroup>
+	
+</Project>

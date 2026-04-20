@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.ItemSelectionWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:common="clr-namespace:Leapay.Client.UserInterface.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dtoModels1="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             Width="400"
+             Height="400"
+             d:DataContext="{d:DesignInstance common:ItemSelectionWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             x:DataType="common:ItemSelectionWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             KeyDown="OnPreviewKeyDown"
+             mc:Ignorable="d">
+    <Grid Margin="0,10,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.RingVisibility}">
+            <suki:Loading Width="65"
+                          Height="65"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="0"
+                    Width="380"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    IsVisible="{Binding ViewModel.UiVisibility}">
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="FocusTarget"
+                         MinWidth="215"
+                         MaxHeight="35"
+                         Margin="0,15,0,0"
+                         TabIndex="0"
+                         Text="{Binding ViewModel.SearchText}"
+                         TextChanged="TextBoxBase_OnTextChanged"
+                         UseFloatingWatermark="True"
+                         Watermark="{Binding ViewModel[Search]}" />
+                <StackPanel MinWidth="120" Margin="5,0">
+                    <ComboBox Width="160"
+                              MaxWidth="160"
+                              Margin="0,10,0,0"
+                              DisplayMemberBinding="{Binding Display}"
+                              ItemsSource="{Binding ViewModel.Categories.Items}"
+                              SelectedItem="{Binding ViewModel.Categories.SelectedItem}" />
+                </StackPanel>
+            </StackPanel>
+
+            <suki:GlassCard Margin="0,3,0,0" Padding="2">
+                <ScrollViewer VerticalAlignment="Top">
+                    <ListBox x:Name="ListView"
+                             MinHeight="230"
+                             MaxHeight="230"
+                             Margin="0,10,0,0"
+                             DoubleTapped="ListBoxDoubleTapped"
+                             ItemsSource="{Binding ViewModel.ModelsInView}"
+                             KeyboardNavigation.TabNavigation="Continue"
+                             SelectedItem="{Binding ViewModel.SelectedItem}"
+                             SelectionMode="Single">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type dtoModels1:ComboModel}">
+                                <StackPanel Margin="5" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Display}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </suki:GlassCard>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Width="120"
+                        Margin="3,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.CloseCommand}"
+                        Content="{Binding ViewModel[Cancel]}" />
+                <Button Width="110"
+                        Margin="3,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.NewCommand}"
+                        Content="{Binding ViewModel[NewButton]}"
+                        IsVisible="{Binding ViewModel.AddVisibility}" />
+                <Button Width="110"
+                        Margin="3,10,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding ViewModel.SelectCommand}"
+                        Content="{Binding ViewModel[Select]}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

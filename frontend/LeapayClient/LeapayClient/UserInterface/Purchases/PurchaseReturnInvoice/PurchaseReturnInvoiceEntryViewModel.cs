@@ -1,0 +1,145 @@
+﻿using Avalonia.Threading;
+using Fly.Shared.Modules.PurchaseAndSales.Dtos.Purchase;
+using Fly.Shared.Modules.PurchaseAndSales.Enums;
+using Leapay.Client.ClientModels.Dto.DtoModels;
+using Leapay.Client.Helpers;
+using Leapay.Client.Polymorphism.Bases;
+using Leapay.Client.Polymorphism.Interfaces;
+using SmartErpWin.Core.Enums;
+
+namespace Leapay.Client.UserInterface.Purchases.PurchaseReturnInvoice;
+
+public partial class PurchaseReturnInvoiceEntryViewModel : BaseItemPageEntryViewModel<DtoPurchaseReturnInvoice, DtoPurchaseReturnInvoiceDetail>
+{
+    protected override string Endpoint => "PurchaseReturnInvoice";
+
+    [ObservableProperty]
+    public partial bool SafesVisibility { get; set; }
+    
+    [ObservableProperty]
+    public partial bool PaymentMethodVisibility { get; set; }
+
+    [ObservableProperty]
+    public partial bool SupplierVisibility { get; set; }
+
+    [ObservableProperty]
+    public partial long InvoiceNumber { get; set; }
+    
+    public StaticComboVm<PeymentType> PaymentTypes { get; } = new();
+
+    [ObservableProperty]
+    public partial SuperComboVm<DtoPurchaseReturnInvoiceDetail> Safes { get; set; } = new();
+
+    [ObservableProperty]
+    public partial decimal TotalPrice { get; set; }
+    
+    private IValidationEnforcer DetailsEnforcer { get; set; } = new ValidationEnforceImpl();
+
+    public PurchaseReturnInvoiceEntryViewModel(
+        DtoPurchaseReturnInvoice? model,
+        EntryType entryType,
+        Type pageType,
+        long? invoiceNumber = null)
+    {
+        SetDetailsByInvoiceNumberOrModel(model, entryType, pageType, false, invoiceNumber)
+            .ContinueWith(_ =>
+            {
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    if (EntryType == EntryType.Add)
+                    {
+                        Model.Date = DateTime.Now;
+                    }
+        
+                    Model.Details ??= [];
+        
+                    OnItemDelete += OnDelete;
+                    OnItemEdit += OnEdit;
+        
+                    RefreshState(async () => await StartupAsync());
+                });
+            });
+    }
+
+    private async Task StartupAsync(bool refresh = true)
+    {
+        await OnAsync(EntryType, EntryType.Add, async () => InvoiceNumber = (await RequestSpecificAsync<long>("Number")).Data);
+        On(EntryType, EntryType.Edit, () => InvoiceNumber = Model.InvoiceNumber.GetValueOrDefault());
+        SetStaticComboBoxes();
+        SetDetailsModel(null);
+        DetailsEnforcer.AddValidation(CreateValidation(() => ModelDetails.Model.ItemId, optional: false));
+        DetailsEnforcer.AddValidation(CreateValidation(() => ModelDetails.Model.UnitId, optional: false));
+        
+        await LoadDataAsync();
+        await OnAsync(() => refresh, async () => await RefreshAsync());
+        
+        CalculatePrice();
+        CheckVisibilities();
+    }
+
+    private void SetStaticComboBoxes()
+    {
+        PaymentTypes.Set(Model.PeymentType, s =>
+        {
+            Model.PeymentType = s;
+            CheckVisibilities();
+        });
+    }
+
+    private async Task LoadDataAsync()
+    {
+        var categories = (await RequestComboModelsAsync<ComboModel>("Items")).Data;
+
+        var data = new List<DtoPurchaseReturnInvoiceDetail>();
+        
+        foreach (var dto in Model.Details)
+        {
+            dto.ItemName = categories.FirstOrDefault(u => u.Value == dto.ItemId.Value.ToString())?
+                .Display;
+            dto.TemporaryId = dto.Id;
+
+            var units = (await RequestComboModelsAsync<ComboModel>("Units", dto.ItemId.ToString())).Data;
+
+            dto.UnitName = units.FirstOrDefault(u => u.Value == dto.UnitId.Value.ToString())?
+                .Display;
+
+            data.Add(dto);
+        }
+                
+        Model?.Details?.Clear();
+        Model?.Details?.AddRange(data ?? []);
+    }
+
+    protected override async Task RefreshAsync(bool refreshCombos = true)
+    {
+        SetData(Model.Details);
+        RefreshDataGrid();
+        
+        if (refreshCombos)
+        {
+            await Safes.LoadAsync(this, "Safes", Model.SafeId,
+                s => Model.SafeId = s.Id);
+        }
+        
+        CalculatePrice();
+    }
+    
+    private void CalculatePrice()
+    {
+        TotalPrice = Model.Details
+            .Sum(d => d.Price * d.Quantity);
+    }
+    
+    public void CheckVisibilities()
+    {
+        PaymentMethodVisibility = PaymentTypes.Is(PeymentType.Cash);
+        SafesVisibility = PaymentTypes.Is(PeymentType.Cash);
+        SupplierVisibility = Safes.IsAnySelected();
+    }
+    
+    [RelayCommand]
+    private async Task OnSavePrintAsync()
+    {
+        await SaveAsync(() => EventHelper.InvokePurchaseReturnInvoice(new(Model)));
+    }
+}

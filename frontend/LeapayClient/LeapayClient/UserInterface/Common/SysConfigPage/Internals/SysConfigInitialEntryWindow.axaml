@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.SysConfigPage.Internals.SysConfigInitialEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:internals="clr-namespace:Leapay.Client.UserInterface.Common.SysConfigPage.Internals"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             Width="600"
+             Height="250"
+             d:DataContext="{d:DesignInstance internals:SysConfigInitialEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="250"
+             d:DesignWidth="600"
+             x:DataType="internals:SysConfigInitialEntryWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="0,10,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.IsRefreshing}">
+            <suki:Loading Width="100"
+                          Height="100"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="28"
+                       Text="{Binding ViewModel.LoadingTitle}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       Text="{Binding ViewModel.LoadingInfo}" />
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    IsVisible="{Binding ViewModel.UiVisibility}">
+
+            <TextBlock MaxWidth="350"
+                       Margin="0,25,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="{Binding ViewModel.InfoText}"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap" />
+
+            <TextBlock Margin="0,25,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="{Binding ViewModel[EnterCode]}"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap" />
+
+            <TextBox Width="250"
+                     Margin="0,8,0,0"
+                     PasswordChar="*"
+                     Text="{Binding ViewModel.Hash}"
+                     Watermark="{Binding ViewModel[EntryCode]}" />
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Width="160"
+                        Height="35"
+                        Margin="0,25,0,0"
+                        Command="{Binding ViewModel.ActionCommand}"
+                        Content="{Binding ViewModel[Ok]}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
+</UserControl>

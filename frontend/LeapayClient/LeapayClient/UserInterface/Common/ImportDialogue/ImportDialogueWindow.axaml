@@ -1,0 +1,346 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Common.ImportDialogue.ImportDialogueWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:animations="clr-namespace:SukiUI.Animations;assembly=SukiUI"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dto="clr-namespace:Leapay.Client.ClientModels.Dto"
+             xmlns:importDialogue="clr-namespace:Leapay.Client.UserInterface.Common.ImportDialogue"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             x:Name="ImportControl"
+             Width="640"
+             Height="600"
+             d:DesignHeight="580"
+             d:DesignWidth="680"
+             x:CompileBindings="False"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.ShowProcessingUi}"
+                    Spacing="15">
+            <StackPanel Orientation="Horizontal" Spacing="15">
+                <suki:CircleProgressBar Width="80"
+                                        Height="80"
+                                        Margin="0,0,0,0"
+                                        HorizontalAlignment="Center"
+                                        IsIndeterminate="{Binding ViewModel.IsIndeterminate}"
+                                        IsVisible="{Binding ViewModel.ShowProgressCircle}"
+                                        Value="{Binding ViewModel.ProgressPercentage}">
+                    <TextBlock IsVisible="{Binding !ViewModel.IsIndeterminate}" Text="{Binding ViewModel.ProgressPercentage, StringFormat={}{0:0}%}" />
+                </suki:CircleProgressBar>
+                <Border Width="60"
+                        Height="60"
+                        Background="{Binding ViewModel.SuccessBackground}"
+                        ClipToBounds="True"
+                        CornerRadius="40"
+                        IsVisible="{Binding !ViewModel.ShowProgressCircle}">
+                    <PathIcon Data="{Binding ViewModel.SuccessIcon}" />
+                </Border>
+                <TextBlock Margin="0,10,0,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="18"
+                           Text="{Binding ViewModel.InfoText}" />
+            </StackPanel>
+            <ScrollViewer MaxWidth="{Binding Bounds.Width, ElementName=DockPanel, Converter={StaticResource MathConverter}, ConverterParameter='*,0.9'}"
+                          HorizontalScrollBarVisibility="Visible"
+                          IsVisible="{Binding ViewModel.ProcessErrorsVisible}">
+                <suki:GlassCard Padding="10" Background="{Binding ViewModel.RedBackground}">
+                    <StackPanel Spacing="5">
+                        <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                            <TextBlock FontSize="18"
+                                       FontWeight="Bold"
+                                       Text="{Binding ViewModel[Problems]}" />
+                            <TextBlock Margin="10,0,0,0"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Text=" - " />
+                            <TextBlock Margin="10,0,0,0"
+                                       FontSize="16"
+                                       Text="{Binding ViewModel.ProblemsState}" />
+                        </StackPanel>
+
+                        <ItemsControl Margin="5" ItemsSource="{Binding ViewModel.Errors}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel ItemSpacing="3" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="dto:ItemImportErrorModel">
+                                    <suki:GlassCard Padding="9"
+                                                    animations:SquishyOverExtensions.Enable="True"
+                                                    animations:SquishyOverExtensions.Intensity="0.10"
+                                                    IsInteractive="True"
+                                                    IsOpaque="False">
+                                        <StackPanel Orientation="Vertical" Spacing="5">
+                                            <TextBlock FontSize="20"
+                                                       FontWeight="Bold"
+                                                       Text="{Binding Header}" />
+                                            <TextBlock Text="{Binding Error}" />
+                                        </StackPanel>
+                                    </suki:GlassCard>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </suki:GlassCard>
+            </ScrollViewer>
+
+            <Button Width="160"
+                    Height="38"
+                    Margin="0,10"
+                    HorizontalAlignment="Center"
+                    Command="{Binding ViewModel.CancelCommand}"
+                    Content="{Binding ViewModel.CancelCommandText}"
+                    DockPanel.Dock="Bottom"
+                    IsVisible="{Binding ViewModel.CancelVisible}" />
+
+        </StackPanel>
+        <DockPanel x:Name="DockPanel"
+                   Margin="12,45,1,15"
+                   IsVisible="{Binding ViewModel.ShowNormalUi}">
+            <Button Width="160"
+                    Height="38"
+                    Margin="0,10"
+                    HorizontalAlignment="Center"
+                    Command="{Binding ViewModel.ProcessCommand}"
+                    Content="{Binding ViewModel[Import]}"
+                    DockPanel.Dock="Bottom"
+                    IsEnabled="{Binding ViewModel.CanProcess}" />
+
+            <ScrollViewer MaxWidth="{Binding Bounds.Width, ElementName=DockPanel, Converter={StaticResource MathConverter}, ConverterParameter='*,0.96'}"
+                          MaxHeight="{Binding Bounds.Height, ElementName=DockPanel}"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Visible">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Spacing="8">
+
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="10">
+                        <suki:InfoBar x:Name="FavViewsInfoBar"
+                                      MaxWidth="400"
+                                      Margin="0,0,0,0"
+                                      HorizontalAlignment="Center"
+                                      FontSize="24"
+                                      FontWeight="Bold"
+                                      IsClosable="False"
+                                      IsOpen="True"
+                                      IsVisible="True"
+                                      Message="{Binding ViewModel.FileChosenText}"
+                                      Severity="{Binding ViewModel.FileNotification}" />
+                        <Button Width="140"
+                                Height="35"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Command="{Binding ViewModel.ImportFileCommand}"
+                                Content="{Binding ViewModel[BrowseFile]}" />
+                    </StackPanel>
+
+                    <ScrollViewer MaxWidth="{Binding Bounds.Width, ElementName=DockPanel, Converter={StaticResource MathConverter}, ConverterParameter='*,0.95'}" HorizontalScrollBarVisibility="Visible">
+                        <suki:GlassCard Padding="10">
+                            <StackPanel Spacing="5">
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <TextBlock FontSize="18"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[Columns]}" />
+                                    <TextBlock Margin="10,0,0,0"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Text=" - " />
+                                    <TextBlock Margin="10,0,0,0"
+                                               FontSize="16"
+                                               Text="{Binding ViewModel.ColumnsState}" />
+                                </StackPanel>
+
+                                <ItemsControl Margin="5" ItemsSource="{Binding ViewModel.Columns}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel ItemSpacing="3" Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="dto:ColumnImportModel">
+                                            <suki:GlassCard Padding="9"
+                                                            animations:SquishyOverExtensions.Enable="True"
+                                                            animations:SquishyOverExtensions.Intensity="0.10"
+                                                            Background="{Binding ColumnColour}"
+                                                            IsInteractive="True"
+                                                            IsOpaque="False">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <avalonia:MaterialIcon Kind="{Binding ColumnIcon}" />
+                                                    <TextBlock Margin="10,0,0,0" Text="{Binding Name}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </suki:GlassCard>
+
+                    </ScrollViewer>
+
+                    <ItemsControl Margin="0" ItemsSource="{Binding ViewModel.ForeignColumns}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="5" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="dto:ForeignColumnImportModel">
+                                <ScrollViewer MaxWidth="{Binding Bounds.Width, ElementName=DockPanel, Converter={StaticResource MathConverter}, ConverterParameter='*,0.95'}" HorizontalScrollBarVisibility="Visible">
+                                    <suki:GlassCard Padding="10">
+                                        <StackPanel Spacing="5">
+                                            <StackPanel Margin="10,0,0,0"
+                                                        Orientation="Horizontal"
+                                                        Spacing="5">
+                                                <TextBlock FontSize="18"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding Header}" />
+                                                <TextBlock Margin="0,3,0,0"
+                                                           FontSize="16"
+                                                           Text="{Binding State}" />
+                                            </StackPanel>
+
+                                            <ItemsControl Margin="5" ItemsSource="{Binding ForeignColumns}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel ItemSpacing="3" Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="dto:ColumnImportModel">
+                                                        <suki:GlassCard Padding="0"
+                                                                        Background="{Binding ColumnColour}"
+                                                                        IsInteractive="True"
+                                                                        IsOpaque="False">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <avalonia:MaterialIcon Margin="6" Kind="{Binding ColumnIcon}" />
+                                                                <TextBlock Margin="0,6,6,6"
+                                                                           VerticalAlignment="Center"
+                                                                           Text="{Binding Name}" />
+                                                                <Button Margin="0,0,0,0"
+                                                                        Background="{Binding ViewModel.Background, ElementName=ImportControl}"
+                                                                        Classes="Flat Rounded"
+                                                                        Command="{Binding AddCommand}"
+                                                                        Content="{Binding ViewModel[Add], ElementName=ImportControl}"
+                                                                        IsVisible="{Binding AddVisibility}" />
+                                                            </StackPanel>
+                                                        </suki:GlassCard>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </suki:GlassCard>
+                                </ScrollViewer>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <ScrollViewer MaxWidth="{Binding Bounds.Width, ElementName=DockPanel, Converter={StaticResource MathConverter}, ConverterParameter='*,0.9'}"
+                                  HorizontalScrollBarVisibility="Visible"
+                                  IsVisible="{Binding ViewModel.ErrorsVisible}">
+                        <suki:GlassCard Padding="10" Background="{Binding ViewModel.RedBackground}">
+                            <StackPanel Spacing="5">
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <TextBlock FontSize="18"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[Problems]}" />
+                                    <TextBlock Margin="10,0,0,0"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Text=" - " />
+                                    <TextBlock Margin="10,0,0,0"
+                                               FontSize="16"
+                                               Text="{Binding ViewModel.ProblemsState}" />
+                                </StackPanel>
+
+                                <ItemsControl Margin="5" ItemsSource="{Binding ViewModel.Errors}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel ItemSpacing="3" Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="dto:ItemImportErrorModel">
+                                            <suki:GlassCard Padding="9"
+                                                            animations:SquishyOverExtensions.Enable="True"
+                                                            animations:SquishyOverExtensions.Intensity="0.10"
+                                                            IsInteractive="True"
+                                                            IsOpaque="False">
+                                                <StackPanel Orientation="Vertical" Spacing="5">
+                                                    <TextBlock FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding Header}" />
+                                                    <TextBlock Text="{Binding Error}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </suki:GlassCard>
+                    </ScrollViewer>
+
+                    <ScrollViewer MaxWidth="{Binding Bounds.Width, ElementName=DockPanel, Converter={StaticResource MathConverter}, ConverterParameter='*,0.9'}"
+                                  HorizontalScrollBarVisibility="Visible"
+                                  IsVisible="{Binding ViewModel.DuplicatesVisible}">
+                        <suki:GlassCard Padding="10" Background="{Binding ViewModel.YellowBackground}">
+                            <StackPanel Spacing="5">
+                                <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                                    <TextBlock FontSize="18"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[Duplicates]}" />
+                                    <TextBlock Margin="10,0,0,0"
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               Text=" - " />
+                                    <TextBlock Margin="10,0,0,0"
+                                               FontSize="16"
+                                               Text="{Binding ViewModel[DuplicatesState]}" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Spacing="3">
+                                    <ToggleSwitch IsChecked="{Binding ElementName=ImportControl, Path=ViewModel.SkipDuplicates}" />
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontWeight="Bold"
+                                               Text="{Binding ViewModel[SkipDuplicates]}" />
+                                </StackPanel>
+
+                                <ItemsControl Margin="5" ItemsSource="{Binding ViewModel.Duplicates}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel ItemSpacing="3" Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="dto:ItemImportErrorModel">
+                                            <suki:GlassCard Padding="9"
+                                                            animations:SquishyOverExtensions.Enable="True"
+                                                            animations:SquishyOverExtensions.Intensity="0.10"
+                                                            IsInteractive="True"
+                                                            IsOpaque="False">
+                                                <StackPanel Orientation="Vertical" Spacing="5">
+                                                    <TextBlock FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding Header}" />
+                                                    <TextBlock Text="{Binding Error}" />
+                                                </StackPanel>
+                                            </suki:GlassCard>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </suki:GlassCard>
+                    </ScrollViewer>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</UserControl>

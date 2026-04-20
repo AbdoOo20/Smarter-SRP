@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.FinancingOperations.OperationWindows.EmployeeFinanceEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:operationWindows="clr-namespace:Leapay.Client.UserInterface.FinancingOperations.OperationWindows"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             Width="600"
+             d:DataContext="{d:DesignInstance operationWindows:EmployeeFinanceEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="500"
+             d:DesignWidth="600"
+             x:DataType="operationWindows:EmployeeFinanceEntryWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Margin="25,5,25,0">
+
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel MinWidth="{Binding ViewModel.HorizontalUiWidth}"
+                                Margin="0,10,0,0"
+                                Orientation="Vertical">
+                        <TextBlock Text="{Binding ViewModel[Date]}" />
+                        <suki:GlassCard Margin="0,10,0,0" Padding="0">
+                            <DatePicker HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        CornerRadius="15"
+                                        SelectedDate="{Binding ViewModel.Model.Date, Converter={StaticResource DateOffsetConverter}}" />
+                        </suki:GlassCard>
+                    </StackPanel>
+
+                    <StackPanel MinWidth="{Binding ViewModel.HorizontalUiWidth}"
+                                Margin="10,10,0,0"
+                                IsVisible="{Binding ViewModel.SerialNumberVisibility}">
+                        <TextBlock Text="{Binding ViewModel[SerialNumber]}" />
+                        <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.SerialNumber}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OperationType]}" />
+                    <ComboBox MinWidth="300"
+                              Margin="0,10,0,0"
+                              ItemsSource="{Binding ViewModel.FinanceTypes.Items}"
+                              SelectedItem="{Binding ViewModel.FinanceTypes.SelectedItem}" />
+                </StackPanel>
+
+                <DockPanel Margin="0,10,0,0">
+                    <ContentControl Margin="0,10,0,0" Content="{Binding ViewModel.Party.Content}" />
+                </DockPanel>
+
+                <StackPanel>
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Amount]}" />
+                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Amount}" />
+                </StackPanel>
+
+                <StackPanel Margin="5,0,0,0">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Safe]}" />
+                    <ComboBox MinWidth="280"
+                              Margin="0,5,0,0"
+                              DisplayMemberBinding="{Binding Display}"
+                              ItemsSource="{Binding ViewModel.Safes.Items}"
+                              SelectedItem="{Binding ViewModel.Safes.SelectedItem}" />
+                </StackPanel>
+
+                <StackPanel IsVisible="{Binding ViewModel.InternalNotesVisibility}">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[InternalNotes]}" />
+                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.InternalNotes}" />
+                </StackPanel>
+
+                <StackPanel Margin="0,10,0,0">
+                    <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Notes]}" />
+                    <TextBox MinHeight="{Binding ViewModel.NotesUiHeightForInternalNotes}"
+                             MaxHeight="{Binding ViewModel.NotesUiHeightForInternalNotes}"
+                             Margin="0,10,0,0"
+                             MinLines="1"
+                             Text="{Binding ViewModel.Model.Note}"
+                             TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Margin="0,25,0,0"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Button Margin="0,0,0,0"
+                            Command="{Binding ViewModel.CancelCommand}"
+                            Content="{Binding ViewModel[CancelButton]}" />
+                    <Button Margin="15,0,0,0"
+                            Command="{Binding ViewModel.SaveCommand}"
+                            Content="{Binding ViewModel[SaveButton]}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

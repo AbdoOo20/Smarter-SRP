@@ -1,0 +1,19 @@
+﻿<bases1:UserControlBase x:Class="Leapay.Client.UserInterface.Accounting.Entries.EntryPage"
+                        xmlns="https://github.com/avaloniaui"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:bases1="clr-namespace:Leapay.Client.Polymorphism.Bases"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:entries="clr-namespace:Leapay.Client.UserInterface.Accounting.Entries"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        d:DataContext="{d:DesignInstance entries:EntryPage,
+                                                         IsDesignTimeCreatable=False}"
+                        d:DesignHeight="450"
+                        d:DesignWidth="800"
+                        x:DataType="entries:EntryPage"
+                        FlowDirection="{CompiledBinding ViewModel.FlowDirection}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel x:Name="DataGrid" />
+    </ScrollViewer>
+</bases1:UserControlBase>

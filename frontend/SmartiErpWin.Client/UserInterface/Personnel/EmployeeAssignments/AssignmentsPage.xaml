@@ -1,0 +1,72 @@
+﻿<Page
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    SizeChanged="OnDataSizeChanged"
+    d:DataContext="{d:DesignInstance employeeAssignments:AssignmentsPage,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Personnel.EmployeeAssignments.AssignmentsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:employeeAssignments="clr-namespace:SmartiErpWin.Client.UserInterface.Personnel.EmployeeAssignments"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ui:DynamicScrollViewer HorizontalScrollBarVisibility="Visible">
+        <DockPanel>
+            <StackPanel
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <prefabs:ToolbarPrefab
+                    ActionsEnabled="{Binding ViewModel.ActionsEnabled}"
+                    AddCommand="{Binding ViewModel.AddCommand}"
+                    AddVisibility="{Binding ViewModel.AddVisibility}"
+                    NewButton="{Binding ViewModel[NewButton]}"
+                    PrimaryButtonColour="{Binding ViewModel.PrimaryButtonColour}"
+                    PrintCommand="{Binding ViewModel.PrintCommand}"
+                    PrintText="{Binding ViewModel[PrintText]}"
+                    PrintVisibility="{Binding ViewModel.PrintVisibility}"
+                    RefreshCommand="{Binding ViewModel.RefreshCommand}"
+                    SearchBar="{Binding ViewModel[SearchBar]}"
+                    SearchButton="{Binding ViewModel[SearchButton]}"
+                    SearchText="{Binding ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SecondaryButtonColour="{Binding ViewModel.SecondaryButtonColour}"
+                    x:Name="ToolbarPrefab" />
+            </StackPanel>
+            <mah:ProgressRing
+                DockPanel.Dock="Top"
+                Height="35"
+                HorizontalAlignment="Center"
+                IsActive="{Binding ViewModel.IsRefreshing}"
+                Margin="0,50,0,0"
+                Visibility="{Binding ViewModel.RingVisibility}"
+                Width="35" />
+
+            <StackPanel Margin="0,25,0,0" Visibility="{Binding ViewModel.DataVisibility}">
+                <ui:DynamicScrollViewer
+                    HorizontalScrollBarVisibility="Visible"
+                    Padding="0,5,0,5"
+                    x:Name="DataScroller">
+                    <StackPanel x:Name="DataGrid" />
+                </ui:DynamicScrollViewer>
+
+                <prefabs:PagerPrefab
+                    Limit="{Binding ViewModel.Limit, Mode=TwoWay}"
+                    MoveOneDownCommand="{Binding ViewModel.MoveOneDownCommand}"
+                    MoveOneUpCommand="{Binding ViewModel.MoveOneUpCommand}"
+                    NextButton="{Binding ViewModel[NextButton]}"
+                    PagesText="{Binding ViewModel.PagesText}"
+                    PreviousButton="{Binding ViewModel[PreviousButton]}"
+                    Visibility="{Binding ViewModel.PagingVisibility}" />
+            </StackPanel>
+        </DockPanel>
+    </ui:DynamicScrollViewer>
+</Page>

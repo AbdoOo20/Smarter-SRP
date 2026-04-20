@@ -1,0 +1,1 @@
+﻿namespace SmartErpWin.Core.Models;

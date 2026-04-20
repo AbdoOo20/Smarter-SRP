@@ -1,0 +1,133 @@
+﻿<ui:FluentWindow
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{Binding ViewModel.FlowDirection}"
+    Height="710"
+    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Width="600"
+    WindowBackdropType="Mica"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    d:DataContext="{d:DesignInstance operationWindows:ClientBillEntryWindow,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="710"
+    d:DesignWidth="600"
+    mc:Ignorable="d"
+    ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
+    x:Class="SmartiErpWin.Client.UserInterface.Financial.FinancingOperations.OperationWindows.ClientBillEntryWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dtoModels="clr-namespace:SmartiErpWin.Client.DtoModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:operationWindows="clr-namespace:SmartiErpWin.Client.UserInterface.Financial.FinancingOperations.OperationWindows"
+    xmlns:prefabs="clr-namespace:SmartiErpWin.Client.Prefabs"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar
+            CloseWindowByDoubleClickOnIcon="True"
+            Grid.Row="0"
+            ShowMaximize="False"
+            ShowMinimize="False"
+            Title="{Binding ViewModel.ApplicationTitle}"
+            x:Name="TitleBar" />
+
+        <StackPanel Grid.Row="0" Margin="25,40,25,0">
+            <StackPanel Orientation="Horizontal">
+
+                <StackPanel
+                    Margin="0,10,0,0"
+                    MinWidth="270"
+                    Orientation="Vertical">
+                    <TextBlock Text="{Binding ViewModel[Date]}" />
+                    <DatePicker Margin="0,10,0,0" SelectedDate="{Binding ViewModel.Model.Date}" />
+                </StackPanel>
+
+                <StackPanel
+                    Margin="10,10,0,0"
+                    MinWidth="270"
+                    Visibility="{Binding ViewModel.SerialNumberVisibility}">
+                    <TextBlock Text="{Binding ViewModel[SerialNumber]}" />
+                    <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.SerialNumber}" />
+                </StackPanel>
+
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding ViewModel.InternalNotesVisibility}">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[InternalNotes]}" />
+                <TextBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.InternalNotes}" />
+            </StackPanel>
+
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[OperationType]}" />
+                <ComboBox
+                    ItemsSource="{Binding ViewModel.ComboModelBase.StaticComboItems}"
+                    Margin="0,10,0,0"
+                    MinWidth="300"
+                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedStaticComboItem}" />
+            </StackPanel>
+
+            <StackPanel>
+                <prefabs:ComboPrefabObsolete
+                    AddWindowClosed="OnAddWindowClosed"
+                    DestinationWindow="Clients"
+                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[0]}"
+                    Margin="0,10,0,0"
+                    MinComboWidth="500"
+                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[0]}"
+                    TitleText="{Binding ViewModel[ClientName]}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Amount]}" />
+                <ui:NumberBox Margin="0,10,0,0" Text="{Binding ViewModel.Model.Amount}" />
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Safe]}" />
+                <ComboBox
+                    ItemsSource="{Binding ViewModel.ComboModelBase.ApiComboItems[1]}"
+                    Margin="0,10,0,0"
+                    MinWidth="300"
+                    SelectedItem="{Binding ViewModel.ComboModelBase.SelectedApiComboItems[1]}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type dtoModels:ComboModel}">
+                            <TextBlock Text="{Binding Display}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Margin="0,10,0,0">
+                <TextBlock Margin="0,10,0,0" Text="{Binding ViewModel[Notes]}" />
+                <TextBox
+                    Margin="0,10,0,0"
+                    MaxHeight="100"
+                    MinHeight="100"
+                    MinLines="1"
+                    Text="{Binding ViewModel.Model.Note}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+
+            <StackPanel
+                HorizontalAlignment="Center"
+                Margin="0,25,0,0"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding ViewModel.CancelCommand}"
+                    Content="{Binding ViewModel[CancelButton]}"
+                    Margin="0,0,0,0" />
+                <Button
+                    Command="{Binding ViewModel.SaveCommand}"
+                    Content="{Binding ViewModel[SaveButton]}"
+                    Margin="15,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</ui:FluentWindow>

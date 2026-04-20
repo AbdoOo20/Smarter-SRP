@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Management.Groups.GroupEntryWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:inpc="clr-namespace:Leapay.Client.Wrappers.INPC"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:users="clr-namespace:Leapay.Client.UserInterface.Management.Groups"
+             x:Name="GroupEntry"
+             Width="1100"
+             Height="720"
+             d:DataContext="{d:DesignInstance users:GroupEntryWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="350"
+             d:DesignWidth="600"
+             x:DataType="users:GroupEntryWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="30,40,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding ViewModel.RingVisibility}">
+            <suki:Loading Width="65"
+                          Height="65"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       Text="{Binding ViewModel.LoadingTitle}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Text="{Binding ViewModel.LoadingInfo}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Margin="15,0"
+                    IsVisible="{Binding ViewModel.UiVisibility}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="0,8,0,0" Text="{Binding ViewModel[GroupName]}" />
+                <TextBox Width="200"
+                         Margin="8,0,0,0"
+                         Text="{Binding ViewModel.Model.Name}" />
+            </StackPanel>
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+
+                <StackPanel>
+                    <suki:GlassCard Margin="0,10,0,0" Padding="5">
+                        <StackPanel>
+                            <TextBox Margin="5"
+                                     TextChanged="OnSearchChanged"
+                                     Watermark="{Binding ViewModel[SearchBar]}" />
+                            <ScrollViewer Height="480" VerticalScrollBarVisibility="Visible">
+                                <ListBox Width="250"
+                                         ItemsSource="{Binding ViewModel.SearchedRoles}"
+                                         SelectedItem="{Binding ViewModel.SelectedRole}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type inpc:ObservableSelectableRole}">
+                                            <StackPanel Margin="5" Orientation="Horizontal">
+                                                <TextBlock Text="{Binding IsEnabledText}" />
+                                                <TextBlock Margin="10,0,0,0" Text="{Binding WindowName, Converter={StaticResource LocaleConverter}}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+
+                                </ListBox>
+                            </ScrollViewer>
+                            <StackPanel HorizontalAlignment="Center">
+                                <Button Margin="5"
+                                        Command="{Binding ViewModel.RoleSelectionCommand}"
+                                        Content="{Binding ViewModel.RoleSelectionState}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </suki:GlassCard>
+                </StackPanel>
+
+                <StackPanel Margin="10,0,0,0" HorizontalAlignment="Left">
+                    <suki:GlassCard Margin="0,10,0,0"
+                                    Padding="10"
+                                    IsVisible="{Binding ViewModel.SelectedItemVisibility}">
+                        <DockPanel>
+                            <TextBlock Margin="0,3,0,0"
+                                       HorizontalAlignment="Left"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Text="{Binding ViewModel.SelectedRole.WindowName, Converter={StaticResource LocaleConverter}}" />
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <Button Margin="0,0,10,0"
+                                        Command="{Binding ViewModel.SelectionCommand}"
+                                        Content="{Binding ViewModel.SelectionState}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </suki:GlassCard>
+
+                    <ScrollViewer MinHeight="470"
+                                  MaxHeight="470"
+                                  Margin="0,10,0,0"
+                                  VerticalScrollBarVisibility="Visible">
+                        <ItemsControl Width="650"
+                                      Margin="0,0,0,0"
+                                      ItemsSource="{Binding ViewModel.SelectedRole.Keys}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Top" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type inpc:ObservableRoleKey}">
+                                    <suki:GlassCard Margin="3"
+                                                    HorizontalAlignment="Left"
+                                                    Command="{Binding ViewModel.SwitchCheckCommand, ElementName=GroupEntry}"
+                                                    CommandParameter="{Binding .}"
+                                                    IsInteractive="True">
+                                        <StackPanel Margin="0" Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsChecked}" IsEnabled="False">
+                                                <!--<Interaction.Behaviors>
+                                                    Stack overflow here
+                                                    <EventTriggerBehavior EventName="Checked">
+                                                        <InvokeCommandAction Command="{Binding ViewModel.SwitchCheckCommand, ElementName=GroupEntry}" CommandParameter="{Binding .}" />
+                                                    </EventTriggerBehavior>
+                                                    <EventTriggerBehavior EventName="Unchecked">
+                                                        <InvokeCommandAction Command="{Binding ViewModel.SwitchCheckCommand, ElementName=GroupEntry}" CommandParameter="{Binding .}" />
+                                                    </EventTriggerBehavior>
+                                                </Interaction.Behaviors>-->
+                                            </CheckBox>
+                                            <TextBlock Width="140"
+                                                       Margin="7,0,0,0"
+                                                       Text="{Binding KeyName, Converter={StaticResource LocaleConverter}}"
+                                                       TextWrapping="WrapWithOverflow" />
+                                        </StackPanel>
+                                    </suki:GlassCard>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <StackPanel Margin="0,10,0,0" HorizontalAlignment="Right">
+                        <StackPanel Margin="0,0,15,0"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Button Width="80"
+                                    Margin="0,0,0,0"
+                                    Command="{Binding ViewModel.CancelCommand}"
+                                    Content="{Binding ViewModel[CancelButton]}" />
+                            <Button Width="80"
+                                    Margin="15,0,0,0"
+                                    Command="{Binding ViewModel.SaveCommand}"
+                                    Content="{Binding ViewModel[SaveButton]}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+
+</UserControl>

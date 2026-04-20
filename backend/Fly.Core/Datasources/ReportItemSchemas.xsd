@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" id="ReportItemSchemas" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="RTClientReceipt" nillable="true" type="RTClientReceipt" />
+  <xs:complexType name="RTClientReceipt">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RTModel">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ClientName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RTModel">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Type" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Amount" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TextAmount" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Notes" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UserName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Currency" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Remaining" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Number" type="xs:long" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TypeName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TypeText" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RTCompanyInfo" nillable="true" type="RTCompanyInfo" />
+  <xs:complexType name="RTCompanyInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NameEn" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Type" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TypeEn" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Image" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Address" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PhoneNumber1" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PhoneNumber2" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PhoneNumber3" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InvoiceNotice" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RTDiscountItemReceipt" nillable="true" type="RTDiscountItemReceipt" />
+  <xs:complexType name="RTDiscountItemReceipt">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RTModel">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Number" type="xs:long" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ReceiptNumber" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Quantity" type="xs:decimal" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ItemName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UnitName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ClientName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RTEmployeeReceipt" nillable="true" type="RTEmployeeReceipt" />
+  <xs:complexType name="RTEmployeeReceipt">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RTModel">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="EmployeeName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RTModel" nillable="true" type="RTModel" />
+  <xs:element name="RTRepresentative" nillable="true" type="RTRepresentative" />
+  <xs:complexType name="RTRepresentative">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RTModel">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="ClientBalance" type="xs:decimal" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Balance" type="xs:decimal" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ClientName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MarketerName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ReceiptNumber" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RTSellInvoiceReportDetailModel" nillable="true" type="RTSellInvoiceReportDetailModel" />
+  <xs:complexType name="RTSellInvoiceReportDetailModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="UnitName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ItemName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ItemBarcode" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Quantity" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Price" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Discount" type="xs:decimal" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RTSellInvoiceReportModel" nillable="true" type="RTSellInvoiceReportModel" />
+  <xs:complexType name="RTSellInvoiceReportModel">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="SerialNumber" type="xs:long" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Number" type="xs:long" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TotalAmount" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ClientName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ClientPhone" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="RepresentativeName" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="RepresentativePercentage" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="RepresentativePhone" type="xs:decimal" />
+      <xs:element minOccurs="0" maxOccurs="1" name="StoreName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="Discount" type="xs:decimal" />
+      <xs:element minOccurs="1" maxOccurs="1" name="PeymentType" type="PeymentType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PeymentTypeString" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Details" type="ArrayOfRTSellInvoiceReportDetailModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="PeymentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Cash" />
+      <xs:enumeration value="Deferred" />
+      <xs:enumeration value="BankServices" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfRTSellInvoiceReportDetailModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RTSellInvoiceReportDetailModel" nillable="true" type="RTSellInvoiceReportDetailModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RTSupplierReceipt" nillable="true" type="RTSupplierReceipt" />
+  <xs:complexType name="RTSupplierReceipt">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RTModel">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="SupplierName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SafeName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

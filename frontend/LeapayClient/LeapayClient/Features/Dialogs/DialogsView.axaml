@@ -1,0 +1,93 @@
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Leapay.Client.Features.Dialogs.DialogsView"
+    x:DataType="dialogs:DialogsViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogs="clr-namespace:Leapay.Client.Features.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:suki="https://github.com/kikipoulet/SukiUI"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid RowDefinitions="Auto,*">
+        <suki:GlassCard Classes="HeaderCard">
+            <suki:GroupBox Header="Dialogs">
+                <StackPanel Classes="HeaderContent">
+                    <TextBlock>
+                        SukiUI provides a rich dialog experience out of the box, allowing the display of any arbitrary control, view or ViewModel (with suitable ViewLocator defined) as a dialog.
+                    </TextBlock>
+                    <TextBlock>
+                        As the API for this resides entirely in C#, the source for the examples can be viewed on GitHub at the URL below.
+                    </TextBlock>
+                    <HyperlinkButton Content="Source Here." NavigateUri="https://github.com/kikipoulet/SukiUI/blob/main/SukiUI.Demo/Features/ControlsLibrary/Dialogs/DialogsViewModel.cs" />
+                    <TextBlock>
+                        Click any of the following buttons to open up a dialog.
+                    </TextBlock>
+                </StackPanel>
+            </suki:GroupBox>
+        </suki:GlassCard>
+        <ScrollViewer Grid.Row="1">
+            <WrapPanel Classes="PageContainer">
+                <suki:GlassCard>
+                    <suki:GroupBox Header="Standard Dialog">
+                        <Button
+                            Command="{Binding OpenStandardDialogCommand}"
+                            Content="Show Dialog"
+                            Margin="15,10,15,0"
+                            VerticalAlignment="Top" />
+                    </suki:GroupBox>
+                </suki:GlassCard>
+                <suki:GlassCard>
+                    <suki:GroupBox Header="Multi Option Dialog">
+                        <Button
+                            Command="{Binding OpenMultiOptionDialogCommand}"
+                            Content="Show Dialog"
+                            Margin="15,10,15,0"
+                            VerticalAlignment="Top" />
+                    </suki:GroupBox>
+                </suki:GlassCard>
+                <suki:GlassCard>
+                    <suki:GroupBox Header="Background Closable Dialog">
+                        <Button
+                            Command="{Binding OpenBackgroundCloseDialogCommand}"
+                            Content="Show Dialog"
+                            Margin="15,10,15,0"
+                            VerticalAlignment="Top" />
+                    </suki:GroupBox>
+                </suki:GlassCard>
+                <suki:GlassCard>
+                    <suki:GroupBox Header="Messagebox Style Dialogs">
+                        <StackPanel Spacing="5">
+                            <ComboBox ItemsSource="{Binding NotificationTypes}" SelectedItem="{Binding SelectedType}" />
+                            <Button
+                                Command="{Binding OpenMessageBoxStyleDialogCommand}"
+                                Content="Show Dialog"
+                                Margin="15,10,15,0"
+                                VerticalAlignment="Top" />
+                        </StackPanel>
+                    </suki:GroupBox>
+                </suki:GlassCard>
+                <suki:GlassCard>
+                    <suki:GroupBox Header="ViewModel Dialog">
+                        <Button
+                            Command="{Binding OpenViewModelDialogCommand}"
+                            Content="Show Dialog"
+                            Margin="15,10,15,0"
+                            VerticalAlignment="Top" />
+                    </suki:GroupBox>
+                </suki:GlassCard>
+                <suki:GlassCard>
+                    <suki:GroupBox Header="Window Dialog Demo">
+                        <Button
+                            Command="{Binding OpenDialogWindowDemoCommand}"
+                            Content="Open"
+                            Margin="15,10,15,0"
+                            VerticalAlignment="Top" />
+                    </suki:GroupBox>
+                </suki:GlassCard>
+            </WrapPanel>
+        </ScrollViewer>
+    </Grid>
+
+</UserControl>

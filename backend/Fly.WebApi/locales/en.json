@@ -1,0 +1,21 @@
+{
+  "entity-name": "Name",
+
+
+  "validation-empty": "{0} Cannot be empty",
+
+
+  "page-websitetitle": "Platform",
+
+  "v-NotEmpty": "Cannot be empity",
+  "v-NotNull": "Cannot be empity",
+  "v-exists": "{0} exists",
+
+  "v-RoleGroupCreateUpdate-details": "Your request is missed details",
+
+  "v-grator-than": "{0}  must be grator than {1}",
+
+
+
+  "PrimaryUnitNotFound": "Primary Unit Not Found"
+}

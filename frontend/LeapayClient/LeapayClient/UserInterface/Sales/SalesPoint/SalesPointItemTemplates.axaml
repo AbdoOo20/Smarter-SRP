@@ -1,0 +1,74 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+                    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                    xmlns:fastSales="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels.FastSales"
+                    xmlns:salesPoint="clr-namespace:Leapay.Client.UserInterface.Sales.SalesPoint">
+
+    <DataTemplate x:Key="SalesPointItemTemplate" DataType="fastSales:ItemModel">
+        <Button Width="110"
+                Height="110"
+                Margin="5"
+                Padding="0"
+                HorizontalAlignment="Center"
+                Command="{Binding $parent[salesPoint:SalesPointPage].ViewModel.ItemSelectedCommand}"
+                CommandParameter="{Binding .}"
+                ToolTip.ShowDelay="300"
+                ToolTip.Tip="{Binding Name}">
+            <Button.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding $parent[salesPoint:SalesPointPage].ViewModel.ItemFavouriteCommand}"
+                              CommandParameter="{Binding .}"
+                              Header="{Binding FavouriteContextCommandName, Converter={StaticResource LocaleConverter}}" />
+                </ContextMenu>
+            </Button.ContextMenu>
+            <Grid Width="110" Height="120">
+                <StackPanel Margin="0,5,0,0">
+                    <Border Width="77"
+                            Height="77"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            ClipToBounds="True"
+                            CornerRadius="20">
+                        <asyncImageLoader:AdvancedImage Width="70"
+                                                        Height="70"
+                                                        Source="{Binding Photo}"
+                                                        Stretch="Fill" />
+                    </Border>
+                    <TextBlock MaxWidth="120"
+                               Margin="0,0,0,0"
+                               Padding="5,0,5,0"
+                               HorizontalAlignment="Center"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               MaxLines="2"
+                               Text="{Binding Name}"
+                               TextAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="Wrap" />
+
+                </StackPanel>
+                <Border Margin="0"
+                        Padding="5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Background="{DynamicResource SukiPrimaryColor}"
+                        CornerRadius="15,0,0, 15">
+                    <Border.RenderTransform>
+                        <TranslateTransform>
+                            <TranslateTransform.X>0</TranslateTransform.X>
+                        </TranslateTransform>
+                    </Border.RenderTransform>
+                    <StackPanel Orientation="Horizontal" Spacing="3">
+                        <TextBlock FontSize="13"
+                                   Foreground="White"
+                                   Text="{Binding Price, StringFormat='{}{0:N}'}" />
+                        <avalonia:MaterialIcon Foreground="White" Kind="Tag" />
+
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Button>
+    </DataTemplate>
+</ResourceDictionary>

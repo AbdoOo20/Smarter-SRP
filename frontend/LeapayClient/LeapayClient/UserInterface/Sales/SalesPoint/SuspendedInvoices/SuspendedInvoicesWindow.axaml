@@ -1,0 +1,167 @@
+﻿<UserControl x:Class="Leapay.Client.UserInterface.Sales.SalesPoint.SuspendedInvoices.SuspendedInvoicesWindow"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:common="clr-namespace:Leapay.Client.UserInterface.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dtoModels1="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:Fly.Shared.Modules.PurchaseAndSales.Requests;assembly=Fly.Shared"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:suspendedInvoices="clr-namespace:Leapay.Client.UserInterface.Sales.SalesPoint.SuspendedInvoices"
+             x:Name="SuspendedInvoiceControl"
+             Width="650"
+             Height="500"
+             d:DataContext="{d:DesignInstance suspendedInvoices:SuspendedInvoicesWindow,
+                                              IsDesignTimeCreatable=True}"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             x:DataType="suspendedInvoices:SuspendedInvoicesWindow"
+             FlowDirection="{Binding ViewModel.FlowDirection}"
+             mc:Ignorable="d">
+    <Grid Margin="0,35,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel IsVisible="{Binding ViewModel.UiVisibility}">
+            <suki:GlassCard Width="600"
+                            Margin="0,2,0,0"
+                            Padding="5"
+                            Background="{Binding ViewModel.BackgroundTheme}">
+                <Grid VerticalAlignment="Center" ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" SharedSizeGroup="InvoiceNumberColumn" />
+                        <ColumnDefinition Width="*" SharedSizeGroup="ClientNameColumn" />
+                        <ColumnDefinition Width="*" SharedSizeGroup="ClientPhoneColumn" />
+                        <ColumnDefinition Width="*" SharedSizeGroup="DateColumn" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="ActionColumn" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding ViewModel[Number]}" />
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding ViewModel[ClientName]}" />
+                    <TextBlock Grid.Column="2"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding ViewModel[ClientPhone]}" />
+                    <TextBlock Grid.Column="3"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding ViewModel[Date]}" />
+                    <TextBlock Grid.Column="4"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding ViewModel[Unsuspend]}" />
+                </Grid>
+            </suki:GlassCard>
+
+            <ScrollViewer x:Name="ActiveDataScrollViewer"
+                          Width="620"
+                          MaxHeight="430"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Stretch"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Visible">
+                <ItemsControl ItemsSource="{Binding ViewModel.ModelsInView}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:SuspendedInvoiceModel">
+                            <suki:GlassCard Margin="0,3" Padding="5">
+                                <Grid VerticalAlignment="Center" ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" SharedSizeGroup="InvoiceNumberColumn" />
+                                        <ColumnDefinition Width="*" SharedSizeGroup="ClientNameColumn" />
+                                        <ColumnDefinition Width="*" SharedSizeGroup="ClientPhoneColumn" />
+                                        <ColumnDefinition Width="*" SharedSizeGroup="DateColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="ActionColumn" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Margin="7,0,0,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="16"
+                                               Text="{Binding InvoiceNumber}"
+                                               TextWrapping="Wrap" />
+
+                                    <TextBlock Grid.Column="1"
+                                               Margin="7,0,0,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="16"
+                                               Text="{Binding ClientName}"
+                                               TextWrapping="Wrap" />
+
+                                    <TextBlock Grid.Column="2"
+                                               Margin="7,0,0,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="16"
+                                               Text="{Binding ClientPhone}"
+                                               TextWrapping="Wrap" />
+
+                                    <TextBlock Grid.Column="3"
+                                               Margin="7,0,0,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="16"
+                                               Text="{Binding InvoiceDate}"
+                                               TextWrapping="Wrap" />
+
+                                    <Button Grid.Column="4"
+                                            Height="37"
+                                            Classes="Rounded"
+                                            Command="{Binding ViewModel.ActionCommand, ElementName=SuspendedInvoiceControl}"
+                                            CommandParameter="{Binding .}">
+                                        <avalonia:MaterialIcon Foreground="{Binding ViewModel.BackgroundTheme, ElementName=SuspendedInvoiceControl}" Kind="Check" />
+                                    </Button>
+
+                                </Grid>
+                            </suki:GlassCard>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0"
+                    Margin="0,150,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding !ViewModel.DataExists}">
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Text="{Binding ViewModel[NoSuspendedInvoices]}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsVisible="{Binding !ViewModel.UiVisibility}">
+            <suki:Loading Width="100"
+                          Height="100"
+                          Margin="0,0,0,0"
+                          HorizontalAlignment="Center"
+                          DockPanel.Dock="Top"
+                          IsVisible="{Binding ViewModel.IsRefreshing}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="28"
+                       Text="{Binding ViewModel.LoadingTitle}" />
+            <TextBlock Margin="0,10,0,0"
+                       HorizontalAlignment="Center"
+                       FontSize="22"
+                       Text="{Binding ViewModel.LoadingInfo}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

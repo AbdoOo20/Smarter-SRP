@@ -1,0 +1,54 @@
+﻿<controls:UserControl x:Class="Leapay.Client.UserInterface.Routing.MedianPage"
+                      xmlns="https://github.com/avaloniaui"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                      xmlns:controls="https://github.com/avaloniaui"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:routing1="clr-namespace:Leapay.Client.UserInterface.Routing"
+                      xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                      xmlns:uiModels1="clr-namespace:Leapay.Client.ClientModels.Dto.DtoModels.UiModels"
+                      d:DataContext="{d:DesignInstance routing1:MedianPageViewModel,
+                                                       IsDesignTimeCreatable=False}"
+                      d:DesignHeight="450"
+                      d:DesignWidth="800"
+                      x:DataType="routing1:MedianPage"
+                      FlowDirection="{Binding ViewModel.FlowDirection}"
+                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                      mc:Ignorable="d">
+
+    <StackPanel>
+        <suki:GlassCard Width="400"
+                        Margin="25"
+                        Padding="6"
+                        HorizontalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       Text="{Binding ViewModel.CurrentCategoryName}" />
+        </suki:GlassCard>
+        <ItemsControl Margin="25" ItemsSource="{Binding ViewModel.Cards}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Top" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="uiModels1:CardModel" DataType="{x:Type uiModels1:CardModel}">
+                    <suki:GlassCard Width="300"
+                                    Height="65"
+                                    MaxWidth=""
+                                    Margin="5"
+                                    Command="{Binding ActionCommand}"
+                                    IsInteractive="True"
+                                    IsVisible="{Binding IsVisible}">
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="{Binding CardSymbol}" />
+                            <TextBlock Margin="10,0,0,0" Text="{Binding CardName}" />
+                        </StackPanel>
+                    </suki:GlassCard>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</controls:UserControl>
