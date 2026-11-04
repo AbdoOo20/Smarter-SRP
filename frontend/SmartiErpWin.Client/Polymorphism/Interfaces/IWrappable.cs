@@ -87,8 +87,10 @@ public interface IWrappable
     {
         await WrapOneAsync(async () =>
         {
-            await using var enumerator = actions
-                .ToAsyncEnumerable()
+            // Call the project's extension explicitly: .NET 10 adds a built-in
+            // System.Linq.AsyncEnumerable.ToAsyncEnumerable with the same signature.
+            await using var enumerator = SmartErpWin.Core.Extensions.CustomLinqExtensions
+                .ToAsyncEnumerable(actions)
                 .GetAsyncEnumerator();
 
             while (await enumerator.MoveNextAsync())
