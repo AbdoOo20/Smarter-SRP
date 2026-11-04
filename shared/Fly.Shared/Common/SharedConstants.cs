@@ -7,7 +7,7 @@ public class SharedConstants
     public static class DiscoveryConfig
     {
         public const string AppId = "LeaPayBackend";
-        public const string SharedThumbprint = "C4FABBAA580F179529ACDCF468426CCCF59E65CD";
+        public const string SharedThumbprint = "C5F42C091FE031129D87DB236A6ED15630084EE6";
         public const int DiscoveryPort = 40000;
 
         public static readonly byte[] SharedDiscoveryConfig =

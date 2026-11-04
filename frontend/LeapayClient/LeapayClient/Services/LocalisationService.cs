@@ -58,6 +58,14 @@ public class LocalisationService
                 return value;
             }
 
+            // Arabic is the complete locale; fall back to it for keys missing
+            // from the current one instead of showing the raw key.
+            if (_localisations.TryGetValue(DefaultLocale, out var fallback)
+                && fallback.TryGetValue(name, out var fallbackValue))
+            {
+                return fallbackValue;
+            }
+
             return name;
         }
     }
