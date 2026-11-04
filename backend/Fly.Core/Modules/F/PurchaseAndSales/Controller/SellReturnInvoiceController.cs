@@ -78,6 +78,13 @@ public class SellReturnInvoiceController
 
     public override async Task BeforReturn(PageList<DtoSellReturnInvoice> list)
     {
+        // TotalAmount has no database column, so compute it for the list
+        // (the same net total used when the return is saved).
+        foreach (var item in list.Items)
+        {
+            item.TotalAmount = decimal.Round(item.Count().discountedTotal, 2);
+        }
+
         return;
         var entryService = _service.MakeChildService<IEntryService>();
         var clientService = _service.MakeChildService<DtoClient, TClient>();
@@ -289,6 +296,16 @@ public class SellReturnInvoiceController
             returnTotal = netTotal;
             returnInvoiceTotalDiscount = discountTotal;
             number = await _service.NextNumber(s => s.Number);
+        }
+        //
+        // A return not linked to a sales invoice has no store to take, and the
+        // inventory step below needs one (it used to fail with
+        // "Nullable object must have a value").
+        if (invoice is null
+            && returnInvoice.StorageType == StorageType.Normal
+            && (returnInvoice.StoreId is null || returnInvoice.StoreId.Value.IsNullOrEmpty()))
+        {
+            throw new InvalidInputException("رجاءً قم بتحديد المخزن"); // Localized
         }
         //
         //

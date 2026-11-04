@@ -23,6 +23,12 @@ public partial class SellReturnInvoiceEntryViewModel : BaseItemPageEntryViewMode
     
     [ObservableProperty]
     public partial SuperComboVm<DtoSellReturnInvoiceDetail> Safes { get; set; } = new();
+
+    // The store the returned items go back to (sales return) or leave from
+    // (purchase return). The backend requires it when the return is not linked
+    // to an existing invoice.
+    [ObservableProperty]
+    public partial SuperComboVm<DtoSellReturnInvoiceDetail> Stores { get; set; } = new();
     
     [ObservableProperty]
     public partial decimal TotalPrice { get; set; }
@@ -115,6 +121,14 @@ public partial class SellReturnInvoiceEntryViewModel : BaseItemPageEntryViewMode
         {
             await Safes.LoadAsync(this, "Safes", Model.SafeId,
                 s => Model.SafeId = s.Id);
+
+            var stores = GetVisibleStorages((await RequestComboModelsAsync<ComboModel>("Stores")).Data.ToList());
+            var defStore = GetDefaultStorage(stores, Model.StoreId.GetValueOrDefault(), EntryType);
+            Stores.Load(stores, defStore, s =>
+            {
+                Model.StoreId = s.Id;
+                Model.StoreName = s.Display ?? string.Empty;
+            });
         }
         
         CalculatePrice();

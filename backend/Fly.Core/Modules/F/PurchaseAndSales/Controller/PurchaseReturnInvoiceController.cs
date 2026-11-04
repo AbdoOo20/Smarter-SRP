@@ -90,6 +90,21 @@ public class PurchaseReturnInvoiceController
     
     public override async Task BeforReturn(PageList<DtoPurchaseReturnInvoice> list)
     {
+        // TotalAmount has no database column, so compute it for the list
+        // with the same formula used when the return is saved.
+        foreach (var item in list.Items)
+        {
+            var nonDiscountedTotal = item.Details.Sum(s => s.CountingPrince(-100));
+            var detailsTotal = item.Details.Sum(s => s.CountingPrince((int)item.DiscountType));
+            var netTotal = item.DiscountType == DiscountType.Percent
+                ? detailsTotal - (detailsTotal * item.Discount / 100)
+                : detailsTotal - item.Discount;
+
+            item.TotalAmount = decimal.Round(netTotal, 2);
+            item.NetAmount = decimal.Round(netTotal, 2);
+            item.DiscountAmount = decimal.Round(nonDiscountedTotal - netTotal, 2);
+        }
+
         var entryService = _service.MakeChildService<IEntryService>();
         var supplierService = _service.MakeChildService<DtoSupplier, TSupplier>();
         var purchaseReturnService = _service.MakeChildService<DtoPurchaseReturnInvoice, TPurchaseReturnInvoice>();

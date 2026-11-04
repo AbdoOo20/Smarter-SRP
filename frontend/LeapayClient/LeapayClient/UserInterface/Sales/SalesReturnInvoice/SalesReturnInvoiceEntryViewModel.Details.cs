@@ -15,9 +15,6 @@ public partial class SellReturnInvoiceEntryViewModel
     [ObservableProperty]
     public partial ModelDetailsViewModelBase<DtoSellReturnInvoiceDetail> ModelDetails { get; set; } = new();
 
-    [ObservableProperty]
-    public partial decimal SuggestedPrice { get; set; }
-
     private void SetDetailsModel(DtoSellReturnInvoiceDetail? model)
     {
         Reset();
@@ -29,8 +26,6 @@ public partial class SellReturnInvoiceEntryViewModel
     [RelayCommand]
     private void OnSubmit()
     {
-        ModelDetails.Model.Price = SuggestedPrice;
-        
         if(!VerifyValidations(DetailsEnforcer.Enforce(ModelDetails.Model)))
             return;
         
@@ -62,7 +57,11 @@ public partial class SellReturnInvoiceEntryViewModel
             return;
         
         await Units.LoadAsync(this, "Units", ModelDetails.Model.UnitId,
-            s => ModelDetails.Model.UnitId = s.Id, SelectedItem?.Value, false);
+            s =>
+            {
+                ModelDetails.Model.UnitId = s.Id;
+                ModelDetails.Model.UnitName = s.Display ?? string.Empty;
+            }, SelectedItem?.Value, false);
         
         if (ModelDetails.Model?.UnitId.IsNullOrEmpty() ?? true)
         {

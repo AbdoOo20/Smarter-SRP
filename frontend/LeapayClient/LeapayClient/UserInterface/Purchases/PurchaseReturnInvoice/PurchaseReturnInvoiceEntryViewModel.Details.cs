@@ -58,7 +58,11 @@ public partial class PurchaseReturnInvoiceEntryViewModel
             return;
         
         await Units.LoadAsync(this, "Units", ModelDetails.Model.UnitId,
-            s => ModelDetails.Model.UnitId = s.Id, SelectedItem?.Value, false);
+            s =>
+            {
+                ModelDetails.Model.UnitId = s.Id;
+                ModelDetails.Model.UnitName = s.Display ?? string.Empty;
+            }, SelectedItem?.Value, false);
         
         if (ModelDetails.Model?.UnitId.IsNullOrEmpty() ?? true)
         {
