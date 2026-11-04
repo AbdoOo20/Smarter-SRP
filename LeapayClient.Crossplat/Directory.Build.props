@@ -1,0 +1,6 @@
+<Project>
+  <!-- AvaloniaVersion is referenced by the csproj files but was never defined. -->
+  <PropertyGroup>
+    <AvaloniaVersion>11.3.9</AvaloniaVersion>
+  </PropertyGroup>
+</Project>

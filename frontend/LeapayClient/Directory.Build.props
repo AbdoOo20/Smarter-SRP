@@ -1,0 +1,10 @@
+<Project>
+  <!--
+    Shared build settings for Leapay.Client, SukiUI and SukiUI.Dock.
+    This file was missing from the repository; the code relies on implicit usings.
+  -->
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+</Project>

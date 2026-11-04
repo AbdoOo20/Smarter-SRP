@@ -1,0 +1,60 @@
+<Project>
+  <!--
+    Central package versions for Leapay.Client, SukiUI and SukiUI.Dock.
+    This file was missing from the repository (NU1015 errors). Versions are
+    pinned to the Avalonia 11.3 line used elsewhere in the solution.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <AvaloniaVersion>11.3.9</AvaloniaVersion>
+    <DockVersion>11.3.0.12</DockVersion>
+    <SkiaSharpVersion>3.119.4</SkiaSharpVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Avalonia core -->
+    <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Themes.Simple" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Controls.DataGrid" Version="$(AvaloniaVersion)" />
+    <PackageVersion Include="Avalonia.Controls.ItemsRepeater" Version="11.1.5" />
+
+    <!-- Avalonia ecosystem -->
+    <PackageVersion Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
+    <PackageVersion Include="AvaloniaEdit.TextMate" Version="11.3.0" />
+    <PackageVersion Include="Avalonia.Xaml.Interactions" Version="11.3.0.6" />
+    <PackageVersion Include="AsyncImageLoader.Avalonia" Version="3.4.3" />
+    <PackageVersion Include="Dock.Avalonia" Version="$(DockVersion)" />
+    <PackageVersion Include="Dock.Model" Version="$(DockVersion)" />
+    <PackageVersion Include="Dock.Model.Avalonia" Version="$(DockVersion)" />
+    <PackageVersion Include="Dock.Model.Mvvm" Version="$(DockVersion)" />
+    <PackageVersion Include="Dock.Serializer" Version="$(DockVersion)" />
+    <PackageVersion Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.5" />
+    <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.1" />
+    <PackageVersion Include="Markdown.Avalonia" Version="11.0.3" />
+    <PackageVersion Include="Sandreas.Avalonia.Preferences" Version="0.0.3" />
+    <PackageVersion Include="ShowMeTheXaml.Avalonia" Version="1.5.1" />
+    <PackageVersion Include="ShowMeTheXaml.Avalonia.Generator" Version="1.5.1" />
+
+    <!-- SkiaSharp (Leapay.Windows already resolves the 3.x line) -->
+    <PackageVersion Include="SkiaSharp" Version="$(SkiaSharpVersion)" />
+    <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="$(SkiaSharpVersion)" />
+
+    <!-- General -->
+    <PackageVersion Include="ClosedXML" Version="0.105.0" />
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="Mapster" Version="7.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageVersion Include="PdfSharpCore" Version="1.3.67" />
+    <PackageVersion Include="ReportViewerCore.NETCore" Version="15.1.22" />
+    <PackageVersion Include="Squirrel.Windows" Version="2.0.1" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.4" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.0" />
+    <PackageVersion Include="Velopack" Version="0.0.1298" />
+  </ItemGroup>
+</Project>

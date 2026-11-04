@@ -50,7 +50,7 @@
     <PackageReference Include="ReportViewerCore.NETCore" />
     <PackageReference Include="Sandreas.Avalonia.Preferences" />
     <PackageReference Include="ShowMeTheXaml.Avalonia" />
-    <PackageReference Include="ShowMeTheXaml.Avalonia.Generator" />
+    <PackageReference Include="ShowMeTheXaml.Avalonia.Generator" PrivateAssets="all" />
     <PackageReference Include="Squirrel.Windows" />
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="Velopack" />
