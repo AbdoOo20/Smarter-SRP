@@ -31,13 +31,17 @@ public class BackendService
     
     public static HttpClientHandler CreatePinnedHandler(string? expectedThumbprint = null)
     {
-        expectedThumbprint ??= SharedConstants.DiscoveryConfig.SharedThumbprint;
+        // With no explicit thumbprint, trust both the repository certificate and
+        // the one used by backends already deployed at customers.
+        var trusted = expectedThumbprint is null
+            ? SharedConstants.DiscoveryConfig.TrustedThumbprints
+            : [expectedThumbprint];
+
         return new HttpClientHandler
         {
             ServerCertificateCustomValidationCallback = (_, cert, _, _) =>
                 cert is X509Certificate2 c &&
-                c.Thumbprint!.Equals(expectedThumbprint,
-                    StringComparison.OrdinalIgnoreCase)
+                trusted.Any(t => c.Thumbprint!.Equals(t, StringComparison.OrdinalIgnoreCase))
         };
     }
 }

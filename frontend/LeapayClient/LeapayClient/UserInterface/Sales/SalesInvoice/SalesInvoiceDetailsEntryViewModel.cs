@@ -224,17 +224,29 @@ public partial class SalesInvoiceEntryViewModel
 
     public void UpdateDetailsListing(DtoSalesInvoiceDetail model, bool checkForExisting)
     {
-        var alreadyExisting = Model.Details.FirstOrDefault(m => m.Discount == model.Discount
+        // A line with the same TemporaryId is already in the invoice, so this is
+        // an edit of that line: its new quantity replaces the old one.
+        var isEditOfExistingLine = Model.Details.Any(m => m.TemporaryId == model.TemporaryId);
+
+        var alreadyExisting = Model.Details.FirstOrDefault(m => m.TemporaryId != model.TemporaryId
+                                                       && m.Discount == model.Discount
                                                        && m.UnitId == model.UnitId
                                                        && m.ItemId == model.ItemId
                                                        && m.Price == model.Price);
         if (alreadyExisting is not null && checkForExisting)
         {
-            // We already have a model with the same item and discount,
-            // so just update the already existing one with the added quantities
-
+            // Another line already has the same item, unit, price and discount,
+            // so merge into it instead of adding a duplicate line.
             alreadyExisting.Quantity += model.Quantity;
-            
+
+            if (isEditOfExistingLine)
+            {
+                // The edited line was merged into the other one, so drop the original.
+                var originalLine = Model.Details.FirstOrDefault(m => m.TemporaryId == model.TemporaryId);
+                if (originalLine is not null)
+                    Model.Details.Remove(originalLine);
+            }
+
             UpdateDetailsListing(alreadyExisting, false);
             return;
         }
