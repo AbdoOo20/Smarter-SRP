@@ -9,7 +9,7 @@ internal class MySqlDbContextDesignTime : IDesignTimeDbContextFactory<DbApplicat
     public DbApplicationContext CreateDbContext(string[] args)
     {
         // This is your local database server FOR MIGRATIONS.
-        string conStr = "Server=localhost;port=3308;Database=erp_mmtech_20032025;Uid=Admin;Pwd=959924";
+        string conStr = "Server=localhost;port=3308;Database=erp_mmtech_20032025;Uid=Admin;Pwd=NaZe3X5V";
         var optionsBuilder = new DbContextOptionsBuilder<DbApplicationContext>();
         var ver = ServerVersion.AutoDetect(conStr);
         optionsBuilder.UseMySql(conStr, ver, x => x.MigrationsAssembly(typeof(MySqlDbContextDesignTime).Assembly.FullName));
