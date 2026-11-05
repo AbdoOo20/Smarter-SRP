@@ -182,8 +182,14 @@ public static class BackendDiscovery
     {
         var results = new HashSet<ConnectionInfo>();
 
-        using var udp = new UdpClient(SharedConstants.DiscoveryConfig.DiscoveryPort);
+        // Allow port sharing BEFORE binding, so discovery still works when another
+        // LeaPay instance (e.g. an older installed copy) is already listening on the
+        // discovery port. Setting it after the constructor had no effect, because
+        // `new UdpClient(port)` binds immediately and failed with "address in use".
+        using var udp = new UdpClient(AddressFamily.InterNetwork);
+        udp.ExclusiveAddressUse = false;
         udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+        udp.Client.Bind(new IPEndPoint(IPAddress.Any, SharedConstants.DiscoveryConfig.DiscoveryPort));
         
         using var cts = new CancellationTokenSource(timeout);
 
