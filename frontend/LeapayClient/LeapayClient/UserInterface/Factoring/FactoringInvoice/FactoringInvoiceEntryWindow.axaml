@@ -468,7 +468,7 @@
                                                                VerticalAlignment="Center"
                                                                FontSize="14"
                                                                FontWeight="Bold"
-                                                               Text="{Binding ViewModel.TotalPrice}" />
+                                                               Text="{Binding ViewModel.TotalExtraCost}" />
                                                 </StackPanel>
                                             </suki:GlassCard>
                                             <ScrollViewer x:Name="SecondaryDataScroller"

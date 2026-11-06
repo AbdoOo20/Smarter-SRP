@@ -9,6 +9,9 @@ using Fly.Framework.Shared.Common.Requests;
 using Fly.Framework.Shared.Common.ValueTypes;
 using Fly.Shared.Modules.PurchaseAndSales.Requests;
 using Fly.Shared.Modules.Store.Dtos;
+using Fly.Shared.Modules.PurchaseAndSales.Dtos;
+using Fly.Core.Modules.E.Store.Models.DbModels;
+using Fly.Core.Modules.F.PurchaseAndSales.Models.DbModels;
 using Fly.Shared.Modules.Store.Enums;
 using Fly.Shared.Modules.Store.Features;
 using Fly.Shared.Modules.Store.Requests;
@@ -87,33 +90,35 @@ public class SupplyPermitController
         }
         else
         {
-            var old = await detService.GetAllAsAsync(s => new { s.ItemId, s.UnitId, s.Quantity }, w => w.SupplyPermitId == permit.Id);
-            var selectedUnits = permit.SupplyPermitDetails
-            .Join(old.Items,
-                detail => new { detail.ItemId, detail.UnitId },
-                item => new { item.ItemId, item.UnitId },
-                (detail, item) => new { detail.ItemId, detail.UnitId })
-                .ToArray();
+            var old = (await detService.GetAllAsAsync(s => new { s.ItemId, s.UnitId, s.Quantity }, w => w.SupplyPermitId == permit.Id)).Items.ToList();
+            var db = await _service.GetById(permit.Id);
+            var oldStoreId = db.StoreId;
 
+            // Load unit conversion rates for both the old and the new lines. (The previous
+            // composite `selectedUnits.Any(...)` filter could not be translated to SQL, so
+            // every edit failed; it also skipped lines that were newly added on edit.)
+            var unitItemIds = old.Select(x => x.ItemId)
+                .Concat(permit.SupplyPermitDetails?.Select(x => x.ItemId) ?? [])
+                .Distinct().ToList();
             var selectedUnitInfo = (await itemUnitsService.GetAllAsAsync(
                    unit => new { unit.UnitId, unit.ItemId, unit.TransferRate, unit.IsPrimary },
-                   unit => selectedUnits.Any(selected => unit.UnitId == selected.UnitId && unit.ItemId == selected.ItemId)
-               )).Items;
-            if (permit.SupplyPermitDetails?.Any() == true)
+                   unit => unitItemIds.Contains(unit.ItemId)
+               )).Items.ToList();
+
+            // Reverse what the permit added before: the OLD lines, from the OLD store.
+            foreach (var item in old)
             {
-                foreach (var item in permit.SupplyPermitDetails)
-                {
-                    var selectedOne = selectedUnitInfo.First(w => w.UnitId == item.UnitId & w.ItemId == item.ItemId);
-                    var itmId = item.ItemId;
-                    var untId = item.UnitId;
-                    var strId = permit.StoreId;
-                    var qun = item.Quantity;
-                    var allOnes = selectedOne.TransferRate * qun;
-                    await storageModuleService.LoseItem(itmId, untId, strId, qun, allOnes, permit.Id, RelatedInventory.Supply_Return);
-                }
+                var selectedOne = selectedUnitInfo.First(w => w.UnitId == item.UnitId & w.ItemId == item.ItemId);
+                var allOnes = selectedOne.TransferRate * item.Quantity;
+                await storageModuleService.LoseItem(item.ItemId, item.UnitId, oldStoreId, item.Quantity, allOnes, permit.Id, RelatedInventory.Supply_Return);
             }
-            await detService.Remove(w => w.SupplyPermitId == permit.Id);
-            var db = await _service.GetById(permit.Id);
+            // Replace the lines: the old code only removed them and never saved the new
+            // ones, so an edited permit lost all of its lines.
+            await detService.Remove(w => w.SupplyPermitId == permit.Id, false);
+            var newLines = (permit.SupplyPermitDetails ?? []).ToList();
+            newLines.ForEach(f => f.SupplyPermitId = permit.Id);
+            if (newLines.Count > 0)
+                await detService.AddRange(newLines);
             permit.Adapt(db);
             await _service.Update(permit);
             if (permit.SupplyPermitDetails?.Any() == true)
@@ -133,6 +138,26 @@ public class SupplyPermitController
         //  
         _service.CommitTransaction();
         return permit;
+    }
+
+    /// <summary>
+    /// Deleting a permit must undo its stock movements. Every movement it ever made
+    /// (including the reverse/re-apply pairs written on edits) carries its id as
+    /// RelatedId, so removing them returns the stock to how it was before the permit.
+    /// </summary>
+    protected override async ValueTask AfterDelete(DtoSupplyPermit dto, DeleteRequestBase command, Framework.Server.Common.ResultOrFailer<DtoSupplyPermit?> opt)
+    {
+        var inventoryService = _service.MakeChildService<DtoInventory, TInventory>();
+        var inventoryCostService = _service.MakeChildService<DtoInventoryCost, TInventoryCost>();
+        var detService = _service.MakeChildService<DtoSupplyPermitDetail, TSupplyPermitDetail>();
+        var ids = (await inventoryService.GetAllAsAsync(s => s.Id,
+            w => w.RelatedId == dto.Id && (w.RelatedIndex == RelatedInventory.Supply || w.RelatedIndex == RelatedInventory.Supply_Return))).Items.ToList();
+        if (ids.Count > 0)
+        {
+            await inventoryCostService.Remove(w => ids.Contains(w.TInventoryId));
+            await inventoryService.Remove(w => ids.Contains(w.Id));
+        }
+        await detService.Remove(w => w.SupplyPermitId == dto.Id);
     }
 
 

@@ -31,18 +31,16 @@ public partial class DtoMaintenanceInvoiceDetail : DtoBase, IDetailsModel
     
     public Identifier? TemporaryId { get; set; } = Identifier.Create(Guid.NewGuid());
     
+    /// <summary>
+    /// Line total. mode -100 = before the line discount; any other value = after it.
+    /// As on the sales invoice and the printed invoice, the line discount is a fixed
+    /// amount for the whole line (it used to turn into a percentage whenever the
+    /// invoice discount was a percentage).
+    /// </summary>
     public decimal CountPrice(int mode)
     {
         var realPrice = Math.Round(Price * Quantity, 3);
-        decimal final = realPrice;
-        if (mode == (int)DiscountType.Percent)
-        {
-            final = realPrice - realPrice * (Discount / 100);
-        }
-        else if (mode == (int)DiscountType.Static)
-        {
-            final = realPrice - Discount;
-        }
+        var final = mode == -100 ? realPrice : realPrice - Discount;
         return Math.Round(final, 3);
     }
 }

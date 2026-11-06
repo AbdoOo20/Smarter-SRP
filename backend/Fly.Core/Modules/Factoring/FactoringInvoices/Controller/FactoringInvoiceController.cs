@@ -58,8 +58,30 @@ public class FactoringInvoiceController
         OnCreateUpdate += FactoringInvoiceControllerOnCreateUpdate;
     }
 
+    /// <summary>
+    /// Lines saved before the save request carried the unit name have it empty;
+    /// look it up so the unit shows on screen and in the printed invoice.
+    /// </summary>
+    private async Task FillMissingUnitNamesAsync<TLine>(IEnumerable<TLine> lines,
+        Func<TLine, Identifier> unitId, Func<TLine, string?> unitName, Action<TLine, string?> setUnitName)
+    {
+        var missing = lines.Where(l => string.IsNullOrEmpty(unitName(l))).ToList();
+        if (missing.Count == 0)
+            return;
+
+        var ids = missing.Select(unitId).Distinct().ToArray();
+        var unitService = _service.MakeChildService<DtoUnit, TUnit>();
+        var units = (await unitService.GetAllAsAsync(s => new { s.Id, s.Name }, w => ids.Contains(w.Id))).Items.ToList();
+
+        foreach (var line in missing)
+            setUnitName(line, units.FirstOrDefault(u => u.Id == unitId(line))?.Name);
+    }
+
     public override async Task BeforReturn(PageList<DtoFactoringInvoice> list)
     {
+        await FillMissingUnitNamesAsync(list.Items.SelectMany(i => i.Details),
+            d => d.UnitId, d => d.UnitName, (d, n) => d.UnitName = n);
+
         #region Counting Balances
 
         var entryService = _service.MakeChildService<IEntryService>();
@@ -288,11 +310,15 @@ public class FactoringInvoiceController
             
             await _service.Update(mainInvoice);
             
-            await entryService.RemoveAllRelated(mainInvoice.Id, OprationTypeEnum.Maintenance,
+            // Entries are created as Factoring (see FinancialProcess); removing them as
+            // Maintenance matched nothing, so every edit added the amounts again.
+            await entryService.RemoveAllRelated(mainInvoice.Id, OprationTypeEnum.Factoring,
                 PurchaseAndSalesConstants.TransactionOprationType__FactoringRelated);
 
             await InventoryProcess(mainInvoice.Details, mainInvoice.Compositions, true);
-            await FinancialProcess(finalTotal, actualTotal, payInAdvance: payInAdvanceThisTime);
+            // Same arguments as for a new invoice: (discount, total). They were passed as
+            // (net, total), which posted the discount amount as the invoice value on edit.
+            await FinancialProcess(discountTotal, actualTotal, payInAdvance: payInAdvanceThisTime);
         }
 
         _service.CommitTransaction();
@@ -379,11 +405,15 @@ public class FactoringInvoiceController
                     final -= mainInvoice.CollectionRate;
                 }
                 
-                finacialTransaction.AppendEntry(manuInfo.AccountId, theClient, final);
+                // Debit the customer, credit the sector (as the sales invoice does with its
+                // sales account). It was reversed, so with the payment entry below the
+                // customer was credited twice and ended up with a credit balance.
+                finacialTransaction.AppendEntry(theClient, manuInfo.AccountId, final);
 
                 if (_discountedTtoal > 0)
                 {
-                    finacialTransaction.AppendEntry(discountAccountAccount.Id, manuInfo.AccountId, final);
+                    // The discount entry is for the discount amount (it used the invoice value).
+                    finacialTransaction.AppendEntry(discountAccountAccount.Id, manuInfo.AccountId, _discountedTtoal);
                 }
                 
                 switch (mainInvoice.PaymentType)
@@ -401,7 +431,9 @@ public class FactoringInvoiceController
             }
             else if(payInAdvance)
             {
-                finacialTransaction.AppendEntry(manuInfo.AccountId, theClient, q.CollectionRate);
+                // Same direction as above: the advance is invoiced to the customer, and the
+                // payment entry below settles it.
+                finacialTransaction.AppendEntry(theClient, manuInfo.AccountId, q.CollectionRate);
                 
                 switch (mainInvoice.PaymentType)
                 {
@@ -427,6 +459,24 @@ public class FactoringInvoiceController
             }
             return true;
         }
+    }
+
+    /// <summary>
+    /// Deleting an invoice must undo what saving it did: return the used items to the
+    /// store and remove its accounting entries (customer, safe, discount, advance).
+    /// Before, only the invoice row was removed and the stock and balances stayed.
+    /// </summary>
+    protected override async ValueTask AfterDelete(DtoFactoringInvoice dto, FactoringInvoiceDeleteRequest command, Fly.Framework.Server.Common.ResultOrFailer<DtoFactoringInvoice?> opt)
+    {
+        var storageModuleService = _service.MakeChildService<IPurchaseAndSalesModuleService>();
+        var entryService = _service.MakeChildService<IEntryService>();
+        var detailService = _service.MakeChildService<DtoFactoringInvoiceDetail, TFactoringInvoiceDetail>();
+        var costService = _service.MakeChildService<DtoFactoringInvoiceCost, TFactoringInvoiceCost>();
+        await storageModuleService.LossAllEver(dto.Id, [RelatedInventory.Factoring]);
+        await entryService.RemoveAllRelated(dto.Id, OprationTypeEnum.Factoring, PurchaseAndSalesConstants.TransactionOprationType__FactoringRelated);
+        await detailService.Remove(w => w.FactoringInvoiceId == dto.Id);
+        await costService.Remove(w => w.FactoringInvoiceId == dto.Id);
+        await _service.MakeChildService<DtoFactoringInvoiceComposition, TFactoringInvoiceComposition>().Remove(w => w.FactoringInvoiceId == dto.Id);
     }
 
     public virtual void Dispose()

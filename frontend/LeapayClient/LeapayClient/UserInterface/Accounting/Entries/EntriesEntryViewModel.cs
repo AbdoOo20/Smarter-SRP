@@ -1,4 +1,6 @@
-﻿using Fly.Shared.Modules.Accounting.Dtos;
+using SmartErpWin.Core.Extensions;
+using Fly.Framework.Shared.Common;
+using Fly.Shared.Modules.Accounting.Dtos;
 using Leapay.Client.ClientModels.Dto.DtoModels;
 using Leapay.Client.Events.Arguments;
 using Leapay.Client.Polymorphism.Bases;
@@ -47,7 +49,10 @@ public partial class EntriesEntryViewModel : BasePageEntryViewModel<DtoEntry, Dt
         {
             dto.AccountName = accounts.FirstOrDefault(u 
                 => u.Value == dto.AccountId.Value.ToString())?.Display;
-            dto.TemporaryId = dto.Id;
+            // Lines copied from another invoice have no Id yet; giving them all the same
+            // (empty) TemporaryId made editing one line duplicate it over the others and
+            // deleting one line delete them all.
+            dto.TemporaryId = dto.Id.IsNullOrEmpty() ? Identifier.Create(Guid.NewGuid()) : dto.Id;
 
             return dto;
         }).ToList();

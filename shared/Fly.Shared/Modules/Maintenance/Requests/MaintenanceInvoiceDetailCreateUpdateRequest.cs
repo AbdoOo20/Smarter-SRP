@@ -16,6 +16,12 @@ public class MaintenanceInvoiceDetailCreateUpdateRequest : CreateUpdateRequestBa
     public Identifier ItemId { get; set; }
     
     public Identifier UnitId { get; set; }
+
+    // Stored on the line; without them the saved line had no item/unit name and the
+    // unit column was empty on screen and in the printed invoice.
+    public string? ItemName { get; set; }
+
+    public string? UnitName { get; set; }
     
     public Identifier? ItemVarianceId { get; set; }
     

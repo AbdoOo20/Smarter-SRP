@@ -210,10 +210,12 @@ public partial class FactoringInvoiceEntryViewModel : BaseItemPageEntryViewModel
     
     private void CalculatePrice()
     {
-        TotalPrice = Model.Details
-            .Sum(d => (d.Price - d.Discount) * d.Quantity);
-        
-        TotalExtraCost = Model.Costs.Sum(d => d.Price);
+        // The amount the customer pays, as the backend charges it: lines after their
+        // discounts, plus the extra costs, minus the invoice discount. It used to
+        // leave out the extra costs and the invoice discount, and treat the line
+        // discount as per unit while the backend and the print take it per line.
+        TotalPrice = Math.Round(Model.Count().discountedTotal, 2);
+        TotalExtraCost = Model.CostsTotal;
     }
     
     public void CheckVisibilities()

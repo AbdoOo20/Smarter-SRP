@@ -76,6 +76,65 @@ public class SellReturnInvoiceController
         OnCreateUpdateEx -= SellReturnInvoiceController_OnCreateUpdateEx;
     }
 
+    private sealed record SourceLine(Identifier ItemId, Identifier UnitId, decimal Quantity, decimal Discount);
+
+    /// <summary>The sales invoice as sold, before any returns reduce its quantities.</summary>
+    private sealed record InvoiceSnapshot(decimal DetailsTotal, List<SourceLine> Lines);
+
+    /// <summary>
+    /// Take this before AdjustQuantity, which reduces the invoice quantities.
+    /// DetailsTotal matches the sales invoice: price x quantity minus the line's
+    /// fixed discount.
+    /// </summary>
+    private static InvoiceSnapshot Snapshot(DtoSalesInvoice invoice)
+        => new(invoice.Details.Sum(d => d.CountItemPrice(true)),
+               invoice.Details.Select(d => new SourceLine(d.ItemId, d.UnitId, d.Quantity, d.Discount)).ToList());
+
+    /// <summary>
+    /// The return table has no discount columns, so a return linked to a sales
+    /// invoice takes its discounts from that invoice: each line gets its share of
+    /// the line discount, and the return gets its share of a fixed invoice
+    /// discount (a percentage applies as is). Returning a whole invoice therefore
+    /// refunds exactly what the customer paid.
+    /// </summary>
+    private static void ApplyInvoiceDiscount(DtoSellReturnInvoice ret, DtoSalesInvoice invoice, InvoiceSnapshot source)
+    {
+        ret.Discount = invoice.Discount;
+        ret.DiscountType = invoice.DiscountType;
+        ret.SourceInvoiceDetailsTotal = source.DetailsTotal;
+
+        foreach (var line in ret.Details)
+        {
+            var sold = source.Lines.FirstOrDefault(l => l.ItemId == line.ItemId && l.UnitId == line.UnitId);
+            if (sold is null)
+                continue;
+
+            line.SourceQuantity = sold.Quantity;
+            line.SourceDiscount = sold.Discount;
+            line.Discount = line.LineDiscount(); // stored as this line's share
+        }
+
+        ret.TotalAmount = decimal.Round(ret.Count().discountedTotal, 2);
+    }
+
+    private async Task ApplyInvoiceDiscountAsync(IEnumerable<DtoSellReturnInvoice> returns)
+    {
+        var linked = returns.Where(r => r.InvoiceId is not null).ToList();
+        if (linked.Count == 0)
+            return;
+
+        var ids = linked.Select(r => r.InvoiceId!).Distinct().ToArray();
+        var sellService = _service.MakeChildService<DtoSalesInvoice, TSalesInvoice>();
+        var invoices = (await sellService.GetAllAsync(w => ids.Contains(w.Id))).Items.ToList();
+
+        foreach (var ret in linked)
+        {
+            var invoice = invoices.FirstOrDefault(i => i.Id == ret.InvoiceId);
+            if (invoice is not null)
+                ApplyInvoiceDiscount(ret, invoice, Snapshot(invoice));
+        }
+    }
+
     public override async Task BeforReturn(PageList<DtoSellReturnInvoice> list)
     {
         // TotalAmount has no database column, so compute it for the list
@@ -84,6 +143,9 @@ public class SellReturnInvoiceController
         {
             item.TotalAmount = decimal.Round(item.Count().discountedTotal, 2);
         }
+
+        // Returns made from a sales invoice: apply that invoice's discount.
+        await ApplyInvoiceDiscountAsync(list.Items);
 
         return;
         var entryService = _service.MakeChildService<IEntryService>();
@@ -145,6 +207,8 @@ public class SellReturnInvoiceController
                     return opt.Problem("Wrong number"); // locale
                 
                 var next = await _service.GetOneAsAsync(x => x, y => y.Number == num);
+                if (next is not null)
+                    await ApplyInvoiceDiscountAsync([next]);
                 return opt.Success(next);
             });
     
@@ -243,6 +307,7 @@ public class SellReturnInvoiceController
         //
         //****************************(0)****************************
         var invoice = await sellInvoiceService.GetAsync(w => w.Number == request.InvoiceNumber);
+        var source = invoice is null ? null : Snapshot(invoice);
         var otherReturns = await service.GetAllAsync(w => w.InvoiceNumber == request.InvoiceNumber && w.Id != request.Id);
         if (invoice is not null && otherReturns.Items.Any())
         {
@@ -265,12 +330,11 @@ public class SellReturnInvoiceController
         {
             returnInvoice.Details.ForEach(f =>
             {
-                var i = invoice.Details.FirstOrDefault(ff => ff.ItemId == f.ItemId && ff.UnitId == ff.UnitId) ?? throw new Exception("Item Not exists in real invoice");
+                var i = invoice.Details.FirstOrDefault(ff => ff.ItemId == f.ItemId && ff.UnitId == f.UnitId) ?? throw new Exception("Item Not exists in real invoice");
                 f.Price = i.Price;
                 f.Discount = i.Discount;
             });
-            returnInvoice.Discount = invoice.Discount;
-            returnInvoice.DiscountType = invoice.DiscountType;
+            ApplyInvoiceDiscount(returnInvoice, invoice, source!);
             var resultx = AdjustQuantity(invoice, [returnInvoice]);
             if (resultx is not null) return _.Problem(System.Net.HttpStatusCode.BadRequest, resultx);
             //
@@ -280,12 +344,11 @@ public class SellReturnInvoiceController
             returnInvoice.ClientId = invoice.ClientId;
 
 
-            returnDetailsNonDiscountedTotal = actualTotal;
+            // Prices were replaced with the invoice's above, so recount from them.
+            // A fixed invoice discount is shared in proportion to what is returned
+            // (it used to be subtracted in full from every partial return).
+            (returnDetailsNonDiscountedTotal, returnTotal, returnInvoiceTotalDiscount) = returnInvoice.Count();
             returnDetailsTotal = returnInvoice.Details.Sum(s => s.CountingPrince((int)returnInvoice.DiscountType));
-            returnTotal = returnInvoice.DiscountType == DiscountType.Percent
-                ? returnDetailsTotal - (returnDetailsTotal * returnInvoice.Discount / 100)
-                : returnDetailsTotal - returnInvoice.Discount;
-            returnInvoiceTotalDiscount = returnDetailsNonDiscountedTotal - returnTotal;
             defTotal = invoice.NetAmount - netTotal;
 
             number = invoice.Number;
@@ -532,7 +595,10 @@ public class SellReturnInvoiceController
         service.CommitTransaction();
         returnInvoice = await _service.GetById(returnInvoice.Id);
         if (invoice is not null && returnInvoice is not null)
+        {
             returnInvoice.SellInvoice = invoice;
+            ApplyInvoiceDiscount(returnInvoice, invoice, source!);
+        }
         var allReturns = otherReturns.Items.Append(returnInvoice);
         return _.Success(returnInvoice);
     }
@@ -554,6 +620,7 @@ public class SellReturnInvoiceController
             var sellInvoiceService = _service.MakeChildService<DtoSalesInvoice, TSalesInvoice>();
             var invoice = await sellInvoiceService.GetAsync(w => w.Number == request.Number);
             if (invoice is null) return _.Problem(System.Net.HttpStatusCode.BadRequest, l["Invoice-not-found"]!); // Invoice not found
+            var source = Snapshot(invoice);
 
             var returnInvoices = await _service.GetAllAsync(w => w.InvoiceNumber == request.Number);
             if (returnInvoices.Items.Any())
@@ -596,6 +663,7 @@ public class SellReturnInvoiceController
                 }).ToList(),
             };
 
+            ApplyInvoiceDiscount(sellReturnInvoice, invoice, source);
             return _.Success(sellReturnInvoice);
         });
 

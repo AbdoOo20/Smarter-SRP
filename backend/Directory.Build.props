@@ -1,0 +1,12 @@
+<Project>
+  <!--
+    The backend targets .NET 10 but uses EF Core 8 (Pomelo MySQL 8). With C# 14,
+    `array.Contains(x)` inside a query lambda binds to MemoryExtensions.Contains on
+    ReadOnlySpan<T>, which EF Core 8 cannot translate ("exception while attempting
+    to evaluate the LINQ query parameter expression 'op_Implicit(...[])'").
+    C# 13 keeps Enumerable.Contains, which EF Core 8 translates to SQL IN (...).
+  -->
+  <PropertyGroup>
+    <LangVersion>13</LangVersion>
+  </PropertyGroup>
+</Project>

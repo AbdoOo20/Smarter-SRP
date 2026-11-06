@@ -71,18 +71,29 @@ public partial class DtoFactoringInvoice : DtoBase
     [ClientInvisible]
     public virtual ICollection<DtoFactoringInvoiceComposition> Compositions { get; set; } = [];
     
+    /// <summary>
+    /// total = lines before discounts + extra costs.
+    /// discountedTotal = what the customer pays: lines after their discounts, plus
+    /// the extra costs, minus the invoice discount (taken on that whole amount).
+    /// discount = total - discountedTotal.
+    /// Extra costs used to be left out of the amount charged and counted as
+    /// discount instead.
+    /// </summary>
     public (decimal total, decimal discountedTotal, decimal discount) Count()
     {
-        var realTotal = Details.Sum(s => s.CountPrice(-100)) + Costs.Sum(c => c.Price);
-        var discountedTotal = realTotal - Details.Sum(s => s.CountPrice((int)DiscountType));
-        var fullInvoiceDiscount = DiscountType switch
+        var costs = Costs.Sum(c => c.Price);
+        var realTotal = Details.Sum(s => s.CountPrice(-100)) + costs;
+        var beforeInvoiceDiscount = Details.Sum(s => s.CountPrice(0)) + costs;
+        var net = DiscountType switch
         {
-            DiscountType.Static => discountedTotal - Discount,
-            DiscountType.Percent => discountedTotal - discountedTotal * Discount / 100,
-            _ => discountedTotal,
+            DiscountType.Static => beforeInvoiceDiscount - Discount,
+            DiscountType.Percent => beforeInvoiceDiscount - beforeInvoiceDiscount * Discount / 100,
+            _ => beforeInvoiceDiscount,
         };
-        
-        var finalDiscount = realTotal - fullInvoiceDiscount;
-        return (realTotal, fullInvoiceDiscount, finalDiscount);
+        net = Math.Round(net, 3);
+        return (realTotal, net, realTotal - net);
     }
+
+    /// <summary>Extra costs (المصاريف) of the invoice.</summary>
+    public decimal CostsTotal => Costs.Sum(c => c.Price);
 }

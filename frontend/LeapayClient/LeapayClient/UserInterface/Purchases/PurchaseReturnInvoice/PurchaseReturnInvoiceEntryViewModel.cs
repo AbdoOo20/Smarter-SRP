@@ -1,4 +1,6 @@
-﻿using Avalonia.Threading;
+using SmartErpWin.Core.Extensions;
+using Fly.Framework.Shared.Common;
+using Avalonia.Threading;
 using Fly.Shared.Modules.PurchaseAndSales.Dtos.Purchase;
 using Fly.Shared.Modules.PurchaseAndSales.Enums;
 using Leapay.Client.ClientModels.Dto.DtoModels;
@@ -102,7 +104,10 @@ public partial class PurchaseReturnInvoiceEntryViewModel : BaseItemPageEntryView
         {
             dto.ItemName = categories.FirstOrDefault(u => u.Value == dto.ItemId.Value.ToString())?
                 .Display;
-            dto.TemporaryId = dto.Id;
+            // Lines copied from another invoice have no Id yet; giving them all the same
+            // (empty) TemporaryId made editing one line duplicate it over the others and
+            // deleting one line delete them all.
+            dto.TemporaryId = dto.Id.IsNullOrEmpty() ? Identifier.Create(Guid.NewGuid()) : dto.Id;
 
             var units = (await RequestComboModelsAsync<ComboModel>("Units", dto.ItemId.ToString())).Data;
 

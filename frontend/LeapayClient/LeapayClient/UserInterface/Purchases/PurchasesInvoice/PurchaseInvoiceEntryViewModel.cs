@@ -1,4 +1,6 @@
-﻿using Avalonia.Threading;
+using SmartErpWin.Core.Extensions;
+using Fly.Framework.Shared.Common;
+using Avalonia.Threading;
 using Fly.Shared.Modules.PurchaseAndSales.Dtos;
 using Fly.Shared.Modules.PurchaseAndSales.Enums;
 using Leapay.Client.ClientModels.Dto.DtoModels;
@@ -124,7 +126,10 @@ public partial class PurchaseInvoiceEntryViewModel : BaseItemPageEntryViewModel<
         
         foreach (var dto in Model.Details)
         {
-            dto.TemporaryId = dto.Id;
+            // Lines copied from another invoice have no Id yet; giving them all the same
+            // (empty) TemporaryId made editing one line duplicate it over the others and
+            // deleting one line delete them all.
+            dto.TemporaryId = dto.Id.IsNullOrEmpty() ? Identifier.Create(Guid.NewGuid()) : dto.Id;
 
             data.Add(dto);
         }
@@ -134,7 +139,10 @@ public partial class PurchaseInvoiceEntryViewModel : BaseItemPageEntryViewModel<
 
         var secondaryData = Model.Costs.Select(dto =>
         {
-            dto.TemporaryId = dto.Id;
+            // Lines copied from another invoice have no Id yet; giving them all the same
+            // (empty) TemporaryId made editing one line duplicate it over the others and
+            // deleting one line delete them all.
+            dto.TemporaryId = dto.Id.IsNullOrEmpty() ? Identifier.Create(Guid.NewGuid()) : dto.Id;
             dto.Ammount = dto.Ammount;
 
             return dto;

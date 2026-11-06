@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Fly.Framework.Shared.Common;
 using Fly.Framework.Shared.Common.Attributes;
 using Fly.Framework.Shared.Common.Dtos;
@@ -57,6 +57,35 @@ public partial class DtoSellReturnInvoice : DtoBase
     [ClientInvisible]
     public decimal Discount { get; set; }
 
+    /// <summary>
+    /// Lines total (after line discounts) of the sales invoice this return comes from.
+    /// Used to give a partial return its share of a fixed invoice discount.
+    /// Not stored; the backend fills it from the linked invoice.
+    /// </summary>
+    [ClientInvisible]
+    public decimal SourceInvoiceDetailsTotal { get; set; }
+
+    /// <summary>
+    /// The invoice discount that applies to this return, in money.
+    /// A percentage applies as is. A fixed discount is split in proportion to the
+    /// returned amount, so returning part of an invoice refunds only that part's
+    /// share and returning all of it refunds exactly what the customer paid.
+    /// </summary>
+    public decimal InvoiceDiscountAmount(decimal detailsTotal)
+    {
+        if (Discount <= 0 || detailsTotal <= 0)
+            return 0;
+
+        if (DiscountType == DiscountType.Percent)
+            return detailsTotal * Discount / 100;
+
+        if (SourceInvoiceDetailsTotal <= 0)
+            return Math.Min(Discount, detailsTotal);
+
+        var share = Math.Min(1m, detailsTotal / SourceInvoiceDetailsTotal);
+        return decimal.Round(Discount * share, 2);
+    }
+
     public PeymentType PeymentType { get; set; }
 
     [ClientInvisible]
@@ -103,23 +132,12 @@ public partial class DtoSellReturnInvoice : DtoBase
         // for now, no extra amount.
         var total = Details.Sum(s => s.CountingPrince((int)DiscountType));
 
-        return DiscountType switch
-        {
-            DiscountType.Static => total - Discount,
-            DiscountType.Percent => total - (total * Discount / 100),
-            _ => total,
-        };
+        return total - InvoiceDiscountAmount(total);
     }
     public decimal CountingDiscount()
     {
         var total = Details.Sum(s => s.CountingPrince((int)DiscountType));
-        var tot = DiscountType switch
-        {
-            DiscountType.Static => total - Discount,
-            DiscountType.Percent => total - (total * Discount / 100),
-            _ => total,
-        };
-        return total - tot;
+        return InvoiceDiscountAmount(total);
     }
     public decimal CountingRealPrice()
     {
@@ -146,12 +164,7 @@ public partial class DtoSellReturnInvoice : DtoBase
 
         var realTotal = Details.Sum(s => s.CountingPrince(-100));           //  $1,000
         var total = Details.Sum(s => s.CountingPrince((int)DiscountType));  //    $900
-        var tot = DiscountType switch                                       //    $900 - $45 = $855
-        {
-            DiscountType.Static => total - Discount,
-            DiscountType.Percent => total - (total * Discount / 100),
-            _ => total,
-        };
+        var tot = total - InvoiceDiscountAmount(total);                     //    $900 - $45 = $855
         var discount = realTotal - tot;                                     //  $1,000 - $855 = $145
         return (realTotal, tot, discount);
     }

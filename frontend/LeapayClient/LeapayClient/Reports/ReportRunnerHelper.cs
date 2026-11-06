@@ -144,43 +144,78 @@ public static class ReportRunnerHelper
 
     private static void OnMaintenanceInvoiceCreated(object? sender, PrintEventArgs<DtoMaintenanceInvoice> e)
     {
-
-        // Legacy below:
         try
         {
-            var ee = e.Model.Adapt<MaintenanceInvoiceDto>();
-            //var ddd = e.Details.Adapt<List<SalesInvoiceDetailDto>>();
-            //ee.TotalAmount = e.TotalAmount;
-            var ddd = e.Model.Details.Select((s, indx) =>
-                new MaintenanceInvoiceDetailDto()
-                {
-                    ItemName = s.ItemName,
-                    //ItemNumber = s.ItemName,
-                    Price = s.Price,
-                    Quantity = s.Quantity,
-                    Total = (s.Price * s.Quantity) - s.Discount,
-                    Serial = (indx + 1),
-                    UnitName = s.UnitName,
-                }).ToList();
-
-            
-            var reportDefinition = new StreamReader($"./Reports/MaintenanceInvoiceReport.rdlc").BaseStream;
-            var report = new LocalReport();
-            report.EnableExternalImages = true;
-            report.LoadReportDefinition(reportDefinition);
-            
-            report.DataSources.Add(new ReportDataSource("salesDet", ddd));
-            report.DataSources.Add(new ReportDataSource("sales", new List<MaintenanceInvoiceDto> { ee }));
-            report.DataSources.Add(new ReportDataSource("LuncherInfo", DataHelper.GetCompanyInfo()));
-
-            var pdf = report.Render("PDF");
-            //ReportRunnerHelper.OpenPdf(ReportRunnerHelper.SavePdf(pdf));
-            OpenAndSavePdf(pdf);
+            OpenAndSavePdf(GetMaintenanceFile(e.Model));
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
+    }
+
+    /// <summary>
+    /// Text for the deposit box: what was paid in advance and what is left.
+    /// </summary>
+    private static string DepositSummary(decimal deposit, decimal net, bool fullyPaid)
+    {
+        if (deposit <= 0)
+            return fullyPaid ? "مدفوعة بالكامل" : string.Empty;
+
+        var left = fullyPaid ? 0 : Math.Max(net - deposit, 0);
+        return $"العربون {deposit:N2} • المتبقي {left:N2}";
+    }
+
+    public static byte[] GetMaintenanceFile(DtoMaintenanceInvoice model)
+    {
+        var ee = model.Adapt<MaintenanceInvoiceDto>();
+
+        // The invoice calls it PaymentType, the print model PeymentType, so it was
+        // never copied and every print said cash.
+        ee.PeymentType = model.PaymentType;
+
+        // Same figures the system charges: rows = lines after their discount plus
+        // the extra costs; discount = invoice discount; net = what is paid.
+        var (_, net, _) = model.Count();
+        var beforeInvoiceDiscount = model.Details.Sum(d => d.CountPrice(0)) + model.CostsTotal;
+        ee.TotalAmount = beforeInvoiceDiscount;
+        ee.DiscountAmount = beforeInvoiceDiscount - net;
+        ee.NetAmount = net;
+
+        var deposit = model.ReceivedFeeInAdvance ? model.CollectionRate : 0;
+        ee.PaymentSummary = DepositSummary(deposit, net, model.MaintenanceStatus == Fly.Shared.Modules.Maintenance.Enums.MaintenanceStatus.FullyPaid);
+
+        var rows = model.Details.Select(s =>
+                new MaintenanceInvoiceDetailDto
+                {
+                    ItemName = s.ItemName,
+                    Price = s.Price,
+                    Quantity = s.Quantity,
+                    Total = s.CountPrice(0),
+                    UnitName = s.UnitName ?? string.Empty,
+                })
+            // Extra costs as their own rows, so the rows add up to the total.
+            .Concat(model.Costs.Select(c => new MaintenanceInvoiceDetailDto
+            {
+                ItemName = "مصروف: " + c.CostName,
+                Price = c.Price,
+                Quantity = 1,
+                Total = c.Price,
+                UnitName = string.Empty,
+            }))
+            .Select((r, i) => { r.Serial = i + 1; return r; })
+            .ToList();
+
+        using var reportDefinition = new StreamReader($"./Reports/MaintenanceInvoiceReport.rdlc").BaseStream;
+        var report = new LocalReport();
+        report.EnableExternalImages = true;
+        report.LoadReportDefinition(reportDefinition);
+
+        report.DataSources.Add(new ReportDataSource("salesDet", rows));
+        report.DataSources.Add(new ReportDataSource("sales", new List<MaintenanceInvoiceDto> { ee }));
+        report.DataSources.Add(new ReportDataSource("LuncherInfo", DataHelper.GetCompanyInfo()));
+
+        return report.Render("PDF");
     }
     
     private static void OnItemsTransferInvoiceCreated(object? sender, PrintEventArgs<DtoItemsTransferInvoice> e)
@@ -231,15 +266,7 @@ public static class ReportRunnerHelper
         // Legacy below:
         try
         {
-            var report = GetCompositionsReport(e);
-            var reportTwo = GetFactoringDetailsReport(e);
-            
-            var pdf = report.Render("PDF");
-            var pdfTwo = reportTwo.Render("PDF");
-
-            var mergedPdf = MergePdfBytes(pdf, pdfTwo);
-            
-            OpenAndSavePdf(mergedPdf);
+            OpenAndSavePdf(GetFactoringFile(e.Model));
         }
         catch (Exception ex)
         {
@@ -247,9 +274,38 @@ public static class ReportRunnerHelper
         }
     }
 
+    public static byte[] GetFactoringFile(DtoFactoringInvoice model)
+    {
+        var e = new PrintEventArgs<DtoFactoringInvoice>(model);
+        var pdf = GetCompositionsReport(e).Render("PDF");
+        var pdfTwo = GetFactoringDetailsReport(e).Render("PDF");
+        return MergePdfBytes(pdf, pdfTwo);
+    }
+
+    /// <summary>
+    /// Header and totals shared by both manufacturing pages.
+    /// </summary>
+    private static FactoringInvoiceDto FactoringHeader(DtoFactoringInvoice model)
+    {
+        var ee = model.Adapt<FactoringInvoiceDto>();
+
+        // PaymentType vs PeymentType: never copied, so every print said cash.
+        ee.PeymentType = model.PaymentType;
+
+        var (_, net, _) = model.Count();
+        var beforeInvoiceDiscount = model.Details.Sum(d => d.CountPrice(0)) + model.CostsTotal;
+        ee.TotalAmount = beforeInvoiceDiscount;
+        ee.DiscountAmount = beforeInvoiceDiscount - net;
+        ee.NetAmount = net;
+
+        var deposit = model.ReceivedFeeInAdvance ? model.CollectionRate : 0;
+        ee.PaymentSummary = DepositSummary(deposit, net, model.FactoringStatus == Fly.Shared.Modules.Factoring.Enums.FactoringStatus.FullyPaid);
+        return ee;
+    }
+
     private static LocalReport GetCompositionsReport(PrintEventArgs<DtoFactoringInvoice> e)
     {
-        var ee = e.Model.Adapt<FactoringInvoiceDto>();
+        var ee = FactoringHeader(e.Model);
         var ddd = e.Model.Compositions.Select((s, indx) =>
             new FactoringInvoiceDetailDto()
             {
@@ -273,17 +329,26 @@ public static class ReportRunnerHelper
 
     private static LocalReport GetFactoringDetailsReport(PrintEventArgs<DtoFactoringInvoice> e)
     {
-        var ee = e.Model.Adapt<FactoringInvoiceDto>();
-        var ddd = e.Model.Details.Select((s, indx) =>
-            new FactoringInvoiceDetailDto()
+        var ee = FactoringHeader(e.Model);
+        var ddd = e.Model.Details.Select(s =>
+                new FactoringInvoiceDetailDto()
+                {
+                    ItemName = s.ItemName,
+                    Price = s.Price,
+                    Quantity = s.Quantity,
+                    Total = s.CountPrice(0),
+                    UnitName = s.UnitName ?? string.Empty,
+                })
+            // Production expenses as their own rows, so the rows add up to the total.
+            .Concat(e.Model.Costs.Select(c => new FactoringInvoiceDetailDto
             {
-                ItemName = s.ItemName,
-                //ItemNumber = s.ItemName,
-                Price = s.Price,
-                Quantity = s.Quantity,
-                Total = (s.Price * s.Quantity) - s.Discount,
-                Serial = (indx + 1),
-            }).ToList();
+                ItemName = "مصروف: " + c.CostName,
+                Price = c.Price,
+                Quantity = 1,
+                Total = c.Price,
+            }))
+            .Select((r, i) => { r.Serial = i + 1; return r; })
+            .ToList();
 
             
         var reportDefinition = new StreamReader($"./Reports/FactoringInvoiceReportDetails.rdlc").BaseStream;

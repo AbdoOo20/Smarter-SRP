@@ -117,8 +117,8 @@ public partial class FinancialController
               {
                   var userServcie = _service.MakeChildService<DtoUser, TUser>();
                   var userInfo = await userServcie.GetOneAsAsync(s => new { s.Name }, w => w.Id == userId);
-                  if (safeInfo is null) return opt.Problem(l["user-not-found"]);
-                  userName = safeInfo.Name ?? "";
+                  // The receipt showed the safe name in the "user" field.
+                  userName = userInfo?.Name ?? "";
               }
               //
               var service = (EntryService)_service;
@@ -199,8 +199,8 @@ public partial class FinancialController
               {
                   var userServcie = _service.MakeChildService<DtoUser, TUser>();
                   var userInfo = await userServcie.GetOneAsAsync(s => new { s.Name }, w => w.Id == userId);
-                  if (safeInfo is null) return opt.Problem(l["user-not-found"]);
-                  userName = safeInfo.Name ?? "";
+                  // The receipt showed the safe name in the "user" field.
+                  userName = userInfo?.Name ?? "";
               }
               //
               var service = (EntryService)_service;
@@ -282,8 +282,8 @@ public partial class FinancialController
                 {
                     var userServcie = _service.MakeChildService<DtoUser, TUser>();
                     var userInfo = await userServcie.GetOneAsAsync(s => new { s.Name }, w => w.Id == userId);
-                    if (safeInfo is null) return opt.Problem(l["user-not-found"]);
-                    userName = safeInfo.Name ?? "";
+                    // The receipt showed the safe name in the "user" field.
+                    userName = userInfo?.Name ?? "";
                 }
                 //
                 var service = (EntryService)_service;

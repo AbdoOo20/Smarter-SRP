@@ -9,6 +9,9 @@ using Fly.Framework.Shared.Common.Requests;
 using Fly.Framework.Shared.Common.ValueTypes;
 using Fly.Shared.Modules.PurchaseAndSales.Requests;
 using Fly.Shared.Modules.Store.Dtos;
+using Fly.Shared.Modules.PurchaseAndSales.Dtos;
+using Fly.Core.Modules.E.Store.Models.DbModels;
+using Fly.Core.Modules.F.PurchaseAndSales.Models.DbModels;
 using Fly.Shared.Modules.Store.Enums;
 using Fly.Shared.Modules.Store.Features;
 using Fly.Shared.Modules.Store.Requests;
@@ -56,30 +59,38 @@ public class DisbursementPermitController
         storageModuleService.SetTransaction(tr);
         detService.BeginTransaction(tr);
         //
-        var old = await detService.GetAllAsAsync(s => new { s.ItemId, s.UnitId, s.Quantity }, w => w.DisbursementPermitId == permit.Id);
-        var selectedUnits = permit.DisbursementPermitDetails
-            .Join(old.Items,
-                detail => new { detail.ItemId, detail.UnitId },
-                item => new { item.ItemId, item.UnitId },
-                (detail, item) => new { detail.ItemId, detail.UnitId })
-                .ToArray();
+        var old = (await detService.GetAllAsAsync(s => new { s.ItemId, s.UnitId, s.Quantity }, w => w.DisbursementPermitId == permit.Id)).Items.ToList();
+        var oldStoreId = (await _service.GetById(permit.Id)).StoreId;
+        // Load unit conversion rates for both the old and the new lines. (The previous
+        // composite `selectedUnits.Any(...)` filter could not be translated to SQL, so
+        // every edit failed; it also skipped lines that were newly added on edit.)
+        var unitItemIds = old.Select(x => x.ItemId)
+            .Concat(permit.DisbursementPermitDetails?.Select(x => x.ItemId) ?? [])
+            .Distinct().ToList();
         var selectedUnitInfo = (await itemUnitsService.GetAllAsAsync(
                unit => new { unit.UnitId, unit.ItemId, unit.TransferRate, unit.IsPrimary },
-               unit => selectedUnits.Any(selected => unit.UnitId == selected.UnitId && unit.ItemId == selected.ItemId)
-           )).Items;
+               unit => unitItemIds.Contains(unit.ItemId)
+           )).Items.ToList();
         //
-        foreach (var item in old.Items)
+        // Return the OLD lines to the OLD store before applying the new ones.
+        foreach (var item in old)
         {
             var selectedOne = selectedUnitInfo.First(w => w.UnitId == item.UnitId & w.ItemId == item.ItemId);
             var itmId = item.ItemId;
             var untId = item.UnitId;
-            var strId = permit.StoreId;
+            var strId = oldStoreId;
             var qun = item.Quantity;
             var allOnes = selectedOne.TransferRate * qun;
 
             await storageModuleService.RegainItem(itmId, untId, strId, qun, allOnes, permit.Id, RelatedInventory.Disbursement_Return);
         }
-        await detService.Remove(w => w.DisbursementPermitId == permit.Id);
+        // Replace the lines: the old code only removed them and never saved the new
+        // ones, so an edited permit lost all of its lines.
+        await detService.Remove(w => w.DisbursementPermitId == permit.Id, false);
+        var newLines = (permit.DisbursementPermitDetails ?? []).ToList();
+        newLines.ForEach(f => f.DisbursementPermitId = permit.Id);
+        if (newLines.Count > 0)
+            await detService.AddRange(newLines);
         //
         var db = await _service.GetById(permit.Id);
         permit.Adapt(db);
@@ -159,6 +170,26 @@ public class DisbursementPermitController
         }
         _service.CommitTransaction();
         return permit;
+    }
+
+    /// <summary>
+    /// Deleting a permit must undo its stock movements. Every movement it ever made
+    /// (including the reverse/re-apply pairs written on edits) carries its id as
+    /// RelatedId, so removing them returns the stock to how it was before the permit.
+    /// </summary>
+    protected override async ValueTask AfterDelete(DtoDisbursementPermit dto, DeleteRequestBase command, Framework.Server.Common.ResultOrFailer<DtoDisbursementPermit?> opt)
+    {
+        var inventoryService = _service.MakeChildService<DtoInventory, TInventory>();
+        var inventoryCostService = _service.MakeChildService<DtoInventoryCost, TInventoryCost>();
+        var detService = _service.MakeChildService<DtoDisbursementPermitDetail, TDisbursementPermitDetail>();
+        var ids = (await inventoryService.GetAllAsAsync(s => s.Id,
+            w => w.RelatedId == dto.Id && (w.RelatedIndex == RelatedInventory.Disbursement || w.RelatedIndex == RelatedInventory.Disbursement_Return))).Items.ToList();
+        if (ids.Count > 0)
+        {
+            await inventoryCostService.Remove(w => ids.Contains(w.TInventoryId));
+            await inventoryService.Remove(w => ids.Contains(w.Id));
+        }
+        await detService.Remove(w => w.DisbursementPermitId == dto.Id);
     }
 
     [HttpGet("stores")]

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Fly.Framework.Shared.Common.Collections;
 using Fly.Core.Modules.C.Accounting.Services;
 using Fly.Core.Modules.F.Maintenance.MaintenanceInvoices.DbModels;
 using Fly.Core.Modules.F.Maintenance.MaintenanceSectors.Models.DbModels;
@@ -228,7 +229,9 @@ public class MaintenanceInvoiceController
             await entryService.RemoveAllRelated(mainInvoice.Id, OprationTypeEnum.Maintenance, PurchaseAndSalesConstants.TransactionOprationType__MaintenanceRelated);
 
             await InventoryProcess(mainInvoice.Details, true);
-            await FinancialProcess(finalTotal, actualTotal, payInAdvance: payInAdvanceThisTime);
+            // Same arguments as for a new invoice: (discount, total). They were passed as
+            // (net, total), which posted the discount amount as the invoice value on edit.
+            await FinancialProcess(discountTotal, actualTotal, payInAdvance: payInAdvanceThisTime);
         }
 
         _service.CommitTransaction();
@@ -317,11 +320,15 @@ public class MaintenanceInvoiceController
                     final -= mainInvoice.CollectionRate;
                 }
                 
-                finacialTransaction.AppendEntry(manuInfo.AccountId, theClient, final);
+                // Debit the customer, credit the sector (as the sales invoice does with its
+                // sales account). It was reversed, so with the payment entry below the
+                // customer was credited twice and ended up with a credit balance.
+                finacialTransaction.AppendEntry(theClient, manuInfo.AccountId, final);
 
                 if (_discountedTtoal > 0)
                 {
-                    finacialTransaction.AppendEntry(discountAccountAccount.Id, manuInfo.AccountId, final);
+                    // The discount entry is for the discount amount (it used the invoice value).
+                    finacialTransaction.AppendEntry(discountAccountAccount.Id, manuInfo.AccountId, _discountedTtoal);
                 }
                 
                 switch (mainInvoice.PaymentType)
@@ -339,7 +346,9 @@ public class MaintenanceInvoiceController
             }
             else if(payInAdvance)
             {
-                finacialTransaction.AppendEntry(manuInfo.AccountId, theClient, q.CollectionRate);
+                // Same direction as above: the advance is invoiced to the customer, and the
+                // payment entry below settles it.
+                finacialTransaction.AppendEntry(theClient, manuInfo.AccountId, q.CollectionRate);
                 
                 switch (mainInvoice.PaymentType)
                 {
@@ -366,6 +375,49 @@ public class MaintenanceInvoiceController
             }
             return true;
         }
+    }
+
+
+    /// <summary>
+    /// Lines saved before the save request carried the unit name have it empty;
+    /// look it up so the unit shows on screen and in the printed invoice.
+    /// </summary>
+    private async Task FillMissingUnitNamesAsync<TLine>(IEnumerable<TLine> lines,
+        Func<TLine, Identifier> unitId, Func<TLine, string?> unitName, Action<TLine, string?> setUnitName)
+    {
+        var missing = lines.Where(l => string.IsNullOrEmpty(unitName(l))).ToList();
+        if (missing.Count == 0)
+            return;
+
+        var ids = missing.Select(unitId).Distinct().ToArray();
+        var unitService = _service.MakeChildService<DtoUnit, TUnit>();
+        var units = (await unitService.GetAllAsAsync(s => new { s.Id, s.Name }, w => ids.Contains(w.Id))).Items.ToList();
+
+        foreach (var line in missing)
+            setUnitName(line, units.FirstOrDefault(u => u.Id == unitId(line))?.Name);
+    }
+
+    public override async Task BeforReturn(PageList<DtoMaintenanceInvoice> list)
+    {
+        await FillMissingUnitNamesAsync(list.Items.SelectMany(i => i.Details),
+            d => d.UnitId, d => d.UnitName, (d, n) => d.UnitName = n);
+    }
+
+    /// <summary>
+    /// Deleting an invoice must undo what saving it did: return the used items to the
+    /// store and remove its accounting entries (customer, safe, discount, advance).
+    /// Before, only the invoice row was removed and the stock and balances stayed.
+    /// </summary>
+    protected override async ValueTask AfterDelete(DtoMaintenanceInvoice dto, MaintenanceInvoiceDeleteRequest command, Fly.Framework.Server.Common.ResultOrFailer<DtoMaintenanceInvoice?> opt)
+    {
+        var storageModuleService = _service.MakeChildService<IPurchaseAndSalesModuleService>();
+        var entryService = _service.MakeChildService<IEntryService>();
+        var detailService = _service.MakeChildService<DtoMaintenanceInvoiceDetail, TMaintenanceInvoiceDetail>();
+        var costService = _service.MakeChildService<DtoMaintenanceInvoiceCost, TMaintenanceInvoiceCost>();
+        await storageModuleService.LossAllEver(dto.Id, [RelatedInventory.Maintenance]);
+        await entryService.RemoveAllRelated(dto.Id, OprationTypeEnum.Maintenance, PurchaseAndSalesConstants.TransactionOprationType__MaintenanceRelated);
+        await detailService.Remove(w => w.MaintenanceInvoiceId == dto.Id);
+        await costService.Remove(w => w.MaintenanceInvoiceId == dto.Id);
     }
 
     public virtual void Dispose()

@@ -142,6 +142,10 @@
           <DataField>BalanceString</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="PeymentTypeString">
+          <DataField>PeymentTypeString</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="SalesInvoiceDto_Id">
           <DataField>SalesInvoiceDto_Id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -1936,7 +1940,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=IIf(First(Fields!PeymentType.Value, "sales")=1, "آجل", "نقدا")</Value>
+                      <Value>=First(Fields!PeymentTypeString.Value, "sales")</Value>
                       <Style>
                         <FontFamily>Tajawal Black</FontFamily>
                         <FontSize>12pt</FontSize>

@@ -136,7 +136,9 @@ public class ItemsTransferInvoiceController
                     }
                     else if(mainInvoice.TransferStatus == ItemsTransferRequestStatus.Completed)
                     {
-                        // Add items to storage 2
+                        // Move the items: take them out of storage 1 and add them to storage 2.
+                        // (Before, only storage 2 was increased, so the items were duplicated.)
+                        await RemoveFromFirstStorageAsync();
                         await InventoryProcess(mainInvoice.Details, mainInvoice.ToStorageId);
                     }
                     break;
@@ -177,11 +179,8 @@ public class ItemsTransferInvoiceController
                     throw new InvalidInputException("Unknown status.");
             }
 
-            if (mainInvoice.TransferStatus == ItemsTransferRequestStatus.AwaitingConfirmation)
-            {
-                // Do nothing
-                return mainInvoice;
-            }
+            // (An early `return` here skipped CommitTransaction, so edits to a transfer
+            //  that was still awaiting confirmation were never saved.)
         }
 
         _service.CommitTransaction();
@@ -207,6 +206,9 @@ public class ItemsTransferInvoiceController
 
                 var itemInfo = await itemService.GetOneAsAsync(s => s, w => w.Id == itmId);
 
+                // Only check available quantity when taking items OUT of a store. Checking it
+                // when adding to the destination store made every completed transfer fail.
+                if (isLose)
                 {
                     var minusSellConfig = _configuration.GetSection("MinusSellCheck");
                     if (minusSellConfig is null || minusSellConfig.Get<bool>())
@@ -242,6 +244,17 @@ public class ItemsTransferInvoiceController
         {
             await InventoryProcess(mainInvoice.Details, mainInvoice.FromStorageId, true);
         }
+    }
+
+    /// <summary>
+    /// Deleting a transfer must undo its stock movements in both stores.
+    /// </summary>
+    protected override async ValueTask AfterDelete(DtoItemsTransferInvoice dto, ItemsTransferInvoiceDeleteRequest command, Fly.Framework.Server.Common.ResultOrFailer<DtoItemsTransferInvoice?> opt)
+    {
+        var storageModuleService = _service.MakeChildService<IPurchaseAndSalesModuleService>();
+        var detailService = _service.MakeChildService<DtoItemsTransferInvoiceDetail, TItemsTransferInvoiceDetail>();
+        await storageModuleService.LossAllEver(dto.Id, [RelatedInventory.Transfer]);
+        await detailService.Remove(w => w.ItemsTransferInvoiceId == dto.Id);
     }
 
     public virtual void Dispose()

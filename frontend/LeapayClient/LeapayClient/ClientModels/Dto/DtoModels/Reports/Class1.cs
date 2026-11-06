@@ -46,6 +46,7 @@ public class SalesInvoiceDto
     {
         PeymentType.Cash => "نقدا",
         PeymentType.Deferred => "آجل",
+        PeymentType.BankServices => "خدمات بنكية",
         _ => ""
     };
 
@@ -170,8 +171,12 @@ public class MaintenanceInvoiceDto
     {
         PeymentType.Cash => "نقدا",
         PeymentType.Deferred => "آجل",
+        PeymentType.BankServices => "خدمات بنكية",
         _ => ""
     };
+
+    /// <summary>Deposit paid in advance and what is left; shown in the print.</summary>
+    public string PaymentSummary { get; set; } = string.Empty;
 
     public decimal Balance { get; set; }
     public string BalanceString
@@ -232,8 +237,12 @@ public class FactoringInvoiceDto
     {
         PeymentType.Cash => "نقدا",
         PeymentType.Deferred => "آجل",
+        PeymentType.BankServices => "خدمات بنكية",
         _ => ""
     };
+
+    /// <summary>Deposit paid in advance and what is left; shown in the print.</summary>
+    public string PaymentSummary { get; set; } = string.Empty;
 
     public decimal Balance { get; set; }
     public string BalanceString
@@ -258,6 +267,8 @@ public class FactoringInvoiceDetailDto
 {
     public int Serial { get; set; }
     public string ItemName { get; set; }
+
+    public string UnitName { get; set; } = string.Empty;
 
     public decimal Quantity { get; set; }
     public decimal Price { get; set; }
@@ -290,6 +301,7 @@ public class PurchaseInvoiceDto
     {
         PeymentType.Cash => "نقدا",
         PeymentType.Deferred => "آجل",
+        PeymentType.BankServices => "خدمات بنكية",
         _ => ""
     };
     public decimal Balance { get; set; }

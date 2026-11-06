@@ -142,6 +142,14 @@
           <DataField>BalanceString</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="PeymentTypeString">
+          <DataField>PeymentTypeString</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PaymentSummary">
+          <DataField>PaymentSummary</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="SalesInvoiceDto_Id">
           <DataField>SalesInvoiceDto_Id</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -253,7 +261,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>= First(Fields!BalanceString.Value, "sales")</Value>
+                    <Value>=First(Fields!PaymentSummary.Value, "sales")</Value>
                     <Style>
                       <FontFamily>Tajawal Black</FontFamily>
                       <FontSize>12pt</FontSize>
@@ -289,7 +297,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>الرصيد بعد هذه الفاتورة</Value>
+                    <Value>المدفوع مقدماً (العربون)</Value>
                     <Style>
                       <FontFamily>Tajawal Black</FontFamily>
                       <FontSize>12pt</FontSize>

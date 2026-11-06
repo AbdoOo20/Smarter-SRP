@@ -37,7 +37,7 @@ public class MaintenanceInvoiceCreateUpdateRequest : CreateUpdateRequestBase
 
     public MaintenanceStatus MaintenanceStatus { get; set; }
     
-    public MaintenanceItemsStatus MaintenanceItemStatus { get; set; }
+    public MaintenanceItemsStatus MaintenanceItemsStatus { get; set; }
 
     public PeymentType PaymentType { get; set; }
 
